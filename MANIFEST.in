@@ -1,0 +1,4 @@
+include requirements.txt
+include pylibschc/clibschc.pxd pylibschc/libschc.pyx
+global-include *.so
+recursive-include src/ *.h
