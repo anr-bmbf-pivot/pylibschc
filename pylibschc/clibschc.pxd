@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+from cpython.object cimport PyObject
 from libc.stdint cimport uint8_t, uint16_t, uint32_t
 
 __author__ = "Martine S. Lenders"
@@ -196,3 +197,9 @@ cdef extern from "rules.h":
     schc_fragmentation_rule_t **schc_rules_create_frag_ctx(unsigned rule_count)
     void schc_rules_free_compr_ctx(schc_compression_rule_t **ctx, unsigned rule_count)
     void schc_rules_free_frag_ctx(schc_fragmentation_rule_t **ctx, unsigned rule_count)
+
+cdef extern from "pylogging.h":
+    const int PYLOG_BUFFER_SIZE
+
+    void pylog_init(PyObject *logger)
+    int pylog_debug(const char *format, ...)

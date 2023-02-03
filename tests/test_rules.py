@@ -1081,7 +1081,12 @@ def test_config_to_c_header_compilable(test_rules, tmp_path, schc_config, libsch
         rules_config.write(test_rules.to_c_header())
     env = os.environ
     env.update(
-        {"CFLAGS": f"-I'{include_dir}' -I'{libschc_repo}' -D_POSIX_C_SOURCE=200809L "}
+        {
+            "CFLAGS": (
+                f"-I'{include_dir}' -I'{libschc_repo}' -D_POSIX_C_SOURCE=200809L "
+                "-DNLOGGING=1"
+            )
+        }
     )
     for target in ["compress", "fragment", "icmpv6"]:
         subprocess.check_call(

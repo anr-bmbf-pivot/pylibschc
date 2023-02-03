@@ -11,6 +11,14 @@
 #include <unistd.h>
 #include <inttypes.h>
 
+#ifndef NLOGGING
+#define NLOGGING                        0
+#endif
+
+#if !NLOGGING
+#include "pylogging.h"
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,7 +55,11 @@ extern "C" {
 /* the maximum number of tokens inside a JSON structure */
 #define JSON_TOKENS                     16
 
+#if !NLOGGING
+#define DEBUG_PRINTF(...)               pylog_debug(__VA_ARGS__)
+#else
 #define DEBUG_PRINTF(...)
+#endif
 
 /* the number of ack attempts */
 #define MAX_ACK_REQUESTS                3

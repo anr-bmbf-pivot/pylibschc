@@ -80,6 +80,7 @@ setup(
             "pylibschc.libschc",
             [
                 "pylibschc/libschc.pyx",
+                "src/pylogging.c",
                 "src/rules.c",
                 "src/libschc/bit_operations.c",
                 "src/libschc/compressor.c",

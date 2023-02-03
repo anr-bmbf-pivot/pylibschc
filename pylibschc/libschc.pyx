@@ -2,9 +2,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+import logging
 import typing
 
 from cpython.bool cimport bool
+from cpython.object cimport PyObject
 from cython.operator cimport postincrement as inc, postdecrement as dec
 from libc.stddef cimport size_t
 from libc.stdint cimport uint8_t, uint16_t, uint32_t
@@ -28,6 +30,9 @@ MAX_MTU_LENGTH = clibschc.MAX_MTU_LENGTH
 FCN_SIZE_BITS = clibschc.FCN_SIZE_BITS
 DTAG_SIZE_BITS = clibschc.DTAG_SIZE_BITS
 BITMAP_SIZE_BITS = clibschc.BITMAP_SIZE_BYTES * 8
+
+logger = logging.getLogger(__name__)
+clibschc.pylog_init(<PyObject *>logger)
 
 
 cdef class BitArray:
@@ -572,3 +577,10 @@ cdef class Device:
 
     def unregister(self):
         self._unregister()
+
+
+PYLOG_BUFFER_SIZE = clibschc.PYLOG_BUFFER_SIZE
+
+
+def test_pylog_debug(fmt: bytes, str_arg: bytes, int_arg: int):
+    clibschc.pylog_debug(fmt, <char *>str_arg, <int>int_arg)
