@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 from cpython.object cimport PyObject
-from libc.stdint cimport uint8_t, uint16_t, uint32_t
+from libc.stdint cimport int8_t, uint8_t, uint16_t, uint32_t
 
 __author__ = "Martine S. Lenders"
 __copyright__ = "Copyright 2023 Freie Universität Berlin"
@@ -203,3 +203,94 @@ cdef extern from "pylogging.h":
 
     void pylog_init(PyObject *logger)
     int pylog_debug(const char *format, ...)
+
+cdef extern from "libschc/fragmenter.h":
+    const int SCHC_FRAG_INPUT
+    const int SCHC_ACK_INPUT
+    const int SCHC_SUCCESS
+    const int SCHC_END
+    const int SCHC_FAILURE
+    const int SCHC_NO_FRAGMENTATION
+
+    ctypedef enum tx_state:
+        INIT_TX = 0
+        SEND = 1
+        RESEND = 2
+        WAIT_BITMAP = 3
+        END_TX = 4
+        ERR = 5
+
+    ctypedef enum rx_state:
+        RECV_WINDOW = 0
+        WAIT_NEXT_WINDOW = 1
+        WAIT_MISSING_FRAG = 2
+        WAIT_END = 3
+        END_RX = 4
+        ABORT = 5
+
+    ctypedef struct schc_mbuf_t:
+        pass
+
+    ctypedef struct schc_fragmentation_ack_t:
+        pass
+
+    ctypedef struct schc_fragmentation_t
+
+    ctypedef struct schc_fragmentation_t:
+        schc_fragmentation_t *next
+        uint32_t device_id
+        schc_bitarray_t *bit_arr
+        uint8_t *tail_ptr
+        uint16_t mtu
+        uint32_t dc
+        uint8_t mic[MIC_SIZE_BYTES]
+        uint8_t fc
+        uint8_t window
+        uint8_t window_cnt
+        uint8_t dtag
+        uint8_t frag_cnt
+        uint8_t bitmap[BITMAP_SIZE_BYTES]
+        uint8_t attempts
+        tx_state TX_STATE
+        rx_state RX_STATE
+        uint8_t (*send)(uint8_t *data, uint16_t length, uint32_t device_id)
+        void (*post_timer_task)(
+            schc_fragmentation_t *conn,
+            void (*timer_task)(void *arg),
+            uint32_t time_ms,
+            void *arg
+        )
+        void (*end_rx)(schc_fragmentation_t *conn)
+        void (*end_tx)(schc_fragmentation_t *conn)
+        void (*remove_timer_entry)(schc_fragmentation_t *conn)
+        void *timer_ctx
+        uint8_t timer_flag
+        uint8_t input
+        schc_fragmentation_ack_t ack
+        schc_mbuf_t *head
+        schc_fragmentation_rule_t *fragmentation_rule
+        uint8_t rule_id[4]
+
+    int8_t schc_fragmenter_init(
+        schc_fragmentation_t* tx_conn,
+        uint8_t (*send)(uint8_t* data, uint16_t length, uint32_t device_id),
+        void (*end_rx)(schc_fragmentation_t* conn),
+        void (*remove_timer_entry)(schc_fragmentation_t* conn)
+    );
+    int8_t schc_fragment(schc_fragmentation_t *tx_conn)
+    int8_t schc_reassemble(schc_fragmentation_t *rx_conn)
+    void schc_reset(schc_fragmentation_t *conn)
+    schc_fragmentation_t *schc_input(
+        uint8_t *data,
+        uint16_t len,
+        schc_fragmentation_t * rx_conn,
+        uint32_t device_id
+    )
+
+    schc_fragmentation_rule_t *get_fragmentation_rule_by_reliability_mode(
+        reliability_mode mode,
+		uint32_t device_id
+    )
+
+    uint16_t get_mbuf_len(schc_fragmentation_t *conn)
+    void mbuf_copy(schc_fragmentation_t *conn, uint8_t *ptr)
