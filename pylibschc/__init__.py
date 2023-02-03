@@ -1,10 +1,7 @@
-#!/usr/bin/env python3
-
 # Copyright (C) 2023 Freie Universität Berlin
 #
-# This file is subject to the terms and conditions of the GNU Lesser
-# General Public License v2.1. See the file LICENSE in the top level
-# directory for more details.
+# SPDX-License-Identifier: GPL-3.0-only
+
 
 __author__ = "Martine S. Lenders"
 __copyright__ = "Copyright 2023 Freie Universität Berlin"

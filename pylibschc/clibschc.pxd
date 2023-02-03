@@ -1,4 +1,14 @@
+# Copyright (C) 2023 Freie Universität Berlin
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
 from libc.stdint cimport uint8_t, uint16_t, uint32_t
+
+__author__ = "Martine S. Lenders"
+__copyright__ = "Copyright 2023 Freie Universität Berlin"
+__license__ = "GPLv3"
+__email__ = "m.lenders@fu-berlin.de"
+
 
 cdef extern from "libschc/bit_operations.h":
     uint32_t get_bits(const uint8_t A[], uint32_t pos, uint8_t len)

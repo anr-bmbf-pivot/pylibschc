@@ -1,3 +1,7 @@
+# Copyright (C) 2023 Freie Universität Berlin
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
 import typing
 
 from cpython.bool cimport bool
@@ -7,6 +11,11 @@ from libc.stdlib cimport free, malloc
 from libc.string cimport memcmp, memcpy, memset
 
 from . cimport clibschc
+
+__author__ = "Martine S. Lenders"
+__copyright__ = "Copyright 2023 Freie Universität Berlin"
+__license__ = "GPLv3"
+__email__ = "m.lenders@fu-berlin.de"
 
 
 cdef class BitArray:

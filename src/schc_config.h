@@ -1,35 +1,8 @@
 /*
  * Copyright (C) 2018 imec IDLab
- * Copyright (C) 2022 Freie Universität Berlin
+ * Copyright (C) 2023 Freie Universität Berlin
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
-/**
- * @addtogroup  pkg_libschc_config
- *
- * @internal
- * @name        libSCHC-side compile-time config for libSCHC
- * @{
- *
- * @file
- *
- * Usually this file and its macros need not to be touched. Use the compile-time
- * configuration macros in @ref libschc_config.h to configure @ref pkg_libschc.
- *
- * @author  boortmans <bart.moons@gmail.com>
- * @author  Martine S. Lenders <m.lenders@fu-berlin.de>
+ * SPDX-License-Identifier: GPL-3.0-only
  */
 #ifndef SCHC_CONFIG_H
 #define SCHC_CONFIG_H

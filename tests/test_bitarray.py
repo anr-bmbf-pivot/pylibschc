@@ -1,6 +1,15 @@
+# Copyright (C) 2023 Freie Universität Berlin
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
 import pytest
 
 import pylibschc.libschc  # pylint: disable=import-error,no-name-in-module
+
+__author__ = "Martine S. Lenders"
+__copyright__ = "Copyright 2023 Freie Universität Berlin"
+__license__ = "GPLv3"
+__email__ = "m.lenders@fu-berlin.de"
 
 
 def test_bit_array():

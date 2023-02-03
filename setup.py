@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# Copyright (C) 2023 Freie Universität Berlin
+#
+# SPDX-License-Identifier: GPL-3.0-only
+
 import os
 
 from distutils.command.build import build

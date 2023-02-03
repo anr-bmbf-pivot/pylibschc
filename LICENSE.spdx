@@ -1,0 +1,6 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+PackageName: pylibschc
+PackageOriginator: Martine S. Lenders
+PackageHomePage: https://github.com/anr-bmbf-pivot/pylibschc
+PackageLicenseDeclared: GPL-3.0-only
