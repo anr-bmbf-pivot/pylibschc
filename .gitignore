@@ -1,5 +1,6 @@
 test-report.xml
 pylibschc/libschc.c
+rule_config.h
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

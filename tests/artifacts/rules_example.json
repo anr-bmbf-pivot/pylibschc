@@ -1,0 +1,74 @@
+   {
+     "devices": [
+       {
+         "device_id": 1,
+         "mtu": 60,
+         "duty_cycle": 5000,
+         "uncompressed_rule": {
+           "rule_id": 20, "rule_id_size_bits": 8
+         },
+         "compression_rules": [
+           {
+             "rule_id": 1, "rule_id_size_bits": 8,
+             "ipv6_rule": [
+               {"field": "IP6_V", "field_length": 4, "dir": "BI", "target_value": 6, "MO": "equal", "action": "NOTSENT"},
+               {"field": "IP6_TC", "field_length": 8, "dir": "BI", "MO": "ignore", "action": "NOTSENT"},
+               {"field": "IP6_FL", "field_length": 20, "dir": "BI", "MO": "ignore", "action": "NOTSENT"},
+               {"field": "IP6_LEN", "field_length": 16, "dir": "BI", "MO": "ignore", "action": "COMPLENGTH"},
+               {"field": "IP6_NH", "field_length": 8, "dir": "BI", "target_value": 17, "MO": "equal", "action": "NOTSENT"},
+               {"field": "IP6_HL", "field_length": 8, "dir": "UP", "target_value": 64, "MO": "equal", "action": "NOTSENT"},
+               {"field": "IP6_HL", "field_length": 8, "dir": "DOWN", "MO": "ignore", "action": "VALUESENT"},
+               {"field": "IP6_DEVPRE", "field_length": 64, "dir": "BI", "target_value": "2001:db8::/64", "MO": "equal", "action": "NOTSENT"},
+               {"field": "IP6_DEVIID", "field_length": 64, "dir": "BI", "target_value": "::1", "MO": "equal", "action": "NOTSENT"},
+               {
+                 "field": "IP6_APPPRE",  "MO_param_length": 4, "field_length": 64, "dir": "BI",
+                 "target_value": [
+                   "2001:db8:1::/64",
+                   "2001:db8:2::/64",
+                   "2001:db8:3::/64",
+                   "2001:db8:4::/64"
+                 ],
+                 "MO": "matchmap", "action": "MAPPINGSENT"
+               },
+               {"field": "IP6_APPIID", "field_length": 64, "dir": "BI", "target_value": "::2", "MO": "equal", "action": "NOTSENT"}
+             ],
+             "udp_rule": [
+               {"field": "UDP_DEV", "MO_param_length": 2, "field_length": 16, "dir": "BI",
+                "target_value": [5683, 5684], "MO": "matchmap", "action": "NOTSENT"},
+               {"field": "UDP_APP", "MO_param_length": 12, "field_length": 16, "dir": "BI",
+                "target_value": 61616, "MO": "MSB", "action": "LSB"},
+               {"field": "UDP_LEN", "field_length": 16, "dir": "BI", "MO": "ignore", "action": "COMPLENGTH"},
+               {"field": "UDP_CHK", "field_length": 16, "dir": "BI", "MO": "ignore", "action": "COMPCHK"}
+             ],
+             "coap_rule": [
+               {"field": "COAP_V", "field_length": 2, "dir": "BI", "target_value": 1, "MO": "equal", "action": "NOTSENT"},
+               {"field": "COAP_T", "field_length": 2, "dir": "BI", "MO": "ignore", "action": "VALUESENT"},
+               {"field": "COAP_TKL", "field_length": 4, "dir": "BI", "target_value": 4, "MO": "equal", "action": "NOTSENT"},
+               {"field": "COAP_C", "field_length": 8, "dir": "UP", "target_value": 69, "MO": "equal", "action": "NOTSENT"},
+               {"field": "COAP_C", "field_length": 8, "dir": "DOWN", "target_value": 1, "MO": "equal", "action": "NOTSENT"},
+               {"field": "COAP_MID", "field_length": 16, "dir": "DOWN", "MO": "ignore", "action": "VALUESENT"},
+               {"field": "COAP_MID", "MO_param_length": 12, "field_length": 16, "dir": "UP",
+                "target_value": 9136, "MO": "MSB", "action": "LSB"},
+               {"field": "COAP_TKN", "field_length": 32, "dir": "BI", "MO": "ignore", "action": "VALUESENT"},
+               {"field": "COAP_URIPATH", "field_length": 32, "dir": "DOWN",
+                "target_value": "temp", "MO": "equal", "action": "NOTSENT"},
+               {"field": "COAP_PAYLOAD", "field_length": 32, "dir": "BI",
+                "target_value": 255, "MO": "equal", "action": "NOTSENT"}
+             ]
+           }
+         ],
+         "fragmentation_rules": [
+           {
+             "rule_id": 22, "rule_id_size_bits": 8,
+             "mode": "ACK_ON_ERROR",
+             "dir": "BI",
+             "FCN_SIZE": 6,
+             "MAX_WND_FCN": 62,
+             "WINDOW_SIZE": 2,
+             "DTAG_SIZE": 0
+           }
+         ]
+       }
+     ]
+   }
+
