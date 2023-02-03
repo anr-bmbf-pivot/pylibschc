@@ -45,7 +45,7 @@ jobs:
         python -m pip install tox
     - name: Lint with tox
       if: matrix.python-version == 3.10
-      run: tox -e black,flake8,lint
+      run: tox -e codespell,black,flake8,lint
     - name: Test with tox
       run: |
         pyenv="py$(echo "${{ matrix.python-version }}" | tr -d '.')"
