@@ -34,6 +34,12 @@ def get_version(package):
 class Build(build):
     def finalize_options(self):
         super().finalize_options()
+        from Cython.Build import cythonize
+
+        self.distribution.ext_modules = cythonize(
+            self.distribution.ext_modules,
+            language_level=3,
+        )
 
 
 setup(
@@ -62,8 +68,26 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
     ],
-    setup_requires=["setuptools>=42", "wheel"],
+    setup_requires=["setuptools>=42", "Cython", "wheel"],
     install_requires=list(get_requirements()),
     cmdclass={"build": Build},
+    ext_modules=[
+        Extension(
+            "pylibschc.libschc",
+            [
+                "pylibschc/libschc.pyx",
+                "src/rules.c",
+                "src/libschc/bit_operations.c",
+                "src/libschc/compressor.c",
+                "src/libschc/fragmenter.c",
+                "src/libschc/jsmn.c",
+                "src/libschc/picocoap.c",
+                "src/libschc/schc.c",
+            ],
+            include_dirs=["src/libschc", "src"],
+            extra_compile_args=["-Wno-unused-variable"],
+            define_macros=[],
+        ),
+    ],
     python_requires=">=3.7",
 )
