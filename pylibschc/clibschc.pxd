@@ -204,6 +204,23 @@ cdef extern from "pylogging.h":
     void pylog_init(PyObject *logger)
     int pylog_debug(const char *format, ...)
 
+cdef extern from "libschc/compressor.h":
+    uint8_t schc_compressor_init()
+    schc_compression_rule_t *schc_compress(
+        uint8_t *data,
+        uint16_t total_length,
+        schc_bitarray_t *buf,
+        uint32_t device_id,
+        direction dir
+    )
+    uint16_t schc_decompress(
+        schc_bitarray_t *bit_arr,
+        uint8_t *buf,
+        uint32_t device_id,
+        uint16_t total_length,
+        direction dir
+    )
+
 cdef extern from "libschc/fragmenter.h":
     const int SCHC_FRAG_INPUT
     const int SCHC_ACK_INPUT

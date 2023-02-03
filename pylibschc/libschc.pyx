@@ -585,6 +585,51 @@ cdef class Device:
         self._unregister()
 
 
+class CompressionResult(enum.Enum):
+    UNCOMPRESSED = 0
+    COMPRESSED = 1
+
+
+cdef class CompressorDecompressor:
+    @staticmethod
+    def init():
+        clibschc.schc_compressor_init()
+
+    @staticmethod
+    def compress(data: bytes, device: Device, dir: Direction) -> tuple[CompressionResult, BitArray]:
+        cdef clibschc.schc_compression_rule_t *rule
+        # need at minimum length + 1
+        bit_arr = BitArray(
+            len(data) + clibschc.BITS_TO_BYTES(device.uncompressed_rule_id_size_bits)
+        )
+        rule = clibschc.schc_compress(
+            <uint8_t *>(<char *>data),
+            len(data),
+            &bit_arr._bit_array,
+            device.device_id,
+            <clibschc.direction>dir.value
+        )
+        if rule == NULL:
+            if bit_arr.length == 0:
+                raise ValueError(
+                    f"Unable to compress (maybe wrong device #{device.device_id}?)"
+                )
+            return CompressionResult.UNCOMPRESSED, bit_arr
+        return CompressionResult.COMPRESSED, bit_arr
+
+    @staticmethod
+    def decompress(bit_arr: BitArray, device: Device, dir: Direction) -> bytes:
+        buf = b"\0" * clibschc.MAX_MTU_LENGTH
+        cdef uint16_t length = clibschc.schc_decompress(
+            &bit_arr._bit_array,
+            <uint8_t *>(<char *>buf),
+            device.device_id,
+            bit_arr.length,
+            <clibschc.direction>dir.value
+        )
+        return buf[:length]
+
+
 class FragmentationResult(enum.Enum):
     NO_FRAGMENTATION = clibschc.SCHC_NO_FRAGMENTATION
     SUCCESS = clibschc.SCHC_SUCCESS
