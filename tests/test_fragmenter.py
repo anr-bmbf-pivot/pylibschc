@@ -53,6 +53,14 @@ TEST_PARAMS = [
     (
         pylibschc.fragmenter.FragmentationMode.NO_ACK,
         bytes,
+        b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy "
+        b"eirmod tempor invidunt ut labore et dolore magna aliquyam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.NO_ACK,
+        bytes,
         bytes(
             IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
             / UDP(
@@ -97,6 +105,14 @@ TEST_PARAMS = [
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
         bytes,
+        b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy "
+        b"eirmod tempor invidunt ut labore et dolore magna aliquyam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
+        bytes,
         bytes(
             IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
             / UDP(
@@ -128,6 +144,14 @@ TEST_PARAMS = [
         pylibschc.fragmenter.FragmentationMode.ACK_ON_ERROR,
         bytes,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.ACK_ON_ERROR,
+        bytes,
+        b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy "
+        b"eirmod tempor invidunt ut labore et dolore magna aliquyam",
         False,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
