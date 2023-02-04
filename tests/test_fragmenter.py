@@ -9,6 +9,13 @@ import typing
 
 import pytest
 
+from scapy.all import (  # pylint: disable=no-name-in-module
+    IPv6,
+    UDP,
+)
+from scapy.contrib.coap import CoAP
+
+import pylibschc.compressor
 import pylibschc.fragmenter
 import pylibschc.rules
 
@@ -26,48 +33,125 @@ TEST_PARAMS = [
         pylibschc.fragmenter.FragmentationMode.NO_ACK,
         bytes,
         b"foobar",
+        False,
         pylibschc.fragmenter.FragmentationResult.NO_FRAGMENTATION,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.NO_ACK,
         bytes,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.NO_ACK,
         pylibschc.fragmenter.BitArray,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.NO_ACK,
+        bytes,
+        bytes(
+            IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
+            / UDP(
+                sport=8001,
+                dport=8000,
+            )
+            / CoAP(
+                ver=1,
+                code="GET",
+                type="NON",
+                msg_id=0x23B0,
+                token=b"\x12\x34\x56\x78",
+                options=[("Uri-Path", b"temp")],
+                paymark=b"\xff",
+            )
+            / b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+        ),
+        True,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
         bytes,
         b"foobar",
+        False,
         pylibschc.fragmenter.FragmentationResult.NO_FRAGMENTATION,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
         bytes,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
         pylibschc.fragmenter.BitArray,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.ACK_ALWAYS,
+        bytes,
+        bytes(
+            IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
+            / UDP(
+                sport=8001,
+                dport=8000,
+            )
+            / CoAP(
+                ver=1,
+                code="GET",
+                type="NON",
+                msg_id=0x23B0,
+                token=b"\x12\x34\x56\x78",
+                options=[("Uri-Path", b"temp")],
+                paymark=b"\xff",
+            )
+            / b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+        ),
+        True,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ON_ERROR,
         bytes,
         b"foobar",
+        False,
         pylibschc.fragmenter.FragmentationResult.NO_FRAGMENTATION,
     ),
     (
         pylibschc.fragmenter.FragmentationMode.ACK_ON_ERROR,
         bytes,
         b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+        False,
+        pylibschc.fragmenter.FragmentationResult.SUCCESS,
+    ),
+    (
+        pylibschc.fragmenter.FragmentationMode.ACK_ON_ERROR,
+        bytes,
+        bytes(
+            IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
+            / UDP(
+                sport=8001,
+                dport=8000,
+            )
+            / CoAP(
+                ver=1,
+                code="GET",
+                type="NON",
+                msg_id=0x23B0,
+                token=b"\x12\x34\x56\x78",
+                options=[("Uri-Path", b"temp")],
+                paymark=b"\xff",
+            )
+            / b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam"
+        ),
+        True,
         pylibschc.fragmenter.FragmentationResult.SUCCESS,
     ),
 ]
@@ -165,13 +249,20 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         except queue.Empty:
             assert self.end_tx_called
 
-    @pytest.mark.parametrize("mode, input_type, data, exp_result", TEST_PARAMS)
+    @pytest.mark.parametrize(
+        "mode, input_type, data, compress_data, exp_result", TEST_PARAMS
+    )
     def test_fragmenter_reassembler_threaded(  # pylint: disable=too-many-arguments
-        self, test_rules, mode, input_type, data, exp_result
+        self, test_rules, mode, input_type, data, compress_data, exp_result
     ):
         config = test_rules.deploy()
         device = config.devices[0]
         self.input_type = input_type
+        cr = (  # pylint: disable=invalid-name
+            pylibschc.compressor.CompressorDecompressor(
+                device, direction=pylibschc.rules.Direction.DOWN
+            )
+        )
         self.fragmenter = pylibschc.fragmenter.Fragmenter(
             device=device,
             mtu=MTU,
@@ -192,9 +283,18 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         )
         self.fragmenter.register_send(device, self.send)
         with self.timer_lock:
-            assert self.fragmenter.output(self.input_type(data)) == exp_result
+            if compress_data:
+                res, pkt = cr.output(self.input_type(data))
+                assert res == pylibschc.compressor.CompressionResult.COMPRESSED
+                assert self.fragmenter.output(pkt) == exp_result
+            else:
+                assert self.fragmenter.output(self.input_type(data)) == exp_result
         self.reassemble()
-        assert self.reassembler_queue.get(timeout=(DUTY_CYCLE_MS / 1000) * 10) == data
+        pkt = self.reassembler_queue.get(timeout=(DUTY_CYCLE_MS / 1000) * 10)
+        if compress_data:
+            assert cr.input(pkt) == data
+        else:
+            assert pkt == data
         self.fragmenter.unregister_send(device)
 
 
@@ -275,9 +375,11 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
                 assert res == pylibschc.fragmenter.ReassemblyStatus.COMPLETED
 
     @pytest.mark.asyncio
-    @pytest.mark.parametrize("mode, input_type, data, exp_result", TEST_PARAMS)
+    @pytest.mark.parametrize(
+        "mode, input_type, data, compress_data, exp_result", TEST_PARAMS
+    )
     async def test_fragmenter_reassembler_async(  # pylint: disable=too-many-arguments
-        self, test_rules, mode, input_type, data, exp_result
+        self, test_rules, mode, input_type, data, compress_data, exp_result
     ):
         async def output(buffer):
             return self.fragmenter.output(buffer)
@@ -287,6 +389,11 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         config = test_rules.deploy()
         device = config.devices[0]
         self.input_type = input_type
+        cr = (  # pylint: disable=invalid-name
+            pylibschc.compressor.CompressorDecompressor(
+                device, direction=pylibschc.rules.Direction.DOWN
+            )
+        )
         self.fragmenter = pylibschc.fragmenter.Fragmenter(
             device=device,
             mtu=MTU,
@@ -306,10 +413,18 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             remove_timer_entry=self.remove_timer_entry,
         )
         self.fragmenter.register_send(device, self.send)
-        assert await output(self.input_type(data)) == exp_result
+        if compress_data:
+            res, pkt = cr.output(self.input_type(data))
+            assert res == pylibschc.compressor.CompressionResult.COMPRESSED
+            assert await output(pkt) == exp_result
+        else:
+            assert await output(self.input_type(data)) == exp_result
         await self.reassemble()
         pkt = await asyncio.wait_for(
             self.reassembly_buffer, timeout=(DUTY_CYCLE_MS / 1000) * 10
         )
-        assert pkt == data
+        if compress_data:
+            assert cr.input(pkt) == data
+        else:
+            assert pkt == data
         self.fragmenter.unregister_send(device)
