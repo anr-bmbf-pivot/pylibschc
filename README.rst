@@ -33,14 +33,14 @@ generated using
 
 An example for such a dictionary is provided in
 `./tests/artifacts/rules_example.json <./tests/artifacts/rules_example.json>`_ as JSON, the
-concrete `pydantic`_ model you can find `./pylibschc/rules.py <./pylibschc/rules>`_.
+concrete `pydantic`_ model you can find `./pylibschc/rules.py <./pylibschc/rules.py>`_.
 
 Compression/Decompression
 -------------------------
 
 Both compression and decompression can be achieved by using the `CompressorDecompressor` class from
-the submodule _`pylibschc.compressor <./pylibschc/compressor.py>`_. We use `scapy`_ in our example
-to construct a valid CoAP over IPv6 packet for compression  for which the ``output()`` method is
+the submodule `pylibschc.compressor <./pylibschc/compressor.py>`_. We use `scapy`_ in our example
+to construct a valid CoAP over IPv6 packet for compression for which the ``output()`` method is
 called:
 
     >>> from scapy.all import IPv6, UDP, raw
@@ -49,38 +49,38 @@ called:
     >>>
     >>> comp_dec = pylibschc.compressor.CompressorDecompressor(
     ...     device=config.devices[0],
-    ...     direction=pylibschc.rules.Direction.DOWN
+    ...     direction=pylibschc.rules.Direction.UP
     ... )
     >>> pkt = raw(
-    ...     IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
+    ...     IPv6(hlim=64, src="2001:db8::1", dst="2001:db8:1::2")
     ...     / UDP(
-    ...         sport=61618,
-    ...         dport=5683,
+    ...         sport=5683,
+    ...         dport=61618,
     ...     )
     ...     / CoAP(
     ...         ver=1,
-    ...         code="GET",
+    ...         code="2.05 Content",
     ...         type="NON",
     ...         msg_id=0x23B3,
     ...         token=b"\x32\x3a\xf3\xa3",
-    ...         options=[("Uri-Path", b"temp")],
     ...         paymark=b"\xff",
     ...     )
     ...     / (
-    ...         b'[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","gps":"CYOY","code":"YOY",'
-    ...         b'"country":"CA"}]'
+    ...         b'[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
     ...     )
     ... )
     >>> res, bit_array = comp_dec.output(pkt)
     >>> res
     <CompressionResult.COMPRESSED: 1>
     >>> bit_array.buffer
-    b'\x01@\tm\xec\x89\xa5\x90\x88\xe8\xc4\xb0\x80\x89\xb9\x85\xb5\x94\x88\xe8\x89\r(\xb9 \xb90\xb8\xa1)\xbd\x94\xa4\x811\x95\x8d\xbd\xb5\xd1\x94\xa4\x81!\x95\xb1\xa5\xc1\xbd\xc9\xd0\x88\xb0\x89\x9d\xc1\xcc\x88\xe8\x89\re=d\x88\xb0\x89\x8d\xbd\x91\x94\x88\xe8\x89e=d\x88\xb0\x89\x8d\xbd\xd5\xb9\xd1\xc9\xe4\x88\xe8\x89\r\x04\x89\xf5t'
+    b'\x01\t3#\xaf:5\xb7\xb2&\x96B#\xa3\x12\xc2\x02&\xe6\x16\xd6R#\xa2$4\xa2\xe4\x82\xe4\xc2\xe2\x84\xa6\xf6R\x92\x04\xc6V6\xf6\xd7FR\x92\x04\x86V\xc6\x97\x06\xf7\'B"\xc2&6\xf6FR#\xa2%\x94\xf5\x92"\xc2&6\xf7V\xe7G\'\x92#\xa2$4\x12\'\xd5\xd0'
 
 For decompression, the `input()` method is called:
 
     >>> comp_dec.input(bit_array)
-    b'`\x00\x00\x00\x00k\x11@ \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02 \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\xf0\xb2\x163\x00kz\xc9T\x01m\xec\x89\xa5\x90\x88\xb4temp\xe8\xc4\xb0\x80\x89\xb9\x85\xb5\x94\x88\xe8\x89\r(\xb9 \xb90\xb8\xa1)\xbd\x94\xa4\x811\x95\x8d\xbd\xb5\xd1\x94\xa4\x81!\x95\xb1\xa5\xc1\xbd\xc9\xd0\x88\xb0\x89\x9d\xc1\xcc\x88\xe8\x89\re=d\x88\xb0\x89\x8d\xbd\x91\x94\x88\xe8\x89e=d\x88\xb0\x89\x8d\xbd\xd5\xb9\xd1\xc9\xe4\x88\xe8\x89\r\x04\x89\xf5t'
+    b'`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
+    >>> pkt == comp_dec.input(bit_array)
+    True
 
 Both ``input()`` and ``output()`` take either ``BitArray``- or ``bytes``-typed variables as input.
 

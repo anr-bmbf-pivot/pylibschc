@@ -52,7 +52,7 @@
                {"field": "COAP_TKN", "field_length": 32, "dir": "BI", "MO": "ignore", "action": "VALUESENT"},
                {"field": "COAP_URIPATH", "field_length": 32, "dir": "DOWN",
                 "target_value": "temp", "MO": "equal", "action": "NOTSENT"},
-               {"field": "COAP_PAYLOAD", "field_length": 32, "dir": "BI",
+               {"field": "COAP_PAYLOAD", "field_length": 8, "dir": "BI",
                 "target_value": 255, "MO": "equal", "action": "NOTSENT"}
              ]
            }
