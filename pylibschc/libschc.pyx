@@ -860,7 +860,7 @@ cdef class FragmentationConnection:
     cdef _outer_from_struct(clibschc.schc_fragmentation_t *conn):
         if conn.timer_ctx:
             obj = <FragmentationConnection>conn.timer_ctx
-            if not obj._allocated:
+            if not obj._allocated():
                 for _ in range(obj._in_timer):
                     Py_DECREF(obj)
                     obj._in_timer -= 1
