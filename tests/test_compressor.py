@@ -81,25 +81,33 @@ def test_compressor_reassembler_io_type_error(test_rules):
             bytes(IPv6()),
             id="uncompressed rule, DOWN",
         ),
-        # pytest.param(
-        #     IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
-        #     / UDP(
-        #         sport=8001,
-        #         dport=8000,
-        #     )
-        #     / CoAP(
-        #         code="GET",
-        #         msg_id=0x23B0,
-        #         token=b"\x12\x34\x56\x78",
-        #         options=[("Uri-Path", b"temp")],
-        #         paymark=b"\xff",
-        #     )
-        #     / b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
-        #     pylibschc.compressor.Direction.DOWN,
-        #     ("compression_rules", 1),
-        #     b"0",
-        #     id="2nd rule, CoAP, DOWN",
-        # ),
+        pytest.param(
+            IPv6(hlim=64, src="2001:db8:1::2", dst="2001:db8::1")
+            / UDP(
+                sport=8001,
+                dport=8000,
+            )
+            / CoAP(
+                ver=1,
+                code="GET",
+                type="NON",
+                msg_id=0x23B0,
+                token=b"\x12\x34\x56\x78",
+                options=[("Uri-Path", b"temp")],
+                paymark=b"\xff",
+            )
+            / b"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam",
+            pylibschc.compressor.Direction.DOWN,
+            ("compression_rules", 1),
+            (
+                b"\x40\x00\x48\xec\x04\x8d\x15\x9e\x13\x1b\xdc\x99\x5b\x48\x1a\x5c\x1c"
+                b"\xdd\x5b\x48\x19\x1b\xdb\x1b\xdc\x88\x1c\xda\x5d\x08\x18\x5b\x59\x5d"
+                b"\x0b\x08\x18\xdb\xdb\x9c\xd9\x5d\x19\x5d\x1d\x5c\x88\x1c\xd8\x59\x1a"
+                b"\x5c\x1c\xd8\xda\x5b\x99\xc8\x19\x5b\x1a\x5d\x1c\x8b\x08\x1c\xd9\x59"
+                b"\x08\x19\x1a\x58\x5b\x40"
+            ),
+            id="2nd rule, CoAP, DOWN",
+        ),
         pytest.param(
             IPv6(hlim=64, src="fe80::1", dst="fe80::2")
             / ICMPv6EchoRequest(id=57428, seq=32838, data="Hello World!"),

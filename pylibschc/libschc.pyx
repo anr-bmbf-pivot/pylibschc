@@ -420,33 +420,47 @@ cdef class Device:
 
     @staticmethod
     cdef _set_compression_rule(
-        clibschc.schc_compression_rule_t *c_rule, dict py_rule
+        dict layer_rules, clibschc.schc_compression_rule_t *c_rule, dict py_rule
     ):
-        cdef uint8_t *test = <uint8_t *>malloc(6)
         c_rule.rule_id = py_rule["rule_id"]
         c_rule.rule_id_size_bits = py_rule["rule_id_size_bits"]
         try:
             if py_rule.get("ipv6_rule"):
-                c_rule.ipv6_rule = clibschc.schc_rules_create_ipv6_rule()
-                Device._set_layer_rule(
-                    <clibschc.schc_layer_rule_t *>c_rule.ipv6_rule,
-                    py_rule["ipv6_rule"],
-                    clibschc.IP6_FIELDS
-                )
+                for ptr, rule in layer_rules.items():
+                    if rule == py_rule["ipv6_rule"]:
+                        c_rule.ipv6_rule = <clibschc.schc_ipv6_rule_t *>(<intptr_t>ptr)
+                if not c_rule.ipv6_rule:
+                    c_rule.ipv6_rule = clibschc.schc_rules_create_ipv6_rule()
+                    Device._set_layer_rule(
+                        <clibschc.schc_layer_rule_t *>c_rule.ipv6_rule,
+                        py_rule["ipv6_rule"],
+                        clibschc.IP6_FIELDS
+                    )
+                    layer_rules[<intptr_t>c_rule.ipv6_rule] = py_rule["ipv6_rule"]
             if py_rule.get("udp_rule"):
-                c_rule.udp_rule = clibschc.schc_rules_create_udp_rule()
-                Device._set_layer_rule(
-                    <clibschc.schc_layer_rule_t *>c_rule.udp_rule,
-                    py_rule["udp_rule"],
-                    clibschc.UDP_FIELDS
-                )
+                for ptr, rule in layer_rules.items():
+                    if rule == py_rule["udp_rule"]:
+                        c_rule.udp_rule = <clibschc.schc_udp_rule_t *>(<intptr_t>ptr)
+                if not c_rule.udp_rule:
+                    c_rule.udp_rule = clibschc.schc_rules_create_udp_rule()
+                    Device._set_layer_rule(
+                        <clibschc.schc_layer_rule_t *>c_rule.udp_rule,
+                        py_rule["udp_rule"],
+                        clibschc.UDP_FIELDS
+                    )
+                    layer_rules[<intptr_t>c_rule.udp_rule] = py_rule["udp_rule"]
             if py_rule.get("coap_rule"):
-                c_rule.coap_rule = clibschc.schc_rules_create_coap_rule()
-                Device._set_layer_rule(
-                    <clibschc.schc_layer_rule_t *>c_rule.coap_rule,
-                    py_rule["coap_rule"],
-                    clibschc.COAP_FIELDS
-                )
+                for ptr, rule in layer_rules.items():
+                    if rule == py_rule["coap_rule"]:
+                        c_rule.coap_rule = <clibschc.schc_coap_rule_t *>(<intptr_t>ptr)
+                if not c_rule.coap_rule:
+                    c_rule.coap_rule = clibschc.schc_rules_create_coap_rule()
+                    Device._set_layer_rule(
+                        <clibschc.schc_layer_rule_t *>c_rule.coap_rule,
+                        py_rule["coap_rule"],
+                        clibschc.COAP_FIELDS
+                    )
+                    layer_rules[<intptr_t>c_rule.coap_rule] = py_rule["coap_rule"]
         except ValueError as exc:
             raise ValueError(f"Error on rule {py_rule['rule_id']}: {exc}") from exc
 
@@ -502,8 +516,9 @@ cdef class Device:
                 rule_count = len(rules)
                 context = clibschc.schc_rules_create_compr_ctx(<unsigned>len(rules))
                 try:
+                    layer_rules = {}
                     for i, py_rule in enumerate(rules):
-                        Device._set_compression_rule(context[i], py_rule)
+                        Device._set_compression_rule(layer_rules, context[i], py_rule)
                 except ValueError:
                     clibschc.schc_rules_free_compr_ctx(context, rule_count)
                     raise

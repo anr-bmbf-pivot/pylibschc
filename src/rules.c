@@ -5,6 +5,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "schc.h"
 #include "rules/rule_config.h"
@@ -54,15 +55,30 @@ struct schc_fragmentation_rule_t **schc_rules_create_frag_ctx(unsigned rule_coun
     return ctx;
 }
 
-static void _free_compr_rule(struct schc_compression_rule_t *ctx)
+static int _already_freed(void *rule, void **freed_layer_rules)
 {
-    if (ctx->ipv6_rule) {
+    int i = 0;
+
+    /* determine already free'd pointers */
+    while (freed_layer_rules[i]) {
+        if (rule == freed_layer_rules[i]) {
+            return 1;
+        }
+        i++;
+    }
+    freed_layer_rules[i] = rule;
+    return 0;
+}
+
+static void _free_compr_rule(struct schc_compression_rule_t *ctx, void **freed_layer_rules)
+{
+    if (ctx->ipv6_rule && !_already_freed(ctx->ipv6_rule, freed_layer_rules)) {
         free(ctx->ipv6_rule);
     }
-    if (ctx->udp_rule) {
+    if (ctx->udp_rule && !_already_freed(ctx->udp_rule, freed_layer_rules)) {
         free(ctx->udp_rule);
     }
-    if (ctx->coap_rule) {
+    if (ctx->coap_rule && !_already_freed(ctx->coap_rule, freed_layer_rules)) {
         free(ctx->coap_rule);
     }
     free(ctx);
@@ -70,8 +86,12 @@ static void _free_compr_rule(struct schc_compression_rule_t *ctx)
 
 void schc_rules_free_compr_ctx(struct schc_compression_rule_t **ctx, unsigned rule_count)
 {
+    const size_t freed_layer_rules_size = (sizeof(void *) * rule_count * 3U) + 1;
+    void *freed_layer_rules = malloc(freed_layer_rules_size);
+
+    memset(freed_layer_rules, 0, freed_layer_rules_size);
     for (unsigned i = 0; i < rule_count; i++) {
-        _free_compr_rule(ctx[i]);
+        _free_compr_rule(ctx[i], freed_layer_rules);
     }
     free(ctx);
 }

@@ -319,8 +319,8 @@ def test_rules():
             field_length=2,
             dir="BI",
             target_value=1,
-            MO="mo_ignore",
-            action="VALUESENT",
+            MO="mo_equal",
+            action="NOTSENT",
         ),
         pylibschc.rules.CompressionRuleField(
             field="COAP_TKL",
@@ -332,7 +332,7 @@ def test_rules():
         ),
         pylibschc.rules.CompressionRuleField(
             field="COAP_C",
-            field_length=4,
+            field_length=8,
             dir="BI",
             target_value=3,
             MO="mo_equal",
@@ -394,8 +394,9 @@ def test_rules():
             field="COAP_T",
             field_length=2,
             dir="BI",
-            MO="mo_ignore",
-            action="VALUESENT",
+            target_value=1,
+            MO="mo_equal",
+            action="NOTSENT",
         ),
         pylibschc.rules.CompressionRuleField(
             field="COAP_TKL",

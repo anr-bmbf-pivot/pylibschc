@@ -48,7 +48,6 @@ def test_device_iter():
         devices.append(pylibschc.device.Device(i))
     for device, iter_device in zip(devices, pylibschc.device.Device.iter()):
         assert device == iter_device
-    print("foobar")
 
 
 def test_device_compression_rules():

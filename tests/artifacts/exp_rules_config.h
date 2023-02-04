@@ -127,9 +127,9 @@ static const struct schc_coap_rule_t coap_rule_00 = {
     {
         /* field,           ML, len, pos, dir,  val,                MO,             CDA         */
         { COAP_V,            0,   2,   1, BI,   {0x01},             &mo_equal,      NOTSENT     },
-        { COAP_T,            0,   2,   1, BI,   {0x01},             &mo_ignore,     VALUESENT   },
+        { COAP_T,            0,   2,   1, BI,   {0x01},             &mo_equal,      NOTSENT     },
         { COAP_TKL,          0,   4,   1, BI,   {0x04},             &mo_equal,      NOTSENT     },
-        { COAP_C,            0,   4,   1, BI,   {0x03},             &mo_equal,      NOTSENT     },
+        { COAP_C,            0,   8,   1, BI,   {0x03},             &mo_equal,      NOTSENT     },
         { COAP_MID,         12,  16,   1, BI,   {0x23, 0xb0},       &mo_MSB,        LSB         },
         { COAP_TKN,         24,  32,   1, BI,   {
                 0x21, 0xfa, 0x01, 0x00
@@ -147,7 +147,7 @@ static const struct schc_coap_rule_t coap_rule_01 = {
     {
         /* field,           ML, len, pos, dir,  val,                MO,             CDA         */
         { COAP_V,            0,   2,   1, BI,   {0x01},             &mo_equal,      NOTSENT     },
-        { COAP_T,            0,   2,   1, BI,   {0x00},             &mo_ignore,     VALUESENT   },
+        { COAP_T,            0,   2,   1, BI,   {0x01},             &mo_equal,      NOTSENT     },
         { COAP_TKL,          0,   4,   1, BI,   {0x04},             &mo_equal,      NOTSENT     },
         { COAP_C,            0,   8,   1, UP,   {0x45},             &mo_equal,      NOTSENT     },
         { COAP_C,            0,   8,   1, DOWN, {0x01},             &mo_equal,      NOTSENT     },
