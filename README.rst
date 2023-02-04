@@ -30,8 +30,9 @@ generated using
     >>> with open("rule_config.h", "w", encoding="utf-8") as f:
     ...     written = f.write(rules.to_c_header())
 
-An example for such a dictionary is provided in ./tests/artifacts/rules_example.json as JSON, the
-concrete model you can find ./pylibschc/rules.py.
+An example for such a dictionary is provided in
+`./tests/artifacts/rules_example.json <./tests/artifacts/rules_example.json>`_ as JSON, the
+concrete `pydantic`_ model you can find `./pylibschc/rules.py <./pylibschc/rules>`_.
 
 
 .. _`libSCHC`: https://github.com/imec-idlab/libschc
