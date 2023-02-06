@@ -38,9 +38,9 @@ class BaseFragmenterReassembler(abc.ABC):
     def __init__(  # pylint: disable=too-many-arguments
         self,
         device: pylibschc.device.Device,
-        mtu: int,
         duty_cycle_ms: int,
-        mode: FragmentationMode,
+        mtu: int = None,
+        mode: FragmentationMode = None,
         end_rx: typing.Callable[[object], None] = None,
         end_tx: typing.Callable[[object], None] = None,
         post_timer_task: typing.Callable[
@@ -62,8 +62,16 @@ class BaseFragmenterReassembler(abc.ABC):
 
 
 class Fragmenter(BaseFragmenterReassembler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(
+        self,
+        device: pylibschc.device.Device,
+        duty_cycle_ms: int,
+        mtu: int,
+        mode: FragmentationMode,
+        *args,
+        **kwargs
+    ):
+        super().__init__(device, duty_cycle_ms, mtu, mode, *args, **kwargs)
         self._tx_conn = None
         self._tx_conn_lock = threading.Lock()
 

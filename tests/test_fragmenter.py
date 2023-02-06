@@ -272,9 +272,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         )
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
-            mtu=MTU,
             duty_cycle_ms=DUTY_CYCLE_MS,
-            mode=mode,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
@@ -403,9 +401,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         )
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
-            mtu=MTU,
             duty_cycle_ms=DUTY_CYCLE_MS,
-            mode=mode,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
