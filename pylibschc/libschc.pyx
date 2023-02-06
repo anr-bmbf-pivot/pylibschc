@@ -82,7 +82,7 @@ cdef class BitArray:
     def __eq__(self, other: BitArray) -> bool:
         try:
             return bool(self._eq(other))
-        except:
+        except Exception:
             raise
 
     def __ne__(self, other: BitArray) -> bool:
@@ -250,7 +250,7 @@ class FragmentationMode(EnumByName):
 cdef class Device:
     _devices = {}
 
-    cdef clibschc.schc_device _dev;
+    cdef clibschc.schc_device _dev
 
     def __cinit__(self, device_id):
         self._dev.device_id = device_id
@@ -315,7 +315,7 @@ cdef class Device:
         elif mo == <void *>clibschc.mo_matchmap:
             field["MO"] = MO.MO_MATCHMAP
         else:
-            raise ValueError(f"undefined match operator")
+            raise ValueError("undefined match operator")
 
     @staticmethod
     cdef _comp_layer_to_dict(clibschc.schc_layer_rule_t *layer_rule):
@@ -485,8 +485,10 @@ cdef class Device:
         return py_rule
 
     @staticmethod
-    cdef _set_fragmentation_rule(clibschc.schc_fragmentation_rule_t *c_rule,
-                                      dict py_rule):
+    cdef _set_fragmentation_rule(
+        clibschc.schc_fragmentation_rule_t *c_rule,
+        dict py_rule
+    ):
         c_rule.rule_id = py_rule["rule_id"]
         c_rule.rule_id_size_bits = py_rule["rule_id_size_bits"]
         c_rule.mode = <clibschc.reliability_mode>(<int>py_rule["mode"].value)
@@ -504,7 +506,6 @@ cdef class Device:
                 )
                 res.append(py_rule)
             return res
-
 
         def __set__(self, rules: typing.Optional[typing.Sequence[dict]]):
             if self._dev.compression_context:
@@ -611,7 +612,10 @@ cdef class CompressorDecompressor:
         clibschc.schc_compressor_init()
 
     @staticmethod
-    def compress(data: bytes, device: Device, dir: Direction) -> tuple[CompressionResult, BitArray]:
+    def compress(data: bytes, device: Device, dir: Direction) -> tuple[
+        CompressionResult,
+        BitArray
+    ]:
         cdef clibschc.schc_compression_rule_t *rule
         # need at minimum length + 1
         bit_arr = BitArray(
@@ -669,7 +673,7 @@ cdef class _TimerArgWrapper:
 
 cdef class FragmentationConnection:
     cdef public bool fragmented
-    cdef public int _in_timer;
+    cdef public int _in_timer
     cdef object _py_post_timer_task
     cdef object _py_end_rx
     cdef object _py_end_tx
@@ -715,7 +719,7 @@ cdef class FragmentationConnection:
                     )
                 memset(self._frag_conn, 0, sizeof(self._frag_conn[0]))
                 self._init_ops()
-            except:
+            except Exception:
                 free(self._frag_conn)
                 raise MemoryError("Unable to allocate inner fragmentation connection")
         else:
@@ -735,6 +739,7 @@ cdef class FragmentationConnection:
             free(self._frag_conn)
             self._malloced = False
             self._frag_conn = NULL
+
     def __hash__(self):
         return <intptr_t>(<void *>(self._frag_conn))
 
@@ -875,7 +880,7 @@ cdef class FragmentationConnection:
                 return <uint8_t>FragmentationConnection._device_sends[
                     device_id
                 ](<bytes>data[:length])
-            except:
+            except Exception:
                 raise
         else:
             raise ProcessLookupError(f"No send registered for device #{device_id}")
@@ -886,7 +891,7 @@ cdef class FragmentationConnection:
             obj = FragmentationConnection._outer_from_struct(conn)
             if obj and obj.end_rx:
                 obj.end_rx(obj)
-        except:
+        except Exception:
             raise
 
     @staticmethod
@@ -895,7 +900,7 @@ cdef class FragmentationConnection:
             obj = FragmentationConnection._outer_from_struct(conn)
             if obj and obj.end_tx:
                 obj.end_tx(obj)
-        except:
+        except Exception:
             raise
 
     @staticmethod
@@ -908,7 +913,7 @@ cdef class FragmentationConnection:
                 if obj._in_timer:
                     Py_DECREF(obj)
                     obj._in_timer -= 1
-        except:
+        except Exception:
             raise
 
     @staticmethod
@@ -925,11 +930,12 @@ cdef class FragmentationConnection:
                     # only call if schc_fragmentation_schc_t is still allocated
                     timer_task(<void *>(<intptr_t>arg.ptr_int))
                 else:
-                    logger.info("Timer fired with an unallocated fragmentation connection")
+                    logger.info(
+                        "Timer fired with an unallocated fragmentation connection"
+                    )
                 if obj._in_timer:
                     Py_DECREF(obj)
                     obj._in_timer -= 1
-
 
             Py_INCREF(obj)
             obj._in_timer += 1
@@ -1006,7 +1012,7 @@ cdef class FragmentationConnection:
             if res == clibschc.SCHC_FAILURE:
                 raise MemoryError(f"Unable to fragment on {self} due to resource issue")
             return res
-        except:
+        except Exception:
             raise
 
     def fragment(self) -> FragmentationResult:
@@ -1020,7 +1026,7 @@ cdef class FragmentationConnection:
         obj._init_ops()
 
     cdef _input(self, char *buf, uint16_t length):
-        cdef clibschc.schc_fragmentation_t *conn_ptr;
+        cdef clibschc.schc_fragmentation_t *conn_ptr
         try:
             assert self._frag_conn, "FragmentationConnection not properly initialized"
             if not self._frag_conn.device_id:
@@ -1036,7 +1042,9 @@ cdef class FragmentationConnection:
             )
             if conn_ptr == NULL:
                 buffer = <bytes>buf[:length]
-                raise MemoryError(f"Unable to allocate a RX connection for {buffer.hex()}")
+                raise MemoryError(
+                    f"Unable to allocate a RX connection for {buffer.hex()}"
+                )
             elif self._frag_conn != conn_ptr:
                 res = FragmentationConnection(_malloc_inner=False)
                 conn_ptr.post_timer_task = self._c_post_timer_task
@@ -1053,12 +1061,12 @@ cdef class FragmentationConnection:
                 else:
                     res.fragmented = True
             else:  # buf was an ACK
-                # this is probably already self, but one never knows, so rather get outer from
-                # conn_ptr
+                # this is probably already self, but one never knows, so rather get
+                # outer from conn_ptr
                 res = FragmentationConnection._outer_from_struct(conn_ptr)
                 self.fragmented = False
             return res
-        except:
+        except Exception:
             raise
 
     def input(self, buffer: [bytes, BitArray]):
@@ -1066,13 +1074,15 @@ cdef class FragmentationConnection:
             if isinstance(buffer, BitArray):
                 return self._input(_bit_array_ptr(buffer), buffer.length)
             return self._input(<char *>buffer, len(buffer))
-        except:
+        except Exception:
             raise
 
     cdef int8_t _reassemble(self):
         try:
             assert self._frag_conn, "FragmentationConnection not properly initialized"
-            assert self._frag_conn.fragmentation_rule, f"No fragmentation rule found for {self}"
+            assert self._frag_conn.fragmentation_rule, (
+                f"No fragmentation rule found for {self}"
+            )
             res = clibschc.schc_reassemble(self._frag_conn)
             if (  # last fragment received with NO_ACK
                 res
@@ -1083,7 +1093,7 @@ cdef class FragmentationConnection:
                     self._py_end_rx(self)
                 self.reset()
             return res
-        except:
+        except Exception:
             raise
 
     def reassemble(self) -> int:
