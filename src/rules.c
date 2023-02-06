@@ -93,6 +93,7 @@ void schc_rules_free_compr_ctx(struct schc_compression_rule_t **ctx, unsigned ru
     for (unsigned i = 0; i < rule_count; i++) {
         _free_compr_rule(ctx[i], freed_layer_rules);
     }
+    free(freed_layer_rules);
     free(ctx);
 }
 
