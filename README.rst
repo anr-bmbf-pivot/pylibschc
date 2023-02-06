@@ -7,7 +7,12 @@ This provides a pythonic wrapper for `libSCHC`_.
 Installation
 ============
 
+You can use ``pip`` to install the package once you cloned this repo:
+
 .. code:: bash
+
+   git clone https://github.com/anr-bmbf-pivot/pylibschc.git
+   cd pylibschc
    pip install .
 
 Usage
