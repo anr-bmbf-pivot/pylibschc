@@ -167,8 +167,6 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         self.timer_lock = threading.Lock()
 
     def teardown_method(self, method):  # pylint: disable=unused-argument
-        # assert self.fragmenter_queue.empty()
-        # assert self.reassembler_queue.empty()
         for timer in list(self.timers.values()):
             # wait for threads to finish to free all resources
             if timer.is_alive():  # pragma: no cover
