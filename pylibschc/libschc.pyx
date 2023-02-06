@@ -759,7 +759,11 @@ cdef class FragmentationConnection:
             ],
             None
         ]:
-            if self._allocated() and self._py_post_timer_task is not None:
+            if (
+                self._allocated()
+                and (<void *>self._py_post_timer_task) is not NULL
+                and self._py_post_timer_task is not None
+            ):
                 return self._py_post_timer_task
             return None
 
@@ -880,19 +884,11 @@ cdef class FragmentationConnection:
     def _dec_in_timer(self):
         self.__dec_in_timer()
 
-    cdef void __unref(self):
-        for _ in range(self._in_timer):
-            self.__dec_in_timer()
-
-    def _unref(self):
-        self.__unref()
-
     @staticmethod
     cdef _outer_from_struct(clibschc.schc_fragmentation_t *conn):
         if conn.timer_ctx:
             obj = <FragmentationConnection>conn.timer_ctx
             if not obj._allocated():
-                obj._unref()
                 return None
             return obj
         return None

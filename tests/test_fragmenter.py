@@ -357,7 +357,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
     def remove_timer_entry(self, conn: pylibschc.fragmenter.FragmentationConnection):
         if conn in self.timer_tasks:
             self.timer_tasks[conn].cancel()
-            del self.timer_tasks[conn]
+            self.timer_tasks.pop(conn)
 
     async def reassemble(self):
         async def inp(handler, buffer):
