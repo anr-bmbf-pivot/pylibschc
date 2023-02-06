@@ -25,6 +25,9 @@ dictionary (e.g. generated from a JSON or YAML file):
     ...    rules = Config(**json.load(f))
     ...    config = rules.deploy()
 
+**Do not forget** to call ``rules.deploy()`` if you change any rules to re-deploy the rules with
+libSCHC.
+
 The header file for the rules, so they can be used with libSCHC on an embedded device, can be
 generated using
 
@@ -87,7 +90,93 @@ Both ``input()`` and ``output()`` take either ``BitArray``- or ``bytes``-typed v
 Fragmentation/Reassembly
 ------------------------
 
-TBD
+For fragmentation, call the ``output()`` method of a ``pylibschc.fragmenter.Fragmenter`` object.
+To actually send then from the, a send function needs to be registered for the device of the
+fragmenter.
+For reassembly, call the ``input()`` method of a ``pylibschc.fragmenter.Reassembler`` object.
+Acknowledgements can be handled by the ``input()`` method of the ``pylibschc.fragmenter.Fragmenter``
+object. Again, both ``input()`` and ``output()`` take either ``BitArray``- or ``bytes``-typed
+variables as input.
+
+    >>> import asyncio
+    >>> import logging
+    >>> import pylibschc.fragmenter
+    >>>
+    >>> fragmenter_queue = None
+    >>> loop = None
+    >>> timer_tasks = {}
+    >>> reassembly_buffer = None
+    >>>
+    >>> def send(buffer):
+    ...     fragmenter_queue.put_nowait({"cmd": "send", "data": buffer})
+    ...     return len(buffer)
+    ...
+    >>> def post_timer_task(conn, timer_task, delay_sec, arg):
+    ...     if conn in timer_tasks:
+    ...         remove_timer_entry(conn)
+    ...     timer_tasks[conn] = loop.call_later(delay_sec, timer_task, arg)
+    ...
+    >>> def remove_timer_entry(conn):
+    ...     if conn in timer_tasks:
+    ...         timer_tasks[conn].cancel()
+    ...         del timer_tasks[conn]
+    ...
+    >>> def end_rx(conn):
+    ...     reassembly_buffer.set_result(conn.mbuf)
+    ...
+    >>> def end_tx(conn):
+    ...     fragmenter_queue.put_nowait({"cmd": "end_tx"})
+    ...
+    >>> async def asyncized_input(reassembler, buffer):
+    ...     return reassembler.input(buffer)
+    ...
+    >>> async def fragment_and_reassemble():
+    ...     # just making sure these variables are initialized in the same loop
+    ...     global fragmenter_queue
+    ...     global loop
+    ...     global reassembly_buffer
+    ...
+    ...     fragmenter_queue = asyncio.Queue()
+    ...     loop = asyncio.get_running_loop()
+    ...     reassembly_buffer = loop.create_future()
+    ...     fragmenter = pylibschc.fragmenter.Fragmenter(
+    ...         device=config.devices[0],
+    ...         mtu=60,
+    ...         duty_cycle_ms=500,
+    ...         mode=pylibschc.fragmenter.FragmentationMode.NO_ACK,
+    ...         post_timer_task=post_timer_task,
+    ...         end_tx=end_tx,
+    ...         remove_timer_entry=remove_timer_entry,
+    ...     )
+    ...     fragmenter.register_send(config.devices[0], send)
+    ...     reassembler = pylibschc.fragmenter.Reassembler(
+    ...         device=config.devices[0],
+    ...         duty_cycle_ms=500,
+    ...         post_timer_task=post_timer_task,
+    ...         end_rx=end_rx,
+    ...         remove_timer_entry=remove_timer_entry,
+    ...     )
+    ...     print("fragmenter.output ->", fragmenter.output(bit_array))
+    ...     cmd = {}
+    ...     while cmd.get("cmd") != "end_tx":
+    ...         cmd = await asyncio.wait_for(fragmenter_queue.get(), timeout=2)
+    ...         if cmd["cmd"] == "send":
+    ...             print(
+    ...                 "reassembler.input ->",
+    ...                 await asyncized_input(reassembler, cmd["data"])
+    ...             )
+    ...     return await asyncio.wait_for(reassembly_buffer, timeout=5)
+    ...
+    >>> asyncio.run(fragment_and_reassemble()) == bit_array.buffer
+    fragmenter.output -> FragmentationResult.SUCCESS
+    reassembler.input -> ReassemblyStatus.ONGOING
+    reassembler.input -> ReassemblyStatus.COMPLETED
+    True
+
+While this example uses `asyncio` to parallelize timer calls, any method to establish concurrency
+can be used (see `./tests/test_fragmenter.py <./tests/test_fragmenter.py>`_ for an example using the
+`threading` module) as long as the access to libSCHC (including calls to timer tasks) is
+synchronized.
 
 .. _`libSCHC`: https://github.com/imec-idlab/libschc
 .. _`pydantic`: https://pydantic.dev
