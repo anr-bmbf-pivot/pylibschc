@@ -219,7 +219,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
                 return timer_task(the_arg)
 
         if conn in self.timers:
-            self.remove_timer_entry(conn)
+            self.timers[conn].cancel()
         self.timers[conn] = threading.Timer(delay_sec, _timer_task, args=(arg,))
         self.timers[conn].name = f"Timer-{conn}"
         self.timers[conn].start()
@@ -344,7 +344,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             return timer_task(the_arg)
 
         if conn in self.timer_tasks:
-            self.remove_timer_entry(conn)
+            self.timer_tasks[conn].cancel()
         self.timer_tasks[conn] = self.loop.call_later(delay_sec, _timer_task, arg)
 
     def end_rx(self, conn: pylibschc.fragmenter.FragmentationConnection):

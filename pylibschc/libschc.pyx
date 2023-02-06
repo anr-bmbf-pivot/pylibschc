@@ -673,7 +673,6 @@ cdef class _TimerArgWrapper:
 
 cdef class FragmentationConnection:
     cdef public bool fragmented
-    cdef public int _in_timer
     cdef object _py_post_timer_task
     cdef object _py_end_rx
     cdef object _py_end_tx
@@ -681,6 +680,7 @@ cdef class FragmentationConnection:
     cdef object _bit_arr
     cdef clibschc.schc_fragmentation_t *_frag_conn
     cdef uint8_t _malloced
+    cdef uint8_t _in_timer
     _device_sends = {}
 
     def __cinit__(
@@ -759,7 +759,7 @@ cdef class FragmentationConnection:
             ],
             None
         ]:
-            if self._py_post_timer_task is not None:
+            if self._allocated() and self._py_post_timer_task is not None:
                 return self._py_post_timer_task
             return None
 
@@ -786,7 +786,7 @@ cdef class FragmentationConnection:
         def __get__(self) -> typing.Optional[
             typing.Callable[['FragmentationConnection'], None]
         ]:
-            if self._py_end_rx is not None:
+            if self._allocated() and self._py_end_rx is not None:
                 return self._py_end_rx
             return None
 
@@ -803,7 +803,7 @@ cdef class FragmentationConnection:
         def __get__(self) -> typing.Optional[
             typing.Callable[['FragmentationConnection'], None]
         ]:
-            if self._py_end_tx is not None:
+            if self._allocated() and self._py_end_tx is not None:
                 return self._py_end_tx
             return None
 
@@ -820,7 +820,7 @@ cdef class FragmentationConnection:
         def __get__(self) -> typing.Optional[
             typing.Callable[['FragmentationConnection'], None]
         ]:
-            if self._py_remove_timer_entry is not None:
+            if self._allocated() and self._py_remove_timer_entry is not None:
                 return self._py_remove_timer_entry
             return None
 
@@ -861,14 +861,38 @@ cdef class FragmentationConnection:
     def _allocated(self):
         return self._frag_conn is not NULL and self._frag_conn.timer_ctx is not NULL
 
+    def _is_in_timer(self):
+        return self._in_timer > 0
+
+    cdef void __inc_in_timer(self):
+        if self._in_timer < 255:
+            Py_INCREF(self)
+            inc(self._in_timer)
+
+    def _inc_in_timer(self):
+        self.__inc_in_timer()
+
+    cdef void __dec_in_timer(self):
+        if self._in_timer > 0:
+            Py_DECREF(self)
+            dec(self._in_timer)
+
+    def _dec_in_timer(self):
+        self.__dec_in_timer()
+
+    cdef void __unref(self):
+        for _ in range(self._in_timer):
+            self.__dec_in_timer()
+
+    def _unref(self):
+        self.__unref()
+
     @staticmethod
     cdef _outer_from_struct(clibschc.schc_fragmentation_t *conn):
         if conn.timer_ctx:
             obj = <FragmentationConnection>conn.timer_ctx
             if not obj._allocated():
-                for _ in range(obj._in_timer):
-                    Py_DECREF(obj)
-                    obj._in_timer -= 1
+                obj._unref()
                 return None
             return obj
         return None
@@ -910,9 +934,7 @@ cdef class FragmentationConnection:
             if obj:
                 if obj.remove_timer_entry:
                     obj.remove_timer_entry(obj)
-                if obj._in_timer:
-                    Py_DECREF(obj)
-                    obj._in_timer -= 1
+                obj._dec_in_timer()
         except Exception:
             raise
 
@@ -926,19 +948,16 @@ cdef class FragmentationConnection:
         obj = FragmentationConnection._outer_from_struct(conn)
         if obj and obj.post_timer_task:
             def _timer_task_wrapper(arg: _TimerArgWrapper):
-                if obj._allocated():
+                if obj._allocated() and obj._is_in_timer():
                     # only call if schc_fragmentation_schc_t is still allocated
                     timer_task(<void *>(<intptr_t>arg.ptr_int))
                 else:
                     logger.info(
                         "Timer fired with an unallocated fragmentation connection"
                     )
-                if obj._in_timer:
-                    Py_DECREF(obj)
-                    obj._in_timer -= 1
+                obj._dec_in_timer()
 
-            Py_INCREF(obj)
-            obj._in_timer += 1
+            obj._inc_in_timer()
             obj.post_timer_task(
                 obj,
                 _timer_task_wrapper,
