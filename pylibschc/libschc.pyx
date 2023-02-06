@@ -1061,9 +1061,7 @@ cdef class FragmentationConnection:
                 else:
                     res.fragmented = True
             else:  # buf was an ACK
-                # this is probably already self, but one never knows, so rather get
-                # outer from conn_ptr
-                res = FragmentationConnection._outer_from_struct(conn_ptr)
+                res = self
                 self.fragmented = False
             return res
         except Exception:
