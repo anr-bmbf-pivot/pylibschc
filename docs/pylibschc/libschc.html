@@ -264,7 +264,7 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressionResult">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">CompressionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressionResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>An enumeration.</p>
+<p>Result-part of <a class="reference internal" href="#pylibschc.libschc.CompressorDecompressor.compress" title="pylibschc.libschc.CompressorDecompressor.compress"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CompressorDecompressor.compress()</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressionResult.COMPRESSED">
 <span class="sig-name descname"><span class="pre">COMPRESSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.CompressionResult.COMPRESSED" title="Permalink to this definition">¶</a></dt>
@@ -281,20 +281,62 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Compressor/Decompressor.</p>
+<p>Wraps functionality of <code class="docutils literal notranslate"><span class="pre">compressor.h</span></code> of libSCHC.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.compress">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.compress" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compress <code class="docutils literal notranslate"><span class="pre">data</span></code> for <code class="docutils literal notranslate"><span class="pre">device</span></code> in <code class="docutils literal notranslate"><span class="pre">dir</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code>) – The data to compress.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="#pylibschc.libschc.Device" title="pylibschc.libschc.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a>) – The device of which to use the compression context.</p></li>
+<li><p><strong>dir</strong> (<a class="reference internal" href="#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Direction</span></code></a>) – The direction <code class="docutils literal notranslate"><span class="pre">data</span></code> is sent in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether the packet was compressed or the uncompressed rule was used
+and the compressed packet as a <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Tuple`[:class:`CompressionResult</span></code>, <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.decompress">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decompress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.decompress" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Decompress <code class="docutils literal notranslate"><span class="pre">data</span></code> for <code class="docutils literal notranslate"><span class="pre">device</span></code> in <code class="docutils literal notranslate"><span class="pre">dir</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code>) – The data to decompress.</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="#pylibschc.libschc.Device" title="pylibschc.libschc.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a>) – The device of which to use the compression context.</p></li>
+<li><p><strong>dir</strong> (<a class="reference internal" href="#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Direction</span></code></a>) – The direction <code class="docutils literal notranslate"><span class="pre">data</span></code> is sent in.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The decompressed packet.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.init">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.init" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize compressor/decompressor module in libSCHC.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -317,7 +359,15 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.compression_rules">
 <span class="sig-name descname"><span class="pre">compression_rules</span></span><a class="headerlink" href="#pylibschc.libschc.Device.compression_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+<p>The compression rules for this device. Setting this re-allocates the compression
+context of the wrapped <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_device`.</span> <span class="pre">Setting</span> <span class="pre">it</span> <span class="pre">to</span> <span class="pre">None</span> <span class="pre">or</span> <span class="pre">an</span> <span class="pre">empty</span>
+<span class="pre">list</span> <span class="pre">sets</span> <span class="pre">the</span> <span class="pre">compression</span> <span class="pre">context</span> <span class="pre">to</span> <span class="pre">``NULL</span></code>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.device_id">
@@ -333,7 +383,15 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.fragmentation_rules">
 <span class="sig-name descname"><span class="pre">fragmentation_rules</span></span><a class="headerlink" href="#pylibschc.libschc.Device.fragmentation_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[dict]</p>
+</dd>
+</dl>
+<p>The fragmentation rules for this device. Setting this re-allocates the
+fragmentation context of the wrapped <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_device</span></code>. Setting it to None
+or an empty list sets the fragmentation context to <code class="docutils literal notranslate"><span class="pre">NULL</span></code>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.get">
@@ -358,17 +416,32 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.uncompressed_rule_id">
 <span class="sig-name descname"><span class="pre">uncompressed_rule_id</span></span><a class="headerlink" href="#pylibschc.libschc.Device.uncompressed_rule_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p>The uncompressed rule id. This wraps the <code class="docutils literal notranslate"><span class="pre">uncomp_rule_id</span></code> member of the
+<code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_device</span></code> struct type.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.uncompressed_rule_id_size_bits">
 <span class="sig-name descname"><span class="pre">uncompressed_rule_id_size_bits</span></span><a class="headerlink" href="#pylibschc.libschc.Device.uncompressed_rule_id_size_bits" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p>The uncompressed rule id size in bits. This wraps the
+<code class="docutils literal notranslate"><span class="pre">uncomp_rule_id_size_bits</span></code> member of the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_device</span></code> struct type.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.Device.unregister">
 <span class="sig-name descname"><span class="pre">unregister</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.Device.unregister" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Removes this device from the rule configuration of libSCHC.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -506,7 +579,7 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>An enumeration.</p>
+<p>The result of calling <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.fragment" title="pylibschc.libschc.FragmentationConnection.fragment"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.fragment()</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.ACK_INPUT">
 <span class="sig-name descname"><span class="pre">ACK_INPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.ACK_INPUT" title="Permalink to this definition">¶</a></dt>
