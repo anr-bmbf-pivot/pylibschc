@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+"""Representation and configuration of rules."""
+
 import argparse
 import ipaddress
 import struct
@@ -40,15 +42,23 @@ __email__ = "m.lenders@fu-berlin.de"
 
 # pylint: disable=too-many-lines
 class BaseModel(PydanticBaseModel):
+    """Overrides pydantic to default to case-insensitivity:"""
+
     # pylint: disable=too-few-public-methods
     class Config:
+        """Config meta-class for :class:`BaseModel`."""
+
         case_sensitive = False
 
 
 class BaseRule(BaseModel):
+    """Base Rule definition."""
+
     # pylint: disable=too-few-public-methods
     rule_id: int
+    """The Rule ID."""
     rule_id_size_bits: conint(gt=0, le=32)
+    """Size of Rule ID in bits."""
 
     @validator("rule_id_size_bits", allow_reuse=True)
     @classmethod
@@ -62,14 +72,24 @@ class BaseRule(BaseModel):
 
 
 class CompressionRuleField(BaseModel):
+    """Field descriptor for a compression rule."""
+
     # order is different from C-definition to ensure validation order
     field: HeaderFieldID
+    """Field identifier."""
     field_length: conint(ge=0x00, le=MAX_FIELD_LENGTH * 8)
+    """Field length in bits."""
     field_pos: conint(ge=0x00, le=0xFF) = 1
+    """Field position, i.e., when there are multiple occurrences of this field, which
+    occurrence this field descriptor applies to (default: 1)."""
     dir: Direction
+    """Direction indicator for this field descriptor."""
     MO: MO
+    """Matching operator for this field."""
     action: CDA
+    """Compression/decompression action for this field."""
     MO_param_length: conint(ge=0x00, le=0xFF) = 0
+    """Parameter length for the matching operator (default: 0)."""
     target_value: typing.Union[
         typing.List[
             typing.Union[
@@ -82,10 +102,25 @@ class CompressionRuleField(BaseModel):
         ipaddress.IPv6Interface,
         conbytes(max_length=MAX_FIELD_LENGTH),
     ] = b""
+    """Target value for the matching operator (default: 0)."""
 
     @validator("MO_param_length", allow_reuse=True, always=True, pre=False)
     @classmethod
     def check_mo_param_length(cls, value, values):
+        """Validator to check if :attr:`CompressionRuleField.MO_param_length`
+        is lesser or equal to :attr:`CompressionRuleField.field_length` when
+        :attr:`CompressionRuleField.MO` is :attr:`pylibschc.libschc.MO.MSB` or
+        :attr:`CompressionRuleField.action` is :attr:`pylibschc.libschc.CDA.LSB`
+
+        :param value: The value to validate
+        :param values: name-to-value mapping of previously validated fields
+        :raise ValueError: When :attr:`CompressionRuleField.MO` is
+            :attr:`pylibschc.libschc.MO.MSB` or :attr:`CompressionRuleField.action`
+            is :attr:`pylibschc.libschc.CDA.LSB` but
+            :attr:`CompressionRuleField.MO_param_length` is greater than
+            :attr:`CompressionRuleField.field_length`
+        :return: The validated value
+        """
         if values.get("MO") == MO.MSB or values.get("action") == CDA.LSB:
             if value > values.get("field_length", 0):
                 raise ValueError(

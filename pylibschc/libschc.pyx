@@ -2,6 +2,58 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+"""libSCHC Cython wrapper.
+
+.. py:data:: MAX_FIELD_LENGTH
+   :type: int
+
+   Maximum length in bytes for a
+   :attr:`pylibschc.rules.CompressionRuleField.target_value`.
+   Exposes :c:macro:`MAX_FIELD_LENGTH` to ``pylibschc``.
+
+.. py:data:: IP6_FIELDS
+   :type: int
+
+   Maximum number of fields for a :attr:`pylibschc.rules.CompressionRule.ipv6_rule`.
+   Exposes :c:macro:`IP6_FIELDS` to ``pylibschc``.
+
+.. py:data:: UDP_FIELDS
+   :type: int
+
+   Maximum number of fields for a :attr:`pylibschc.rules.CompressionRule.udp_rule`.
+   Exposes :c:macro:`UDP_FIELDS` to ``pylibschc``.
+
+.. py:data:: COAP_FIELDS
+   :type: int
+
+   Maximum number of fields for a :attr:`pylibschc.rules.CompressionRule.coap_rule`.
+   Exposes :c:macro:`COAP_FIELDS` to ``pylibschc``.
+
+.. py:data:: MAX_MTU_LENGTH
+   :type: int
+
+   The maximum transmission unit of the underlying technology.
+   Exposes :c:macro:`MAX_MTU_LENGTH` to ``pylibschc``.
+
+.. py:data:: FCN_SIZE_BITS
+   :type: int
+
+   Maximum size of the SCHC FCN field in bits.
+   Exposes :c:macro:`FCN_SIZE_BITS` to ``pylibschc``.
+
+.. py:data:: DTAG_SIZE_BITS
+   :type: int
+
+   Maximum size of the SCHC DTAG field in bits.
+   Exposes :c:macro:`DTAG_SIZE_BITS` to ``pylibschc``.
+
+.. py:data:: BITMAP_SIZE_BITS
+   :type: int
+
+   Maximum size of the SCHC acknowledgment bitmap in bits.
+   The value is 8 multiplied with :c:macro:`BITMAP_SIZE_BYTES`.
+"""
+
 import enum
 import logging
 import typing
@@ -36,10 +88,20 @@ BITMAP_SIZE_BITS = clibschc.BITMAP_SIZE_BYTES * 8
 logger = logging.getLogger(__name__)
 clibschc.pylog_init(<PyObject *>logger)
 
-
 cdef class BitArray:
+    """A bit-based array. Wraps the ``schc_bitarray_t`` type of libSCHC.
+
+    :param n: Input to the :class:`BitArray`.
+        If the type of ``n`` is :class:`bytes` those bytes will be copied into
+        :attr:`BitArray.buffer`, the maximum size then is the length of ``n``. If the
+        type of ``n`` is :class:`int`, an empty :class:`BitArray` of maximum size
+        ``n`` is created.
+    :type n: :class:`typing.Union[bytes, int]`
+    :raise MemoryError: if internal memory for `BitArray.buffer` can not be allocated.
+    """
     cdef clibschc.schc_bitarray_t _bit_array
-    cdef size_t size
+    cdef public size_t size
+    """Maximum size in bytes of the memory used for :attr:`BitArray.buffer`."""
 
     def __cinit__(self, n: typing.Union[bytes, int]):
         self.size = len(n) if isinstance(n, bytes) else n
@@ -89,6 +151,11 @@ cdef class BitArray:
         return not (self == other)
 
     property buffer:
+        """
+        :type: bytes
+
+        The underlying bytes buffer of the bit array.
+        """
         def __get__(self) -> bytes:
             if self._bit_array.ptr is NULL:
                 return b""
@@ -120,24 +187,53 @@ cdef class BitArray:
             self._bit_array.bit_len = 0
 
     property offset:
+        """Offset in bits within :attr:`BitArray.buffer`."""
         def __get__(self) -> int:
             return self._bit_array.offset
 
     property padding:
+        """Padding in bits after :attr:`BitArray.buffer`."""
         def __get__(self) -> int:
             return self._bit_array.padding
 
     property length:
+        """Length of :attr:`BitArray.buffer` in bytes.
+
+        If :attr:`BitArray.bit_length` overflows a byte, this value will be
+        (:attr:`BitArray.bit_length` // 8) + 1, otherwise it will be
+        :attr:`BitArray.bit_length` // 8.
+        """
         def __get__(self) -> int:
             return self._bit_array.len
 
     property bit_length:
+        """Length of :attr:`BitArray.buffer` in bits."""
         def __get__(self) -> int:
             return self._bit_array.bit_len
 
     def get_bits(self, pos: int, length: int) -> int:
-        if length > 32:
-            raise ValueError("`length` must be lesser or equal to 32")
+        """Get at a maximum 32 bits from the :class:`BitArray` as integer.
+
+        :param pos: Position of the first bit in :attr:`BitArray.buffer`. Must be at
+            least 0 and not exceed :attr:`BitArray.bit_length`.
+        :type pos: :class:`int`
+        :param length: Number of bits to read from :attr:`BitArray.buffer` as of
+            ``pos``. Must be between 0 and 32.
+        :type length: :class:`int`
+        :raise ValueError: If ``length`` is lesser than 0 or greater than 32.
+        :raise ValueError: If ``pos`` is lesser than 0.
+        :raise ValueError: If ``pos + length`` is greater than
+            :attr:`BitArray.bit_length`.
+        :return: the bits from ``pos`` to ``pos + length`` (not inclusive) in
+            :attr:`BitArray.buffer` converted to an integer.
+        :rtype: :class:`int`
+        """
+        if length < 0 or length > 32:
+            raise ValueError(
+                "`length` must be greater or equal to 0 and lesser or equal to 32"
+            )
+        if pos < 0:
+            raise ValueError("`pos` must be greater or equal to 0")
         if (<uint32_t>pos + <uint8_t>length) > self._bit_array.bit_len:
             raise ValueError(
                 f"`pos + length` overflows buffer size ({self._bit_array.bit_len})"
@@ -145,12 +241,31 @@ cdef class BitArray:
         return clibschc.get_bits(self._bit_array.ptr, pos, length)
 
     def copy_bits(self, pos: int, data: bytes, length: int) -> int:
+        """Copy bits to :attr:`BitArray.buffer`.
+
+        :param pos: Position of the first bit in :attr:`BitArray.buffer`. Must be at
+            least 0 and not exceed :attr:`BitArray.bit_length`.
+        :type pos: :class:`int`
+        :param data: Data to copy to :attr:`BitArray.buffer`.
+        :type data: :class:`bytes`
+        :param length: Number of bits to copy from ``data`` to :attr:`BitArray.buffer`.
+            Must be at least 0 and not exceed :attr:`BitArray.bit_length`.
+        :type length: :class:`int`
+        :raise ValueError: If ``length`` is lesser than 0.
+        :raise ValueError: If ``pos`` is lesser than 0.
+        :raise ValueError: If ``pos + length`` is greater than
+            :attr:`BitArray.bit_length`.
+        """
+        if length < 0:
+            raise ValueError("`length` must be greater or equal to 0")
+        if pos < 0:
+            raise ValueError("`pos` must be greater or equal to 0")
         if (<uint32_t>pos + <uint8_t>length) > self._bit_array.bit_len:
             raise ValueError(
                 f"`pos + length` overflows buffer size ({self._bit_array.bit_len})"
             )
         clibschc.clear_bits(self._bit_array.ptr, pos, length)
-        return clibschc.copy_bits(
+        clibschc.copy_bits(
             self._bit_array.ptr, pos, <uint8_t *>(<char *>data), 0, length
         )
 
@@ -160,6 +275,8 @@ cdef char *_bit_array_ptr(BitArray bit_array):
 
 
 class HeaderFieldID(EnumByName):
+    """Header field identifier for field descriptors of compression rules.
+    Wraps the ``COAPO_fields`` and ``schc_header_fields`` types."""
     IP6_V = clibschc.IP6_V
     IP6_TC = clibschc.IP6_TC
     IP6_FL = clibschc.IP6_FL
@@ -200,12 +317,14 @@ class HeaderFieldID(EnumByName):
 
 
 class Direction(EnumByName):
+    """Direction indicator for rules. Wraps the ``direction`` type."""
     UP = clibschc.UP
     DOWN = clibschc.DOWN
     BI = clibschc.BI
 
 
 class MO(EnumByName):
+    """Matching operator for compression rules."""
     EQUAL = 0
     MO_EQUAL = 0
     IGNORE = 1
@@ -230,6 +349,8 @@ cdef void _set_mo_op(clibschc.schc_field *field, int mo):
 
 
 class CDA(EnumByName):
+    """Compression/Decompression actions for compression rules.
+    Wraps the ``CDA`` type."""
     NOTSENT = clibschc.NOTSENT
     VALUESENT = clibschc.VALUESENT
     MAPPINGSENT = clibschc.MAPPINGSENT
@@ -241,6 +362,7 @@ class CDA(EnumByName):
 
 
 class FragmentationMode(EnumByName):
+    """SCHC F/R Modes. Wraps the ``reliability_mode`` type."""
     ACK_ALWAYS = clibschc.ACK_ALWAYS
     ACK_ON_ERROR = clibschc.ACK_ON_ERROR
     NO_ACK = clibschc.NO_ACK
@@ -248,11 +370,18 @@ class FragmentationMode(EnumByName):
 
 
 cdef class Device:
+    """A SCHC device. Representation of ``struct schc_device`` type.
+
+    :param device_id: The libSCHC-internal identifier for the device.
+    :type device_id: :class:`int`
+    :raise ValueError: if another device for `device_id` was already allocated.
+    :raise MemoryError: if internal memory for the device can not be allocated.
+    """
     _devices = {}
 
     cdef clibschc.schc_device _dev
 
-    def __cinit__(self, device_id):
+    def __cinit__(self, device_id: int):
         self._dev.device_id = device_id
         self._register()
 
@@ -299,6 +428,13 @@ cdef class Device:
 
     @staticmethod
     def get(device_id: int):
+        """Get a device by its libSCHC-internal identifier.
+
+        :param device_id: The libSCHC-internal identifier for a device.
+        :type device_id: :class:`int`
+        :raise KeyError: if there is no device with identifier `device_id`.
+        :return: The device identified with `device_id`.
+        :rtype: :class:`Device`"""
         try:
             return Device._devices[device_id]
         except KeyError as exc:
@@ -539,6 +675,11 @@ cdef class Device:
             self._dev.compression_rule_count = 0
 
     property device_id:
+        """
+        :type: int
+
+        The libSCHC-internal identifier of the device.
+        """
         def __get__(self):
             return self._dev.device_id
 

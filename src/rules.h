@@ -1,3 +1,5 @@
+/* Dynamic memory manipulation of rule contexts */
+
 /*
  * Copyright (C) 2023 Freie Universität Berlin
  *
@@ -6,10 +8,6 @@
 
 #ifndef RULES_H
 #define RULES_H
-
-typedef uint8_t (*schc_mo_op_t)(
-    struct schc_field *target_field, unsigned char *field_value, uint16_t field_offset
-);
 
 struct schc_compression_rule_t **schc_rules_create_compr_ctx(unsigned rule_count);
 struct schc_ipv6_rule_t *schc_rules_create_ipv6_rule(void);

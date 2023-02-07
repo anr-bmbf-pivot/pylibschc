@@ -1,3 +1,5 @@
+/* Rule configuration stub for libSCHC to allow for dynamic rule management */
+
 /*
  * Copyright (C) 2018 imec IDLab
  * Copyright (C) 2023 Freie Universität Berlin

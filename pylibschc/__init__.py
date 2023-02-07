@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-only
 
 
+"""Base module for pylibschc."""
+
 __author__ = "Martine S. Lenders"
 __copyright__ = "Copyright 2023 Freie Universität Berlin"
 __license__ = "GPLv3"

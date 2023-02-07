@@ -13,7 +13,7 @@ __email__ = "m.lenders@fu-berlin.de"
 
 
 class EnumByName(enum.Enum):
-    """A custom Enum type for pydantic to validate by name.
+    """A custom Enum type for pydantic to validate by case-insensitive name.
 
     Source: https://github.com/pydantic/pydantic/discussions/2980
     """
@@ -44,7 +44,7 @@ class EnumByName(enum.Enum):
         """Validate enum reference, `value`.
 
         We check:
-          1. If it is a member of this Enum
+          1. If it is in uppercase a member of this Enum
           2. If we can find it by name.
         """
         # is the value an enum member?

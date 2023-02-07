@@ -33,6 +33,10 @@ def test_bit_array_get_bits():
     with pytest.raises(ValueError):
         bit_array.get_bits(0, 33)
     with pytest.raises(ValueError):
+        bit_array.get_bits(0, -233)
+    with pytest.raises(ValueError):
+        bit_array.get_bits(-1, 32)
+    with pytest.raises(ValueError):
         bit_array.get_bits(16, 1)
 
 
@@ -46,3 +50,7 @@ def test_bit_array_copy_bits():
     assert bit_array.buffer == b"\x98\xd1"
     with pytest.raises(ValueError):
         bit_array.copy_bits(2, b"\xf0", 15)
+    with pytest.raises(ValueError):
+        bit_array.copy_bits(-1, b"\xf0", 8)
+    with pytest.raises(ValueError):
+        bit_array.copy_bits(2, b"\xf0", -8)

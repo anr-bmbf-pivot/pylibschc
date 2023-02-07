@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+"""Exposes libSCHC's compressor/decompressor functionality"""
+
 import typing
 
 import pylibschc.device
@@ -22,6 +24,8 @@ from .libschc import (
 
 
 class CompressorDecompressor:
+    """Compressor/Decompressor."""
+
     _inner_cls = InnerCompressorDecompressor
     _inner = None
 
@@ -32,6 +36,13 @@ class CompressorDecompressor:
         return super().__new__(cls)
 
     def __init__(self, device: pylibschc.device.Device, direction: Direction):
+        """
+        :param device: Device to be used for compression/decompression
+        :type device: :class:`pylibschc.device.Device`
+        :param direction: Direction to use for compression/decompression
+        :type direction: :class:`pylibschc.libschc.Direction`
+        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`
+        """
         if direction == Direction.BI:
             raise ValueError("direction must be either UP or DOWN, not BI")
         self.device = device

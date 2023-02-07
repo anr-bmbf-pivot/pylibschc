@@ -44,6 +44,11 @@ class Build(build):
             self.distribution.ext_modules,
             language_level=3,
         )
+        for e in self.distribution.ext_modules:
+            if not hasattr(e, "cython_directives"):
+                e.cython_directives = {}
+            if bool(os.environ.get("CYTHON_EMBEDSIGNATURE", "0")):
+                e.cython_directives["embedsignature"] = True
 
 
 setup(

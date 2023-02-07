@@ -187,9 +187,10 @@ cdef extern from "libschc/schc.h":
         schc_field *target_field, unsigned char *field_value, uint16_t field_offset
     );
 
-cdef extern from "rules.h":
+cdef extern from "mo.h":
     ctypedef schc_mo_op_t
 
+cdef extern from "rules.h":
     schc_compression_rule_t **schc_rules_create_compr_ctx(unsigned rule_count)
     schc_ipv6_rule_t *schc_rules_create_ipv6_rule()
     schc_udp_rule_t *schc_rules_create_udp_rule()
