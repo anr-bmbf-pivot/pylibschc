@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>schc_config.h &#8212; pylibschc 0.0.1a0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="rules/rule_config.h" href="rules.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="schc-config-h">
+<h1><code class="docutils literal notranslate"><span class="pre">schc_config.h</span></code><a class="headerlink" href="#schc-config-h" title="Permalink to this heading">¶</a></h1>
+<p>libSCHC compile-time configuration</p>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.BITMAP_SIZE_BYTES">
+<span class="sig-name descname"><span class="n"><span class="pre">BITMAP_SIZE_BYTES</span></span></span><a class="headerlink" href="#c.BITMAP_SIZE_BYTES" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.BITMAP_SIZE_BYTES"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(1 &lt;&lt; <a class="reference internal" href="#c.FCN_SIZE_BITS" title="FCN_SIZE_BITS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">FCN_SIZE_BITS</span></code></a>) / 8</p>
+</dd>
+</dl>
+<p>The length of the bitmap in bytes</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.CLICK">
+<span class="sig-name descname"><span class="n"><span class="pre">CLICK</span></span></span><a class="headerlink" href="#c.CLICK" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.CLICK"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0</p>
+</dd>
+</dl>
+<p>Deactivate CLICK.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.COAP_FIELDS">
+<span class="sig-name descname"><span class="n"><span class="pre">COAP_FIELDS</span></span></span><a class="headerlink" href="#c.COAP_FIELDS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.COAP_FIELDS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>16</p>
+</dd>
+</dl>
+<p>Maximum number of header field descriptors present in a CoAP compression rule.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DEBUG_PRINTF">
+<span class="sig-name descname"><span class="n"><span class="pre">DEBUG_PRINTF</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#c.DEBUG_PRINTF" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.DEBUG_PRINTF"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compile-time switchable debug macro for libSCHC.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DTAG_SIZE_BITS">
+<span class="sig-name descname"><span class="n"><span class="pre">DTAG_SIZE_BITS</span></span></span><a class="headerlink" href="#c.DTAG_SIZE_BITS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.DTAG_SIZE_BITS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0</p>
+</dd>
+</dl>
+<p>The maximum number of DTAG bits</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.DYNAMIC_MEMORY">
+<span class="sig-name descname"><span class="n"><span class="pre">DYNAMIC_MEMORY</span></span></span><a class="headerlink" href="#c.DYNAMIC_MEMORY" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.DYNAMIC_MEMORY"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+<p>Use dynamic memory management.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.FCN_SIZE_BITS">
+<span class="sig-name descname"><span class="n"><span class="pre">FCN_SIZE_BITS</span></span></span><a class="headerlink" href="#c.FCN_SIZE_BITS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.FCN_SIZE_BITS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>6</p>
+</dd>
+</dl>
+<p>The maximum number of FCN bits</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.IP6_FIELDS">
+<span class="sig-name descname"><span class="n"><span class="pre">IP6_FIELDS</span></span></span><a class="headerlink" href="#c.IP6_FIELDS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.IP6_FIELDS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>14</p>
+</dd>
+</dl>
+<p>Maximum number of header field descriptors present in a IPv6 compression rule.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.JSON_TOKENS">
+<span class="sig-name descname"><span class="n"><span class="pre">JSON_TOKENS</span></span></span><a class="headerlink" href="#c.JSON_TOKENS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.JSON_TOKENS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+<p>The maximum number of tokens inside a JSON structure.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_ACK_REQUESTS">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_ACK_REQUESTS</span></span></span><a class="headerlink" href="#c.MAX_ACK_REQUESTS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_ACK_REQUESTS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>3</p>
+</dd>
+</dl>
+<p>The maximum number of ACK attempts</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_COAP_HEADER_LENGTH">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_COAP_HEADER_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_COAP_HEADER_LENGTH" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_COAP_HEADER_LENGTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>24</p>
+</dd>
+</dl>
+<p>Maximum CoAP header length.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_COAP_MSG_SIZE">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_COAP_MSG_SIZE</span></span></span><a class="headerlink" href="#c.MAX_COAP_MSG_SIZE" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_COAP_MSG_SIZE"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#c.MAX_COAP_HEADER_LENGTH" title="MAX_COAP_HEADER_LENGTH"><code class="xref c c-macro docutils literal notranslate"><span class="pre">MAX_COAP_HEADER_LENGTH</span></code></a> + <a class="reference internal" href="#c.MAX_PAYLOAD_LENGTH" title="MAX_PAYLOAD_LENGTH"><code class="xref c c-macro docutils literal notranslate"><span class="pre">MAX_PAYLOAD_LENGTH</span></code></a></p>
+</dd>
+</dl>
+<p>Maximum CoAP message size.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_FIELD_LENGTH">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_FIELD_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_FIELD_LENGTH" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_FIELD_LENGTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>32</p>
+</dd>
+</dl>
+<p>The maximum length of a single header field,
+e.g., you can use 4 ipv6 source iid addresses with match-mapping.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_HEADER_LENGTH">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_HEADER_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_HEADER_LENGTH" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_HEADER_LENGTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>16</p>
+</dd>
+</dl>
+<p>Maximum number of header field descriptors present in a CoAP compression rule.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_MTU_LENGTH">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_MTU_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_MTU_LENGTH" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_MTU_LENGTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1280</p>
+</dd>
+</dl>
+<p>The maximum transfer unit of the underlying technology.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MAX_PAYLOAD_LENGTH">
+<span class="sig-name descname"><span class="n"><span class="pre">MAX_PAYLOAD_LENGTH</span></span></span><a class="headerlink" href="#c.MAX_PAYLOAD_LENGTH" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MAX_PAYLOAD_LENGTH"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>256</p>
+</dd>
+</dl>
+<p>Maximum CoAP payload length.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.MIC_SIZE_BYTES">
+<span class="sig-name descname"><span class="n"><span class="pre">MIC_SIZE_BYTES</span></span></span><a class="headerlink" href="#c.MIC_SIZE_BYTES" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.MIC_SIZE_BYTES"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>4</p>
+</dd>
+</dl>
+<p>The maximum number of bytes the MIC consists of</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.NLOGGING">
+<span class="sig-name descname"><span class="n"><span class="pre">NLOGGING</span></span></span><a class="headerlink" href="#c.NLOGGING" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.NLOGGING"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0</p>
+</dd>
+</dl>
+<p>Toggle logging at compile time: <code class="docutils literal notranslate"><span class="pre">NLOGGING=0</span></code> means logging is delegated to
+<a class="reference internal" href="pylogging.html#c.pylog_debug" title="pylog_debug"><code class="xref c c-func docutils literal notranslate"><span class="pre">pylog_debug()</span></code></a>, <code class="docutils literal notranslate"><span class="pre">NLOGGING=1</span></code> means all logging functionality is removed from
+libSCHC.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.UDP_FIELDS">
+<span class="sig-name descname"><span class="n"><span class="pre">UDP_FIELDS</span></span></span><a class="headerlink" href="#c.UDP_FIELDS" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.UDP_FIELDS"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>4</p>
+</dd>
+</dl>
+<p>Maximum number of header field descriptors present in a UDP compression rule.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.USE_COAP">
+<span class="sig-name descname"><span class="n"><span class="pre">USE_COAP</span></span></span><a class="headerlink" href="#c.USE_COAP" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.USE_COAP"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+<p>Use CoAP.</p>
+</dd></dl>
+
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.USE_IP6_UDP">
+<span class="sig-name descname"><span class="n"><span class="pre">USE_IP6_UDP</span></span></span><a class="headerlink" href="#c.USE_IP6_UDP" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/schc_config.h.html#c.USE_IP6_UDP"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Value<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1</p>
+</dd>
+</dl>
+<p>Use IPv6 and UDP.</p>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pylibschc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">pylibschc: A python wrapper for libSCHC</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#submodules">Submodules</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#c-api">C API</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="pylogging.html"><code class="docutils literal notranslate"><span class="pre">pylogging.h</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rules.html"><code class="docutils literal notranslate"><span class="pre">rules/rule_config.h</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rules.html#rules-h"><code class="docutils literal notranslate"><span class="pre">rules.h</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">schc_config.h</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../modules.html">API reference</a><ul>
+      <li>Previous: <a href="rules.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">rules/rule_config.h</span></code></a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Martine S. Lenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/cfiles/schc_config.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

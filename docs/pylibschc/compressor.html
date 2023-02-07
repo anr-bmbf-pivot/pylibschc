@@ -1,0 +1,153 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>pylibschc.compressor &#8212; pylibschc 0.0.1a0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pylibschc.device" href="device.html" />
+    <link rel="prev" title="pylibschc._pydantic" href="_pydantic.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pylibschc.compressor">
+<span id="pylibschc-compressor"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code><a class="headerlink" href="#module-pylibschc.compressor" title="Permalink to this heading">¶</a></h1>
+<p>Exposes libSCHC’s compressor/decompressor functionality</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.compressor.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Compressor/Decompressor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>) – Device to be used for compression/decompression</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction</span></code></a>) – Direction to use for compression/decompression</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="libschc.html#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.input">
+<span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><span class="pre">CompressionResult</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pylibschc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">pylibschc: A python wrapper for libSCHC</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="_pydantic.html"><code class="docutils literal notranslate"><span class="pre">pylibschc._pydantic</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="device.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fragmenter.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="libschc.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rules.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#c-api">C API</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../modules.html">API reference</a><ul>
+      <li>Previous: <a href="_pydantic.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc._pydantic</span></code></a></li>
+      <li>Next: <a href="device.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code></a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Martine S. Lenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/pylibschc/compressor.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

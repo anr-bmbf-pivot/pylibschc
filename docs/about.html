@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>pylibschc: A python wrapper for libSCHC &#8212; pylibschc 0.0.1a0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="author" title="About these documents" href="#" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API reference" href="modules.html" />
+    <link rel="prev" title="Welcome to pylibschc!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pylibschc-a-python-wrapper-for-libschc">
+<h1>pylibschc: A python wrapper for libSCHC<a class="headerlink" href="#pylibschc-a-python-wrapper-for-libschc" title="Permalink to this heading">¶</a></h1>
+<p>This provides a pythonic wrapper for <a class="reference external" href="https://github.com/imec-idlab/libschc">libSCHC</a>.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
+<p>You can use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to install the package once you cloned this repo:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/anr-bmbf-pivot/pylibschc.git
+<span class="nb">cd</span><span class="w"> </span>pylibschc
+pip<span class="w"> </span>install<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<section id="rules">
+<h3>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">¶</a></h3>
+<p>Rules are managed using a <a class="reference external" href="https://pydantic.dev">pydantic</a> model, i.e., they can be loaded from a correctly typed
+dictionary (e.g. generated from a JSON or YAML file):</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pylibschc.rules</span> <span class="kn">import</span> <span class="n">Config</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;tests/artifacts/rules_example.json&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>   <span class="n">rules</span> <span class="o">=</span> <span class="n">Config</span><span class="p">(</span><span class="o">**</span><span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<span class="gp">... </span>   <span class="n">config</span> <span class="o">=</span> <span class="n">rules</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><strong>Do not forget</strong> to call <code class="docutils literal notranslate"><span class="pre">rules.deploy()</span></code> if you change any rules to re-deploy the rules with
+libSCHC.</p>
+<p>The header file for the rules, so they can be used with libSCHC on an embedded device, can be
+generated using</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rule_config.h&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="n">written</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rules</span><span class="o">.</span><span class="n">to_c_header</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>An example for such a dictionary is provided in
+<a class="reference external" href="./tests/artifacts/rules_example.json">./tests/artifacts/rules_example.json</a> as JSON, the
+concrete <a class="reference external" href="https://pydantic.dev">pydantic</a> model you can find <a class="reference external" href="./pylibschc/rules.py">./pylibschc/rules.py</a>.</p>
+<p>More documentation can be found <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc">here</a></p>
+</section>
+<section id="compression-decompression">
+<h3>Compression/Decompression<a class="headerlink" href="#compression-decompression" title="Permalink to this heading">¶</a></h3>
+<p>Both compression and decompression can be achieved by using the <cite>CompressorDecompressor</cite> class from
+the submodule <a class="reference external" href="./pylibschc/compressor.py">pylibschc.compressor</a>. We use <a class="reference external" href="https://scapy.net/">scapy</a> in our example
+to construct a valid CoAP over IPv6 packet for compression for which the <code class="docutils literal notranslate"><span class="pre">output()</span></code> method is
+called:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scapy.all</span> <span class="kn">import</span> <span class="n">IPv6</span><span class="p">,</span> <span class="n">UDP</span><span class="p">,</span> <span class="n">raw</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scapy.contrib.coap</span> <span class="kn">import</span> <span class="n">CoAP</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pylibschc.compressor</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">comp_dec</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">compressor</span><span class="o">.</span><span class="n">CompressorDecompressor</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">device</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>    <span class="n">direction</span><span class="o">=</span><span class="n">pylibschc</span><span class="o">.</span><span class="n">rules</span><span class="o">.</span><span class="n">Direction</span><span class="o">.</span><span class="n">UP</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pkt</span> <span class="o">=</span> <span class="n">raw</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">IPv6</span><span class="p">(</span><span class="n">hlim</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">src</span><span class="o">=</span><span class="s2">&quot;2001:db8::1&quot;</span><span class="p">,</span> <span class="n">dst</span><span class="o">=</span><span class="s2">&quot;2001:db8:1::2&quot;</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="o">/</span> <span class="n">UDP</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">sport</span><span class="o">=</span><span class="mi">5683</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">dport</span><span class="o">=</span><span class="mi">61618</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="o">/</span> <span class="n">CoAP</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">ver</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">code</span><span class="o">=</span><span class="s2">&quot;2.05 Content&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;NON&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">msg_id</span><span class="o">=</span><span class="mh">0x23B3</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">token</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x32\x3a\xf3\xa3</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">paymark</span><span class="o">=</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\xff</span><span class="s2">&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="o">/</span> <span class="p">(</span>
+<span class="gp">... </span>        <span class="sa">b</span><span class="s1">&#39;[{&quot;id&quot;:1, &quot;name&quot;:&quot;CJ.H.L.(Joe) Lecomte) Heliport&quot;,&quot;code&quot;:&quot;YOY&quot;,&quot;country&quot;:&quot;CA&quot;}]&#39;</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span><span class="p">,</span> <span class="n">bit_array</span> <span class="o">=</span> <span class="n">comp_dec</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">pkt</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span>
+<span class="go">&lt;CompressionResult.COMPRESSED: 1&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bit_array</span><span class="o">.</span><span class="n">buffer</span>
+<span class="go">b&#39;\x01\t3#\xaf:5\xb7\xb2&amp;\x96B#\xa3\x12\xc2\x02&amp;\xe6\x16\xd6R#\xa2$4\xa2\xe4\x82\xe4\xc2\xe2\x84\xa6\xf6R\x92\x04\xc6V6\xf6\xd7FR\x92\x04\x86V\xc6\x97\x06\xf7\&#39;B&quot;\xc2&amp;6\xf6FR#\xa2%\x94\xf5\x92&quot;\xc2&amp;6\xf7V\xe7G\&#39;\x92#\xa2$4\x12\&#39;\xd5\xd0&#39;</span>
+</pre></div>
+</div>
+<p>For decompression, the <cite>input()</cite> method is called:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">comp_dec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">bit_array</span><span class="p">)</span>
+<span class="go">b&#39;`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{&quot;id&quot;:1, &quot;name&quot;:&quot;CJ.H.L.(Joe) Lecomte) Heliport&quot;,&quot;code&quot;:&quot;YOY&quot;,&quot;country&quot;:&quot;CA&quot;}]&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pkt</span> <span class="o">==</span> <span class="n">comp_dec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">bit_array</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>Both <code class="docutils literal notranslate"><span class="pre">input()</span></code> and <code class="docutils literal notranslate"><span class="pre">output()</span></code> take either <code class="docutils literal notranslate"><span class="pre">BitArray</span></code>- or <code class="docutils literal notranslate"><span class="pre">bytes</span></code>-typed variables as input.</p>
+</section>
+<section id="fragmentation-reassembly">
+<h3>Fragmentation/Reassembly<a class="headerlink" href="#fragmentation-reassembly" title="Permalink to this heading">¶</a></h3>
+<p>For fragmentation, call the <code class="docutils literal notranslate"><span class="pre">output()</span></code> method of a <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code> object.
+To actually send then from the, a send function needs to be registered for the device of the
+fragmenter.
+For reassembly, call the <code class="docutils literal notranslate"><span class="pre">input()</span></code> method of a <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Reassembler</span></code> object.
+Acknowledgements can be handled by the <code class="docutils literal notranslate"><span class="pre">input()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code>
+object. Again, both <code class="docutils literal notranslate"><span class="pre">input()</span></code> and <code class="docutils literal notranslate"><span class="pre">output()</span></code> take either <code class="docutils literal notranslate"><span class="pre">BitArray</span></code>- or <code class="docutils literal notranslate"><span class="pre">bytes</span></code>-typed
+variables as input.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pylibschc.fragmenter</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fragmenter_queue</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">loop</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">timer_tasks</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">reassembly_buffer</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="go">&gt;&gt;&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">fragmenter_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">({</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;send&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">buffer</span><span class="p">})</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">post_timer_task</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">timer_task</span><span class="p">,</span> <span class="n">delay_sec</span><span class="p">,</span> <span class="n">arg</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">timer_tasks</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">remove_timer_entry</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">timer_tasks</span><span class="p">[</span><span class="n">conn</span><span class="p">]</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">call_later</span><span class="p">(</span><span class="n">delay_sec</span><span class="p">,</span> <span class="n">timer_task</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">remove_timer_entry</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">if</span> <span class="n">conn</span> <span class="ow">in</span> <span class="n">timer_tasks</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">timer_tasks</span><span class="p">[</span><span class="n">conn</span><span class="p">]</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+<span class="gp">... </span>        <span class="k">del</span> <span class="n">timer_tasks</span><span class="p">[</span><span class="n">conn</span><span class="p">]</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">end_rx</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">reassembly_buffer</span><span class="o">.</span><span class="n">set_result</span><span class="p">(</span><span class="n">conn</span><span class="o">.</span><span class="n">mbuf</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">end_tx</span><span class="p">(</span><span class="n">conn</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">fragmenter_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">({</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;end_tx&quot;</span><span class="p">})</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">asyncized_input</span><span class="p">(</span><span class="n">reassembler</span><span class="p">,</span> <span class="n">buffer</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">reassembler</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">buffer</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">async</span> <span class="k">def</span> <span class="nf">fragment_and_reassemble</span><span class="p">():</span>
+<span class="gp">... </span>    <span class="c1"># just making sure these variables are initialized in the same loop</span>
+<span class="gp">... </span>    <span class="k">global</span> <span class="n">fragmenter_queue</span>
+<span class="gp">... </span>    <span class="k">global</span> <span class="n">loop</span>
+<span class="gp">... </span>    <span class="k">global</span> <span class="n">reassembly_buffer</span>
+<span class="gp">...</span>
+<span class="gp">... </span>    <span class="n">fragmenter_queue</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">reassembly_buffer</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
+<span class="gp">... </span>    <span class="n">fragmenter</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">Fragmenter</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">device</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">mtu</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">duty_cycle_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">mode</span><span class="o">=</span><span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">FragmentationMode</span><span class="o">.</span><span class="n">NO_ACK</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">post_timer_task</span><span class="o">=</span><span class="n">post_timer_task</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">end_tx</span><span class="o">=</span><span class="n">end_tx</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">remove_timer_entry</span><span class="o">=</span><span class="n">remove_timer_entry</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="n">fragmenter</span><span class="o">.</span><span class="n">register_send</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">send</span><span class="p">)</span>
+<span class="gp">... </span>    <span class="n">reassembler</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">Reassembler</span><span class="p">(</span>
+<span class="gp">... </span>        <span class="n">device</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">duty_cycle_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">post_timer_task</span><span class="o">=</span><span class="n">post_timer_task</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">end_rx</span><span class="o">=</span><span class="n">end_rx</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">remove_timer_entry</span><span class="o">=</span><span class="n">remove_timer_entry</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="p">)</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;fragmenter.output -&gt;&quot;</span><span class="p">,</span> <span class="n">fragmenter</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">bit_array</span><span class="p">))</span>
+<span class="gp">... </span>    <span class="n">cmd</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="gp">... </span>    <span class="k">while</span> <span class="n">cmd</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;cmd&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="s2">&quot;end_tx&quot;</span><span class="p">:</span>
+<span class="gp">... </span>        <span class="n">cmd</span> <span class="o">=</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">fragmenter_queue</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">... </span>        <span class="k">if</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;cmd&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;send&quot;</span><span class="p">:</span>
+<span class="gp">... </span>            <span class="nb">print</span><span class="p">(</span>
+<span class="gp">... </span>                <span class="s2">&quot;reassembler.input -&gt;&quot;</span><span class="p">,</span>
+<span class="gp">... </span>                <span class="k">await</span> <span class="n">asyncized_input</span><span class="p">(</span><span class="n">reassembler</span><span class="p">,</span> <span class="n">cmd</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">])</span>
+<span class="gp">... </span>            <span class="p">)</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">reassembly_buffer</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="gp">...</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">fragment_and_reassemble</span><span class="p">())</span> <span class="o">==</span> <span class="n">bit_array</span><span class="o">.</span><span class="n">buffer</span>
+<span class="go">fragmenter.output -&gt; FragmentationResult.SUCCESS</span>
+<span class="go">reassembler.input -&gt; ReassemblyStatus.ONGOING</span>
+<span class="go">reassembler.input -&gt; ReassemblyStatus.COMPLETED</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<p>While this example uses <cite>asyncio</cite> to parallelize timer calls, any method to establish concurrency
+can be used (see <a class="reference external" href="./tests/test_fragmenter.py">./tests/test_fragmenter.py</a> for an example using the
+<cite>threading</cite> module) as long as the access to libSCHC (including calls to timer tasks) is
+synchronized.</p>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pylibschc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pylibschc: A python wrapper for libSCHC</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rules">Rules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compression-decompression">Compression/Decompression</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fragmentation-reassembly">Fragmentation/Reassembly</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to pylibschc!</a></li>
+      <li>Next: <a href="modules.html" title="next chapter">API reference</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Martine S. Lenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/about.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

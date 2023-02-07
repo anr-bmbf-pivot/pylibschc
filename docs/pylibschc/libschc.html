@@ -1,0 +1,863 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>pylibschc.libschc &#8212; pylibschc 0.0.1a0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="author" title="About these documents" href="../about.html" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pylibschc.rules" href="rules.html" />
+    <link rel="prev" title="pylibschc.fragmenter" href="fragmenter.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pylibschc.libschc">
+<span id="pylibschc-libschc"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code><a class="headerlink" href="#module-pylibschc.libschc" title="Permalink to this heading">¶</a></h1>
+<p>libSCHC Cython wrapper.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.MAX_FIELD_LENGTH">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">MAX_FIELD_LENGTH</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.MAX_FIELD_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum length in bytes for a
+<a class="reference internal" href="rules.html#pylibschc.rules.CompressionRuleField.target_value" title="pylibschc.rules.CompressionRuleField.target_value"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.rules.CompressionRuleField.target_value</span></code></a>.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.MAX_FIELD_LENGTH" title="MAX_FIELD_LENGTH"><code class="xref c c-macro docutils literal notranslate"><span class="pre">MAX_FIELD_LENGTH</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.IP6_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">IP6_FIELDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.IP6_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of fields for a <a class="reference internal" href="rules.html#pylibschc.rules.CompressionRule.ipv6_rule" title="pylibschc.rules.CompressionRule.ipv6_rule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.rules.CompressionRule.ipv6_rule</span></code></a>.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.IP6_FIELDS" title="IP6_FIELDS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">IP6_FIELDS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.UDP_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">UDP_FIELDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.UDP_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of fields for a <a class="reference internal" href="rules.html#pylibschc.rules.CompressionRule.udp_rule" title="pylibschc.rules.CompressionRule.udp_rule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.rules.CompressionRule.udp_rule</span></code></a>.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.UDP_FIELDS" title="UDP_FIELDS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">UDP_FIELDS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.COAP_FIELDS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">COAP_FIELDS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.COAP_FIELDS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum number of fields for a <a class="reference internal" href="rules.html#pylibschc.rules.CompressionRule.coap_rule" title="pylibschc.rules.CompressionRule.coap_rule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.rules.CompressionRule.coap_rule</span></code></a>.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.COAP_FIELDS" title="COAP_FIELDS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">COAP_FIELDS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.MAX_MTU_LENGTH">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">MAX_MTU_LENGTH</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.MAX_MTU_LENGTH" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum transmission unit of the underlying technology.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.MAX_MTU_LENGTH" title="MAX_MTU_LENGTH"><code class="xref c c-macro docutils literal notranslate"><span class="pre">MAX_MTU_LENGTH</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.FCN_SIZE_BITS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FCN_SIZE_BITS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.FCN_SIZE_BITS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum size of the SCHC FCN field in bits.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.FCN_SIZE_BITS" title="FCN_SIZE_BITS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">FCN_SIZE_BITS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.DTAG_SIZE_BITS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">DTAG_SIZE_BITS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.DTAG_SIZE_BITS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum size of the SCHC DTAG field in bits.
+Exposes <a class="reference internal" href="../cfiles/schc_config.html#c.DTAG_SIZE_BITS" title="DTAG_SIZE_BITS"><code class="xref c c-macro docutils literal notranslate"><span class="pre">DTAG_SIZE_BITS</span></code></a> to <code class="docutils literal notranslate"><span class="pre">pylibschc</span></code>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pylibschc.libschc.BITMAP_SIZE_BITS">
+<span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">BITMAP_SIZE_BITS</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.libschc.BITMAP_SIZE_BITS" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum size of the SCHC acknowledgment bitmap in bits.
+The value is 8 multiplied with <a class="reference internal" href="../cfiles/schc_config.html#c.BITMAP_SIZE_BYTES" title="BITMAP_SIZE_BYTES"><code class="xref c c-macro docutils literal notranslate"><span class="pre">BITMAP_SIZE_BYTES</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">BitArray</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A bit-based array. Wraps the <code class="docutils literal notranslate"><span class="pre">schc_bitarray_t</span></code> type of libSCHC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>n</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Union[bytes,</span> <span class="pre">int]</span></code>) – Input to the <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>.
+If the type of <code class="docutils literal notranslate"><span class="pre">n</span></code> is <code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code> those bytes will be copied into
+<a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>, the maximum size then is the length of <code class="docutils literal notranslate"><span class="pre">n</span></code>. If the
+type of <code class="docutils literal notranslate"><span class="pre">n</span></code> is <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>, an empty <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> of maximum size
+<code class="docutils literal notranslate"><span class="pre">n</span></code> is created.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MemoryError</strong> – if internal memory for <cite>BitArray.buffer</cite> can not be allocated.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.bit_length">
+<span class="sig-name descname"><span class="pre">bit_length</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.bit_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a> in bits.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.buffer">
+<span class="sig-name descname"><span class="pre">buffer</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.buffer" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+<p>The underlying bytes buffer of the bit array.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.copy_bits">
+<span class="sig-name descname"><span class="pre">copy_bits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.BitArray.copy_bits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy bits to <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Position of the first bit in <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>. Must be at
+least 0 and not exceed <a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a>.</p></li>
+<li><p><strong>data</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code>) – Data to copy to <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.</p></li>
+<li><p><strong>length</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of bits to copy from <code class="docutils literal notranslate"><span class="pre">data</span></code> to <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.
+Must be at least 0 and not exceed <a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">length</span></code> is lesser than 0.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">pos</span></code> is lesser than 0.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">pos</span> <span class="pre">+</span> <span class="pre">length</span></code> is greater than
+<a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.get_bits">
+<span class="sig-name descname"><span class="pre">get_bits</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.BitArray.get_bits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get at a maximum 32 bits from the <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> as integer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pos</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Position of the first bit in <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>. Must be at
+least 0 and not exceed <a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a>.</p></li>
+<li><p><strong>length</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – Number of bits to read from <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a> as of
+<code class="docutils literal notranslate"><span class="pre">pos</span></code>. Must be between 0 and 32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">length</span></code> is lesser than 0 or greater than 32.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">pos</span></code> is lesser than 0.</p></li>
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">pos</span> <span class="pre">+</span> <span class="pre">length</span></code> is greater than
+<a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the bits from <code class="docutils literal notranslate"><span class="pre">pos</span></code> to <code class="docutils literal notranslate"><span class="pre">pos</span> <span class="pre">+</span> <span class="pre">length</span></code> (not inclusive) in
+<a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a> converted to an integer.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.length">
+<span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length of <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a> in bytes.</p>
+<p>If <a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a> overflows a byte, this value will be
+(<a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a> // 8) + 1, otherwise it will be
+<a class="reference internal" href="#pylibschc.libschc.BitArray.bit_length" title="pylibschc.libschc.BitArray.bit_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.bit_length</span></code></a> // 8.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Offset in bits within <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.padding">
+<span class="sig-name descname"><span class="pre">padding</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.padding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Padding in bits after <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.BitArray.size">
+<span class="sig-name descname"><span class="pre">size</span></span><a class="headerlink" href="#pylibschc.libschc.BitArray.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Maximum size in bytes of the memory used for <a class="reference internal" href="#pylibschc.libschc.BitArray.buffer" title="pylibschc.libschc.BitArray.buffer"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BitArray.buffer</span></code></a>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">CDA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CDA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="_pydantic.html#pylibschc._pydantic.EnumByName" title="pylibschc._pydantic.EnumByName"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnumByName</span></code></a></p>
+<p>Compression/Decompression actions for compression rules.
+Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span></code> type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.APPIID">
+<span class="sig-name descname"><span class="pre">APPIID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.APPIID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.COMPCHK">
+<span class="sig-name descname"><span class="pre">COMPCHK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.COMPCHK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.COMPLENGTH">
+<span class="sig-name descname"><span class="pre">COMPLENGTH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.COMPLENGTH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.DEVIID">
+<span class="sig-name descname"><span class="pre">DEVIID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.DEVIID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.LSB">
+<span class="sig-name descname"><span class="pre">LSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.LSB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.MAPPINGSENT">
+<span class="sig-name descname"><span class="pre">MAPPINGSENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.MAPPINGSENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.NOTSENT">
+<span class="sig-name descname"><span class="pre">NOTSENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.NOTSENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CDA.VALUESENT">
+<span class="sig-name descname"><span class="pre">VALUESENT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.CDA.VALUESENT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressionResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">CompressionResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressionResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressionResult.COMPRESSED">
+<span class="sig-name descname"><span class="pre">COMPRESSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.CompressionResult.COMPRESSED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressionResult.UNCOMPRESSED">
+<span class="sig-name descname"><span class="pre">UNCOMPRESSED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.CompressionResult.UNCOMPRESSED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.compress">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.compress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.decompress">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">decompress</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.decompress" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.CompressorDecompressor.init">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.CompressorDecompressor.init" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><a class="headerlink" href="#pylibschc.libschc.Device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A SCHC device. Representation of <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_device</span></code> type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The libSCHC-internal identifier for the device.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – if another device for <cite>device_id</cite> was already allocated.</p></li>
+<li><p><strong>MemoryError</strong> – if internal memory for the device can not be allocated.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.compression_rules">
+<span class="sig-name descname"><span class="pre">compression_rules</span></span><a class="headerlink" href="#pylibschc.libschc.Device.compression_rules" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.device_id">
+<span class="sig-name descname"><span class="pre">device_id</span></span><a class="headerlink" href="#pylibschc.libschc.Device.device_id" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+<p>The libSCHC-internal identifier of the device.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.fragmentation_rules">
+<span class="sig-name descname"><span class="pre">fragmentation_rules</span></span><a class="headerlink" href="#pylibschc.libschc.Device.fragmentation_rules" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.get">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.Device.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a device by its libSCHC-internal identifier.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The libSCHC-internal identifier for a device.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>KeyError</strong> – if there is no device with identifier <cite>device_id</cite>.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The device identified with <cite>device_id</cite>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pylibschc.libschc.Device" title="pylibschc.libschc.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.uncompressed_rule_id">
+<span class="sig-name descname"><span class="pre">uncompressed_rule_id</span></span><a class="headerlink" href="#pylibschc.libschc.Device.uncompressed_rule_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.uncompressed_rule_id_size_bits">
+<span class="sig-name descname"><span class="pre">uncompressed_rule_id_size_bits</span></span><a class="headerlink" href="#pylibschc.libschc.Device.uncompressed_rule_id_size_bits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.Device.unregister">
+<span class="sig-name descname"><span class="pre">unregister</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.Device.unregister" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.Direction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">Direction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.Direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="_pydantic.html#pylibschc._pydantic.EnumByName" title="pylibschc._pydantic.EnumByName"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnumByName</span></code></a></p>
+<p>Direction indicator for rules. Wraps the <code class="docutils literal notranslate"><span class="pre">direction</span></code> type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Direction.BI">
+<span class="sig-name descname"><span class="pre">BI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.Direction.BI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Direction.DOWN">
+<span class="sig-name descname"><span class="pre">DOWN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.Direction.DOWN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.Direction.UP">
+<span class="sig-name descname"><span class="pre">UP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.Direction.UP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationConnection</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.bit_arr">
+<span class="sig-name descname"><span class="pre">bit_arr</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.bit_arr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.end_rx">
+<span class="sig-name descname"><span class="pre">end_rx</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.end_rx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.end_tx">
+<span class="sig-name descname"><span class="pre">end_tx</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.end_tx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.fragment">
+<span class="sig-name descname"><span class="pre">fragment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.fragment" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.fragmented">
+<span class="sig-name descname"><span class="pre">fragmented</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.fragmented" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.init_rx">
+<span class="sig-name descname"><span class="pre">init_rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.init_rx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.init_tx">
+<span class="sig-name descname"><span class="pre">init_tx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.init_tx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.input">
+<span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.mbuf">
+<span class="sig-name descname"><span class="pre">mbuf</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.mbuf" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.post_timer_task">
+<span class="sig-name descname"><span class="pre">post_timer_task</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.post_timer_task" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.reassemble">
+<span class="sig-name descname"><span class="pre">reassemble</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.reassemble" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.register_send">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_send</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.register_send" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.remove_timer_entry">
+<span class="sig-name descname"><span class="pre">remove_timer_entry</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.remove_timer_entry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.reset" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.unregister_send">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unregister_send</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.unregister_send" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationMode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationMode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="_pydantic.html#pylibschc._pydantic.EnumByName" title="pylibschc._pydantic.EnumByName"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnumByName</span></code></a></p>
+<p>SCHC F/R Modes. Wraps the <code class="docutils literal notranslate"><span class="pre">reliability_mode</span></code> type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationMode.ACK_ALWAYS">
+<span class="sig-name descname"><span class="pre">ACK_ALWAYS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationMode.ACK_ALWAYS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationMode.ACK_ON_ERROR">
+<span class="sig-name descname"><span class="pre">ACK_ON_ERROR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationMode.ACK_ON_ERROR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationMode.NOT_FRAGMENTED">
+<span class="sig-name descname"><span class="pre">NOT_FRAGMENTED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationMode.NOT_FRAGMENTED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationMode.NO_ACK">
+<span class="sig-name descname"><span class="pre">NO_ACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationMode.NO_ACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationResult" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.ACK_INPUT">
+<span class="sig-name descname"><span class="pre">ACK_INPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.ACK_INPUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.END">
+<span class="sig-name descname"><span class="pre">END</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.FRAG_INPUT">
+<span class="sig-name descname"><span class="pre">FRAG_INPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.FRAG_INPUT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.NO_FRAGMENTATION">
+<span class="sig-name descname"><span class="pre">NO_FRAGMENTATION</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-2</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.NO_FRAGMENTATION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.SUCCESS">
+<span class="sig-name descname"><span class="pre">SUCCESS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.SUCCESS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">HeaderFieldID</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="_pydantic.html#pylibschc._pydantic.EnumByName" title="pylibschc._pydantic.EnumByName"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnumByName</span></code></a></p>
+<p>Header field identifier for field descriptors of compression rules.
+Wraps the <code class="docutils literal notranslate"><span class="pre">COAPO_fields</span></code> and <code class="docutils literal notranslate"><span class="pre">schc_header_fields</span></code> types.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_ACCEPT">
+<span class="sig-name descname"><span class="pre">COAP_ACCEPT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_ACCEPT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_C">
+<span class="sig-name descname"><span class="pre">COAP_C</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1041</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_C" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_CONTENTF">
+<span class="sig-name descname"><span class="pre">COAP_CONTENTF</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">12</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_CONTENTF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_ETAG">
+<span class="sig-name descname"><span class="pre">COAP_ETAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_ETAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_IFMATCH">
+<span class="sig-name descname"><span class="pre">COAP_IFMATCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_IFMATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_IFNOMATCH">
+<span class="sig-name descname"><span class="pre">COAP_IFNOMATCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_IFNOMATCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_LOCPATH">
+<span class="sig-name descname"><span class="pre">COAP_LOCPATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_LOCPATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_LOCQUERY">
+<span class="sig-name descname"><span class="pre">COAP_LOCQUERY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_LOCQUERY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_MAXAGE">
+<span class="sig-name descname"><span class="pre">COAP_MAXAGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">14</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_MAXAGE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_MID">
+<span class="sig-name descname"><span class="pre">COAP_MID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1042</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_MID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_NORESP">
+<span class="sig-name descname"><span class="pre">COAP_NORESP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">258</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_NORESP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_PAYLOAD">
+<span class="sig-name descname"><span class="pre">COAP_PAYLOAD</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1044</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_PAYLOAD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_PROXYSCH">
+<span class="sig-name descname"><span class="pre">COAP_PROXYSCH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">39</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_PROXYSCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_PROXYURI">
+<span class="sig-name descname"><span class="pre">COAP_PROXYURI</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">35</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_PROXYURI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_SIZE1">
+<span class="sig-name descname"><span class="pre">COAP_SIZE1</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">60</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_SIZE1" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_T">
+<span class="sig-name descname"><span class="pre">COAP_T</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1039</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_T" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_TKL">
+<span class="sig-name descname"><span class="pre">COAP_TKL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1040</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_TKL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_TKN">
+<span class="sig-name descname"><span class="pre">COAP_TKN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1043</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_TKN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_URIHOST">
+<span class="sig-name descname"><span class="pre">COAP_URIHOST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_URIHOST" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_URIPATH">
+<span class="sig-name descname"><span class="pre">COAP_URIPATH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_URIPATH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_URIPORT">
+<span class="sig-name descname"><span class="pre">COAP_URIPORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_URIPORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_URIQUERY">
+<span class="sig-name descname"><span class="pre">COAP_URIQUERY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_URIQUERY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.COAP_V">
+<span class="sig-name descname"><span class="pre">COAP_V</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1038</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.COAP_V" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_APPIID">
+<span class="sig-name descname"><span class="pre">IP6_APPIID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1033</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_APPIID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_APPPRE">
+<span class="sig-name descname"><span class="pre">IP6_APPPRE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1032</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_APPPRE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_DEVIID">
+<span class="sig-name descname"><span class="pre">IP6_DEVIID</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1031</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_DEVIID" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_DEVPRE">
+<span class="sig-name descname"><span class="pre">IP6_DEVPRE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1030</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_DEVPRE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_FL">
+<span class="sig-name descname"><span class="pre">IP6_FL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1026</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_FL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_HL">
+<span class="sig-name descname"><span class="pre">IP6_HL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1029</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_HL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_LEN">
+<span class="sig-name descname"><span class="pre">IP6_LEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1027</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_LEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_NH">
+<span class="sig-name descname"><span class="pre">IP6_NH</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1028</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_NH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_TC">
+<span class="sig-name descname"><span class="pre">IP6_TC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1025</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_TC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.IP6_V">
+<span class="sig-name descname"><span class="pre">IP6_V</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1024</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.IP6_V" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.UDP_APP">
+<span class="sig-name descname"><span class="pre">UDP_APP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1035</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.UDP_APP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.UDP_CHK">
+<span class="sig-name descname"><span class="pre">UDP_CHK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1037</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.UDP_CHK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.UDP_DEV">
+<span class="sig-name descname"><span class="pre">UDP_DEV</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1034</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.UDP_DEV" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.HeaderFieldID.UDP_LEN">
+<span class="sig-name descname"><span class="pre">UDP_LEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1036</span></em><a class="headerlink" href="#pylibschc.libschc.HeaderFieldID.UDP_LEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">MO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.MO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="_pydantic.html#pylibschc._pydantic.EnumByName" title="pylibschc._pydantic.EnumByName"><code class="xref py py-class docutils literal notranslate"><span class="pre">EnumByName</span></code></a></p>
+<p>Matching operator for compression rules.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.EQUAL">
+<span class="sig-name descname"><span class="pre">EQUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.MO.EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.IGNORE">
+<span class="sig-name descname"><span class="pre">IGNORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.MO.IGNORE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MATCHMAP">
+<span class="sig-name descname"><span class="pre">MATCHMAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MATCHMAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MO_EQUAL">
+<span class="sig-name descname"><span class="pre">MO_EQUAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MO_EQUAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MO_IGNORE">
+<span class="sig-name descname"><span class="pre">MO_IGNORE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MO_IGNORE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MO_MATCHMAP">
+<span class="sig-name descname"><span class="pre">MO_MATCHMAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MO_MATCHMAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MO_MSB">
+<span class="sig-name descname"><span class="pre">MO_MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MO_MSB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.MO.MSB">
+<span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MSB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pylibschc</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../about.html">pylibschc: A python wrapper for libSCHC</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../modules.html">API reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../modules.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="_pydantic.html"><code class="docutils literal notranslate"><span class="pre">pylibschc._pydantic</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compressor.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="device.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="fragmenter.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rules.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html#c-api">C API</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="../modules.html">API reference</a><ul>
+      <li>Previous: <a href="fragmenter.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
+      <li>Next: <a href="rules.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Martine S. Lenders.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.1.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../_sources/pylibschc/libschc.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
