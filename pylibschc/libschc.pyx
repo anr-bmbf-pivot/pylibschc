@@ -633,8 +633,16 @@ cdef class Device:
         c_rule.MAX_WND_FCN = py_rule["MAX_WND_FCN"]
         c_rule.WINDOW_SIZE = py_rule["WINDOW_SIZE"]
         c_rule.DTAG_SIZE = py_rule["DTAG_SIZE"]
+
     property compression_rules:
-        def __get__(self):
+        """
+        :type: list[dict]
+
+        The compression rules for this device. Setting this re-allocates the compression
+        context of the wrapped ``struct schc_device`. Setting it to None or an empty
+        list sets the compression context to ``NULL``.
+        """
+        def __get__(self) -> typing.Sequence[dict]:
             res = []
             for i in range(self._dev.compression_rule_count):
                 py_rule = Device._comp_ctx_to_dict(
@@ -684,7 +692,14 @@ cdef class Device:
             return self._dev.device_id
 
     property fragmentation_rules:
-        def __get__(self):
+        """
+        :type: list[dict]
+
+        The fragmentation rules for this device. Setting this re-allocates the
+        fragmentation context of the wrapped ``struct schc_device``. Setting it to None
+        or an empty list sets the fragmentation context to ``NULL``.
+        """
+        def __get__(self) -> typing.Sequence[dict]:
             res = []
             for i in range(self._dev.fragmentation_rule_count):
                 py_rule = Device._frag_ctx_to_dict(
@@ -725,31 +740,49 @@ cdef class Device:
             self._dev.fragmentation_rule_count = 0
 
     property uncompressed_rule_id:
-        def __get__(self):
+        """
+        :type: int
+
+        The uncompressed rule id. This wraps the ``uncomp_rule_id`` member of the
+        ``struct schc_device`` struct type.
+        """
+        def __get__(self) -> int:
             return self._dev.uncomp_rule_id
 
-        def __set__(self, uncompressed_rule_id):
+        def __set__(self, uncompressed_rule_id: int):
             self._dev.uncomp_rule_id = uncompressed_rule_id
 
     property uncompressed_rule_id_size_bits:
-        def __get__(self):
+        """
+        :type: int
+
+        The uncompressed rule id size in bits. This wraps the
+        ``uncomp_rule_id_size_bits`` member of the ``struct schc_device`` struct type.
+        """
+        def __get__(self) -> int:
             return self._dev.uncomp_rule_id_size_bits
 
-        def __set__(self, uncompressed_rule_id_size_bits):
+        def __set__(self, uncompressed_rule_id_size_bits: int):
             self._dev.uncomp_rule_id_size_bits = uncompressed_rule_id_size_bits
 
     def unregister(self):
+        """Removes this device from the rule configuration of libSCHC."""
         self._unregister()
 
 
 class CompressionResult(enum.Enum):
+    """Result-part of :py:meth:`CompressorDecompressor.compress()`"""
     UNCOMPRESSED = 0
     COMPRESSED = 1
 
 
 cdef class CompressorDecompressor:
+    """Compressor/Decompressor.
+
+    Wraps functionality of ``compressor.h`` of libSCHC."""
     @staticmethod
     def init():
+        """Initialize compressor/decompressor module in libSCHC."""
         clibschc.schc_compressor_init()
 
     @staticmethod
@@ -757,8 +790,24 @@ cdef class CompressorDecompressor:
         CompressionResult,
         BitArray
     ]:
+        """Compress ``data`` for ``device`` in ``dir``.
+
+        :param data: The data to compress.
+        :type data: :class:`bytes`
+        :param device: The device of which to use the compression context.
+        :type device: :class:`Device`
+        :param dir: The direction ``data`` is sent in.
+        :type dir: :class:`Direction`
+        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
+        :return: Whether the packet was compressed or the uncompressed rule was used
+            and the compressed packet as a :class:`BitArray`.
+        :rtype: :class:`typing.Tuple`[:class:`CompressionResult`, :class:`BitArray`]
+        """
         cdef clibschc.schc_compression_rule_t *rule
-        # need at minimum length + 1
+
+        if <clibschc.direction>dir.value == <clibschc.direction>Direction.BI.value:
+            raise ValueError("`dir` must be either UP or DOWN, not BI")
+        # need at minimum length + rule length
         bit_arr = BitArray(
             len(data) + clibschc.BITS_TO_BYTES(device.uncompressed_rule_id_size_bits)
         )
@@ -779,6 +828,21 @@ cdef class CompressorDecompressor:
 
     @staticmethod
     def decompress(bit_arr: BitArray, device: Device, dir: Direction) -> bytes:
+        """Decompress ``data`` for ``device`` in ``dir``.
+
+        :param data: The data to decompress.
+        :type data: :class:`bytes`
+        :param device: The device of which to use the compression context.
+        :type device: :class:`Device`
+        :param dir: The direction ``data`` is sent in.
+        :type dir: :class:`Direction`
+        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
+        :return: The decompressed packet.
+        :rtype: :class:`bytes`
+        """
+        if <clibschc.direction>dir.value == <clibschc.direction>Direction.BI.value:
+            raise ValueError("`dir` must be either UP or DOWN, not BI")
+
         buf = b"\0" * clibschc.MAX_MTU_LENGTH
         cdef uint16_t length = clibschc.schc_decompress(
             &bit_arr._bit_array,
@@ -791,6 +855,7 @@ cdef class CompressorDecompressor:
 
 
 class FragmentationResult(enum.Enum):
+    """The result of calling :py:meth:`FragmentationConnection.fragment()`"""
     NO_FRAGMENTATION = clibschc.SCHC_NO_FRAGMENTATION
     SUCCESS = clibschc.SCHC_SUCCESS
     ACK_INPUT = clibschc.SCHC_ACK_INPUT
