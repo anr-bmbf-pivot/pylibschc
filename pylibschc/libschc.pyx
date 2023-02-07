@@ -58,7 +58,7 @@ import enum
 import logging
 import typing
 
-from cpython.ref cimport Py_INCREF, Py_XDECREF
+from cpython.ref cimport Py_INCREF, Py_DECREF, Py_XINCREF, Py_XDECREF
 from cpython.bool cimport bool
 from cpython.object cimport PyObject
 from cython.operator cimport postincrement as inc, postdecrement as dec
@@ -863,18 +863,45 @@ class FragmentationResult(enum.Enum):
     END = clibschc.SCHC_END
 
 
-cdef class _TimerArgWrapper:
-    cdef intptr_t _ptr
+cdef class _TimerTask:
+    cdef intptr_t _arg
+    cdef intptr_t _timer_task_ptr
+    cdef object _conn
 
-    def __cinit__(self, ptr):
-        self._ptr = <intptr_t>ptr
+    def __cinit__(
+        self,
+        conn: "FragmentationConnection",
+        timer_task_ptr: intptr_t,
+        arg: intptr_t,
+    ):
+        Py_INCREF(conn)
+        self._conn = conn
+        self._timer_task_ptr = timer_task_ptr
+        self._arg = arg
 
-    property ptr_int:
-        def __get__(self) -> int:
-            return self._ptr
+    def __dealloc__(self):
+        self._arg = 0
+        self._timer_task_ptr = 0
+        Py_DECREF(self._conn)
+        self._conn = None
 
     def __str__(self):
-        return "<_TimerArgWrapper: 0x%x>" % (<intptr_t>self._ptr)
+        return "<pylibschc.libschc._TimerTask: 0x%x(0x%x)>" % (
+            <intptr_t>self._timer_task_ptr,
+            <intptr_t>self._arg
+        )
+
+    @staticmethod
+    cdef void call_the_task(void (*timer_task)(void *), void *arg):
+        timer_task(arg)
+
+    @staticmethod
+    def the_task(obj: _TimerTask):
+        if obj._timer_task_ptr:
+            _TimerTask.call_the_task(
+                <void (*)(void *)>(<void *>obj._timer_task_ptr),
+                <void *>obj._arg
+            )
 
 
 cdef class FragmentationConnection:
@@ -886,7 +913,6 @@ cdef class FragmentationConnection:
     cdef object _bit_arr
     cdef clibschc.schc_fragmentation_t *_frag_conn
     cdef uint8_t _malloced
-    cdef uint8_t _in_timer
     _device_sends = {}
 
     def __cinit__(
@@ -894,9 +920,9 @@ cdef class FragmentationConnection:
         post_timer_task: typing.Callable[
             [
                 'FragmentationConnection',
-                typing.Callable[[_TimerArgWrapper], None],
+                typing.Callable[[_TimerTask], None],
                 float,
-                _TimerArgWrapper,
+                _TimerTask,
             ],
             None
         ] = None,
@@ -906,7 +932,6 @@ cdef class FragmentationConnection:
         _malloc_inner: bool = True
     ):
         self._bit_arr = None
-        self._in_timer = 0
 
         self._py_post_timer_task = post_timer_task
         self._py_end_rx = end_rx
@@ -959,19 +984,22 @@ cdef class FragmentationConnection:
         def __get__(self) -> typing.Callable[
             [
                 'FragmentationConnection',
-                typing.Callable[[_TimerArgWrapper], None],
+                typing.Callable[[_TimerTask], None],
                 float,
-                _TimerArgWrapper
+                _TimerTask
             ],
             None
         ]:
-            if (
-                self._allocated()
-                and (<void *>self._py_post_timer_task) is not NULL
-                and self._py_post_timer_task is not None
-            ):
-                return self._py_post_timer_task
-            return None
+            Py_XINCREF(<PyObject *>self._py_post_timer_task)
+            try:
+                if (
+                    self._allocated()
+                    and self._py_post_timer_task is not None
+                ):
+                    return self._py_post_timer_task
+                return None
+            finally:
+                Py_XDECREF(<PyObject *>self._py_post_timer_task)
 
         def __set__(
             self,
@@ -979,9 +1007,9 @@ cdef class FragmentationConnection:
                 typing.Callable[
                     [
                         'FragmentationConnection',
-                        typing.Callable[[_TimerArgWrapper], None],
+                        typing.Callable[[_TimerTask], None],
                         float,
-                        _TimerArgWrapper
+                        _TimerTask
                     ],
                     None
                 ]
@@ -1071,25 +1099,6 @@ cdef class FragmentationConnection:
     def _allocated(self):
         return self._frag_conn is not NULL and self._frag_conn.timer_ctx is not NULL
 
-    def _is_in_timer(self):
-        return self._in_timer > 0
-
-    cdef void __inc_in_timer(self):
-        if self._in_timer < 255:
-            Py_INCREF(self)
-            inc(self._in_timer)
-
-    def _inc_in_timer(self):
-        self.__inc_in_timer()
-
-    cdef void __dec_in_timer(self):
-        if self._in_timer > 0:
-            Py_XDECREF(<PyObject *>self)
-            dec(self._in_timer)
-
-    def _dec_in_timer(self):
-        self.__dec_in_timer()
-
     @staticmethod
     cdef _outer_from_struct(clibschc.schc_fragmentation_t *conn):
         if conn.timer_ctx:
@@ -1133,10 +1142,8 @@ cdef class FragmentationConnection:
     cdef void _c_remove_timer_entry(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj:
-                if obj.remove_timer_entry:
-                    obj.remove_timer_entry(obj)
-                obj._dec_in_timer()
+            if obj and obj.remove_timer_entry:
+                obj.remove_timer_entry(obj)
         except Exception:
             raise
 
@@ -1148,24 +1155,15 @@ cdef class FragmentationConnection:
         void *arg
     ):
         obj = FragmentationConnection._outer_from_struct(conn)
-        if obj and obj.post_timer_task:
-            def _timer_task_wrapper(arg: _TimerArgWrapper):
-                if obj._allocated() and obj._is_in_timer():
-                    # only call if schc_fragmentation_schc_t is still allocated
-                    timer_task(<void *>(<intptr_t>arg.ptr_int))
-                else:
-                    logger.info(
-                        "Timer fired with an unallocated fragmentation connection"
-                    )
-                obj._dec_in_timer()
-
-            obj._inc_in_timer()
-            obj.post_timer_task(
-                obj,
-                _timer_task_wrapper,
-                time_ms / 1000,
-                _TimerArgWrapper(<intptr_t>arg)
-            )
+        if obj:
+            if obj.post_timer_task:
+                task = _TimerTask(obj, <intptr_t>(<void *>timer_task), <intptr_t>arg)
+                obj.post_timer_task(
+                    obj,
+                    task.the_task,
+                    time_ms / 1000,
+                    task
+                )
 
     @staticmethod
     def register_send(device_id: int, send: typing.Callable[[bytes], int]):
