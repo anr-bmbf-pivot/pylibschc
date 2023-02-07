@@ -58,7 +58,7 @@ import enum
 import logging
 import typing
 
-from cpython.ref cimport Py_INCREF, Py_DECREF
+from cpython.ref cimport Py_INCREF, Py_XDECREF
 from cpython.bool cimport bool
 from cpython.object cimport PyObject
 from cython.operator cimport postincrement as inc, postdecrement as dec
@@ -1019,7 +1019,7 @@ cdef class FragmentationConnection:
 
     cdef void __dec_in_timer(self):
         if self._in_timer > 0:
-            Py_DECREF(self)
+            Py_XDECREF(<PyObject *>self)
             dec(self._in_timer)
 
     def _dec_in_timer(self):
