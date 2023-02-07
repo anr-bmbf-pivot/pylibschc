@@ -2,7 +2,6 @@
 =======================
 .. autocmodule:: rules/rule_config.h
    :members:
-   :undoc-members:
 
 ``rules.h``
 ===========
