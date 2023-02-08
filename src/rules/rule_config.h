@@ -12,7 +12,14 @@
 
 #include "schc.h"
 
+/**
+ * The devices registered to libSCHC.
+ */
 extern struct schc_device **devices;
+
+/**
+ * The number entries in :c:var:`devices`.
+ */
 extern int DEVICE_COUNT;
 
 #endif /* RULES_RULE_CONFIG_H */

@@ -50,4 +50,10 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "alabaster"
+html_theme_options = {
+    "github_button": True,
+    "github_user": "anr-bmbf-pivot",
+    "github_repo": "pylibschc",
+    "fixed_sidebar": True,
+}
 html_static_path = ["_static"]
