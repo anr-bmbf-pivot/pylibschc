@@ -996,6 +996,7 @@ cdef class FragmentationConnection:
             res = None
             if (
                 self._allocated()
+                and (<void *>self._py_post_timer_task) is not NULL
                 and self._py_post_timer_task is not None
             ):
                 res = self._py_post_timer_task
