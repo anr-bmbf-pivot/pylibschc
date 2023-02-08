@@ -33,7 +33,7 @@ class ReassemblyStatus(enum.Enum):
 
 
 class BaseFragmenterReassembler(FragmenterOps):
-    # pylint: disable=too-many-instance-attributes,too-few-public-methods
+    # pylint: disable=too-few-public-methods
     conn_cls = FragmentationConnection
 
     def __init__(  # pylint: disable=too-many-arguments

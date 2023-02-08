@@ -864,7 +864,7 @@ class FragmentationResult(enum.Enum):
 
 
 class FragmenterOps(abc.ABC):
-    # pylint: disable=too-many-instance-attributes,too-few-public-methods
+    """Operation callbacks for a :py:class:`FragmentationConnection`."""
     conn_cls = FragmentationConnection
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -877,6 +877,26 @@ class FragmenterOps(abc.ABC):
         ] = None,
         remove_timer_entry: typing.Callable[[FragmentationConnection], None] = None,
     ):
+        """
+        :param end_rx: Callback that is called when the reception of a packet is
+            complete. May be None.
+        :type end_rx: A callable which takes a :py:class:`FragmentationConnection` as an
+            argument and returns nothing
+        :param end_tx: Callback that is called when the transmission of a packet is
+            complete. May be None.
+        :type end_tx: A callable which takes a :py:class:`FragmentationConnection` as an
+            argument and returns nothing
+        :param post_timer_task: Callback that is called when a timer task needs to be
+            scheduled. May be None.
+        :type end_tx: A callable which takes a :py:class:`FragmentationConnection`, a
+            callable that takes an object as argument and returns nothing, a
+            float, and an object (the argument for the provided callable) as arguments
+            and returns nothing
+        :param remove_timer_entry: Callback that is called when a timer task needs to be
+            canceled. May be None.
+        :type end_tx: A callable which takes a :py:class:`FragmentationConnection` as an
+            argument and returns nothing
+        """
         self.post_timer_task = post_timer_task
         self.end_rx = end_rx
         self.end_tx = end_tx
