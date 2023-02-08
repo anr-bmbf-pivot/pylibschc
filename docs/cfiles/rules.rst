@@ -8,4 +8,3 @@
 
 .. autocmodule:: rules.h
    :members:
-   :undoc-members:

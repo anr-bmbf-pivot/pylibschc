@@ -21,9 +21,12 @@ struct schc_compression_rule_t **schc_rules_create_compr_ctx(unsigned rule_count
     struct schc_compression_rule_t **ctx = malloc(
         sizeof(struct schc_compression_rule_t) * rule_count
     );
-    for (unsigned i = 0; i < rule_count; i++) {
-        ctx[i] = malloc(sizeof(struct schc_compression_rule_t));
-        *(ctx[i]) = (struct schc_compression_rule_t){ 0 };
+    if (ctx) {
+        for (unsigned i = 0; i < rule_count; i++) {
+            /* TODO protect against NULL return */
+            ctx[i] = malloc(sizeof(struct schc_compression_rule_t));
+            *(ctx[i]) = (struct schc_compression_rule_t){ 0 };
+        }
     }
     return ctx;
 }
@@ -48,9 +51,12 @@ struct schc_fragmentation_rule_t **schc_rules_create_frag_ctx(unsigned rule_coun
     struct schc_fragmentation_rule_t **ctx = malloc(
         sizeof(struct schc_fragmentation_rule_t) * rule_count
     );
-    for (unsigned i = 0; i < rule_count; i++) {
-        ctx[i] = malloc(sizeof(struct schc_fragmentation_rule_t));
-        *(ctx[i]) = (struct schc_fragmentation_rule_t){ 0 };
+    if (ctx) {
+        for (unsigned i = 0; i < rule_count; i++) {
+            /* TODO protect against NULL return */
+            ctx[i] = malloc(sizeof(struct schc_fragmentation_rule_t));
+            *(ctx[i]) = (struct schc_fragmentation_rule_t){ 0 };
+        }
     }
     return ctx;
 }
