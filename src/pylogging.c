@@ -24,7 +24,12 @@ static long _debug_level = 0;
 
 void pylog_init(PyObject *logger)
 {
+    PyObject *logging = NULL, *debug_level = NULL;
+
     if (_logger != logger) {
+        Py_XDECREF(_logger);
+        Py_XDECREF(_get_level);
+        Py_XDECREF(_debug);
         _logger = logger;
         _get_level = PyObject_GetAttrString(_logger, "getEffectiveLevel");
         if (!_get_level) {
@@ -34,11 +39,11 @@ void pylog_init(PyObject *logger)
         if (!_debug) {
             goto error;
         }
-        PyObject *logging = PyImport_ImportModule("logging");
+        logging = PyImport_ImportModule("logging");
         if (!logging) {
             goto error;
         }
-        PyObject *debug_level = PyObject_GetAttrString(logging, "DEBUG");
+        debug_level = PyObject_GetAttrString(logging, "DEBUG");
         if (!debug_level) {
             goto error;
         }
@@ -46,6 +51,8 @@ void pylog_init(PyObject *logger)
             goto error;
         }
     }
+    Py_XDECREF(logging);
+    Py_XDECREF(debug_level);
     _concat_buffer = NULL;
     _concat_buffer_size = 0;
     return;
@@ -66,7 +73,7 @@ int pylog_debug(const char *format, ...)
             Py_DECREF(level);
             return 0;
         }
-        Py_DECREF(level);
+        Py_XDECREF(level);
         int size = PYLOG_BUFFER_SIZE;
         char *str;
         bool str_malloced = true;
