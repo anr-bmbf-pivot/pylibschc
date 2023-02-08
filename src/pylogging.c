@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-only
  */
 
+#include <pthread.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -13,7 +14,7 @@
 
 #include "pylogging.h"
 
-
+pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
 static PyObject *_logger = NULL;
 static PyObject *_get_level = NULL;
 static PyObject *_debug = NULL;
@@ -67,6 +68,7 @@ int pylog_debug(const char *format, ...)
         char *str;
         bool str_malloced = true;
         /* if concat buffer is initialized, let vsnprintf continue concatenation */
+        pthread_mutex_lock(&_mutex);
         if (_concat_buffer) {
             str = &_concat_buffer[_concat_buffer_size];
             size -= _concat_buffer_size;
@@ -74,7 +76,8 @@ int pylog_debug(const char *format, ...)
         }
         /* else, allocate a new string */
         else if ((str = (char *)malloc(sizeof(char) * size)) == NULL) {
-            return -1;
+            size = -1;
+            goto early_out;
         }
         va_start(args, format);
         size = vsnprintf(str, size, format, args);
@@ -92,12 +95,12 @@ int pylog_debug(const char *format, ...)
         else if (!_concat_buffer) {
             _concat_buffer = str;
             _concat_buffer_size = size;
-            return size;
+            goto early_out;
         }
         /* else if buffer still fits count new content for concat buffer */
         else if ((_concat_buffer_size + size) < (PYLOG_BUFFER_SIZE - 1)) {
             _concat_buffer_size += size;
-            return size;
+            goto early_out;
         }
         /* else if size is 0 and no concat buffer initialized, do not log */
         else if ((size == 0) && (!_concat_buffer)) {
@@ -122,6 +125,8 @@ end:
         }
         _concat_buffer = NULL;
         _concat_buffer_size = 0;
+early_out:
+        pthread_mutex_unlock(&_mutex);
         return size;
     }
     return 0;
