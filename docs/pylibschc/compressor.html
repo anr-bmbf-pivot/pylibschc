@@ -24,59 +24,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="module-pylibschc.compressor">
-<span id="pylibschc-compressor"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code><a class="headerlink" href="#module-pylibschc.compressor" title="Permalink to this heading">¶</a></h1>
-<p>Exposes libSCHC’s compressor/decompressor functionality</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.compressor.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Compressor/Decompressor.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>device</strong> (<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>) – Device to be used for compression/decompression</p></li>
-<li><p><strong>direction</strong> (<a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction</span></code></a>) – Direction to use for compression/decompression</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="libschc.html#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a></p>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.input">
-<span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.input" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.output">
-<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><span class="pre">CompressionResult</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">pylibschc</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=anr-bmbf-pivot&repo=pylibschc&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -132,8 +94,52 @@
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-pylibschc.compressor">
+<span id="pylibschc-compressor"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code><a class="headerlink" href="#module-pylibschc.compressor" title="Permalink to this heading">¶</a></h1>
+<p>Exposes libSCHC’s compressor/decompressor functionality</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.compressor.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Compressor/Decompressor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>) – Device to be used for compression/decompression</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction</span></code></a>) – Direction to use for compression/decompression</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="libschc.html#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a></p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.input">
+<span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.input" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.output">
+<span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><span class="pre">CompressionResult</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.output" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2023, Martine S. Lenders.
       

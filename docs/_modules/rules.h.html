@@ -21,48 +21,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <h1>Source code for rules.h</h1><div class="highlight"><pre>
-<span></span><span class="cm">/* Dynamic memory manipulation of rule contexts */</span>
-
-<span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2023 Freie Universität Berlin</span>
-<span class="cm"> *</span>
-<span class="cm"> * SPDX-License-Identifier: GPL-3.0-only</span>
-<span class="cm"> */</span>
-
-<span class="cp">#ifndef RULES_H</span>
-<div class="viewcode-block" id="c.RULES_H"><a class="viewcode-back" href="../cfiles/rules.html#c.RULES_H">[docs]</a><span class="cp">#define RULES_H</span></div>
-
-<div class="viewcode-block" id="c.schc_rules_create_compr_ctx"><div class="viewcode-block" id="c.schc_compression_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_compr_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_compression_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_compr_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_ipv6_rule"><div class="viewcode-block" id="c.schc_ipv6_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_ipv6_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_ipv6_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_ipv6_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_ipv6_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_udp_rule"><div class="viewcode-block" id="c.schc_udp_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_udp_rule_t">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_udp_rule">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_udp_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_udp_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_coap_rule"><div class="viewcode-block" id="c.schc_coap_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_coap_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_coap_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_coap_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_coap_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_frag_ctx"><div class="viewcode-block" id="c.schc_fragmentation_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_frag_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_fragmentation_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_frag_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_free_compr_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_compr_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_compr_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
-<div class="viewcode-block" id="c.schc_rules_free_frag_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_frag_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_frag_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
-
-<span class="cp">#endif </span><span class="cm">/* !RULES_H */</span>
-</pre></div>
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">pylibschc</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=anr-bmbf-pivot&repo=pylibschc&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -102,8 +75,41 @@
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for rules.h</h1><div class="highlight"><pre>
+<span></span><span class="cm">/* Dynamic memory manipulation of rule contexts */</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2023 Freie Universität Berlin</span>
+<span class="cm"> *</span>
+<span class="cm"> * SPDX-License-Identifier: GPL-3.0-only</span>
+<span class="cm"> */</span>
+
+<span class="cp">#ifndef RULES_H</span>
+<div class="viewcode-block" id="c.RULES_H"><a class="viewcode-back" href="../cfiles/rules.html#c.RULES_H">[docs]</a><span class="cp">#define RULES_H</span></div>
+
+<div class="viewcode-block" id="c.schc_rules_create_compr_ctx"><div class="viewcode-block" id="c.schc_compression_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_compr_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_compression_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_compr_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
+<div class="viewcode-block" id="c.schc_rules_create_ipv6_rule"><div class="viewcode-block" id="c.schc_ipv6_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_ipv6_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_ipv6_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_ipv6_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_ipv6_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+<div class="viewcode-block" id="c.schc_rules_create_udp_rule"><div class="viewcode-block" id="c.schc_udp_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_udp_rule_t">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_udp_rule">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_udp_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_udp_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+<div class="viewcode-block" id="c.schc_rules_create_coap_rule"><div class="viewcode-block" id="c.schc_coap_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_coap_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_coap_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_coap_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_coap_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+<div class="viewcode-block" id="c.schc_rules_create_frag_ctx"><div class="viewcode-block" id="c.schc_fragmentation_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_frag_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_fragmentation_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_frag_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
+<div class="viewcode-block" id="c.schc_rules_free_compr_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_compr_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_compr_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.schc_rules_free_frag_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_frag_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_frag_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
+
+<span class="cp">#endif </span><span class="cm">/* !RULES_H */</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2023, Martine S. Lenders.
       

@@ -24,64 +24,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <section id="pylogging-h">
-<h1><code class="docutils literal notranslate"><span class="pre">pylogging.h</span></code><a class="headerlink" href="#pylogging-h" title="Permalink to this heading">¶</a></h1>
-<p>Redirect <a class="reference internal" href="schc_config.html#c.DEBUG_PRINTF" title="DEBUG_PRINTF"><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEBUG_PRINTF()</span></code></a> to <code class="xref py py-func docutils literal notranslate"><span class="pre">logging.debug()</span></code>.</p>
-<dl class="c macro">
-<dt class="sig sig-object c" id="c.PYLOG_BUFFER_SIZE">
-<span class="sig-name descname"><span class="n"><span class="pre">PYLOG_BUFFER_SIZE</span></span></span><a class="headerlink" href="#c.PYLOG_BUFFER_SIZE" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.PYLOG_BUFFER_SIZE"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Maximum line buffer length.</p>
-</dd></dl>
-
-<dl class="c function">
-<dt class="sig sig-object c" id="c.pylog_debug">
-<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pylog_debug</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pylog_debug" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.pylog_debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Add a record to the python loggers <code class="xref py py-data docutils literal notranslate"><span class="pre">logging.DEBUG</span></code> log.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>format</strong> – a <code class="docutils literal notranslate"><span class="pre">printf()</span></code> format string</p></li>
-</ul>
-</dd>
-</dl>
-<p>The remaining parameters will be formatted as with <code class="docutils literal notranslate"><span class="pre">printf()</span></code></p>
-</dd></dl>
-
-<dl class="c function">
-<dt class="sig sig-object c" id="c.pylog_init">
-<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pylog_init</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pylog_init" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.pylog_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize a <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Logger</span></code> for <code class="xref py py-mod docutils literal notranslate"><span class="pre">pylogging</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>logger</strong> – a python logger.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../index.html">pylibschc</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=anr-bmbf-pivot&repo=pylibschc&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -135,8 +92,57 @@
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="pylogging-h">
+<h1><code class="docutils literal notranslate"><span class="pre">pylogging.h</span></code><a class="headerlink" href="#pylogging-h" title="Permalink to this heading">¶</a></h1>
+<p>Redirect <a class="reference internal" href="schc_config.html#c.DEBUG_PRINTF" title="DEBUG_PRINTF"><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEBUG_PRINTF()</span></code></a> to <code class="xref py py-func docutils literal notranslate"><span class="pre">logging.debug()</span></code>.</p>
+<dl class="c macro">
+<dt class="sig sig-object c" id="c.PYLOG_BUFFER_SIZE">
+<span class="sig-name descname"><span class="n"><span class="pre">PYLOG_BUFFER_SIZE</span></span></span><a class="headerlink" href="#c.PYLOG_BUFFER_SIZE" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.PYLOG_BUFFER_SIZE"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Maximum line buffer length.</p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pylog_debug">
+<span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pylog_debug</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">format</span></span>, <span class="p"><span class="pre">...</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pylog_debug" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.pylog_debug"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Add a record to the python loggers <code class="xref py py-data docutils literal notranslate"><span class="pre">logging.DEBUG</span></code> log.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>format</strong> – a <code class="docutils literal notranslate"><span class="pre">printf()</span></code> format string</p></li>
+</ul>
+</dd>
+</dl>
+<p>The remaining parameters will be formatted as with <code class="docutils literal notranslate"><span class="pre">printf()</span></code></p>
+</dd></dl>
+
+<dl class="c function">
+<dt class="sig sig-object c" id="c.pylog_init">
+<span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pylog_init</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">PyObject</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n"><span class="pre">logger</span></span><span class="sig-paren">)</span><a class="headerlink" href="#c.pylog_init" title="Permalink to this definition">¶</a><br /><a class="reference internal" href="../_modules/pylogging.h.html#c.pylog_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize a <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Logger</span></code> for <code class="xref py py-mod docutils literal notranslate"><span class="pre">pylogging</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logger</strong> – a python logger.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2023, Martine S. Lenders.
       

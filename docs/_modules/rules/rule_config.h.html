@@ -21,46 +21,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
 
   </head><body>
-  
-
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          
-
-          <div class="body" role="main">
-            
-  <h1>Source code for rules/rule_config.h</h1><div class="highlight"><pre>
-<span></span><span class="cm">/* Rule configuration stub for libSCHC to allow for dynamic rule management */</span>
-
-<span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2018 imec IDLab</span>
-<span class="cm"> * Copyright (C) 2023 Freie Universität Berlin</span>
-<span class="cm"> *</span>
-<span class="cm"> * SPDX-License-Identifier: GPL-3.0-only</span>
-<span class="cm"> */</span>
-
-<span class="cp">#ifndef RULES_RULE_CONFIG_H</span>
-<div class="viewcode-block" id="c.RULES_RULE_CONFIG_H"><a class="viewcode-back" href="../../cfiles/rules.html#c.RULES_RULE_CONFIG_H">[docs]</a><span class="cp">#define RULES_RULE_CONFIG_H</span></div>
-
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;schc.h&quot;</span>
-
-<div class="viewcode-block" id="c.schc_device"><div class="viewcode-block" id="c.devices"><a class="viewcode-back" href="../../cfiles/rules.html#c.schc_device">[docs]</a><a class="viewcode-back" href="../../cfiles/rules.html#c.devices">[docs]</a><span class="k">extern</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_device</span><span class="w"> </span><span class="o">**</span><span class="n">devices</span><span class="p">;</span></div></div>
-<div class="viewcode-block" id="c.DEVICE_COUNT"><a class="viewcode-back" href="../../cfiles/rules.html#c.DEVICE_COUNT">[docs]</a><span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DEVICE_COUNT</span><span class="p">;</span></div>
-
-<span class="cp">#endif </span><span class="cm">/* RULES_RULE_CONFIG_H */</span>
-</pre></div>
-
-          </div>
-          
-        </div>
-      </div>
+  <div class="document">
+    
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h1 class="logo"><a href="../../index.html">pylibschc</a></h1>
 
 
 
+
+
+
+<p>
+<iframe src="https://ghbtns.com/github-btn.html?user=anr-bmbf-pivot&repo=pylibschc&type=watch&count=true&size=large&v=2"
+  allowtransparency="true" frameborder="0" scrolling="0" width="200px" height="35px"></iframe>
+</p>
 
 
 
@@ -100,8 +75,46 @@
 
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for rules/rule_config.h</h1><div class="highlight"><pre>
+<span></span><span class="cm">/* Rule configuration stub for libSCHC to allow for dynamic rule management */</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2018 imec IDLab</span>
+<span class="cm"> * Copyright (C) 2023 Freie Universität Berlin</span>
+<span class="cm"> *</span>
+<span class="cm"> * SPDX-License-Identifier: GPL-3.0-only</span>
+<span class="cm"> */</span>
+
+<span class="cp">#ifndef RULES_RULE_CONFIG_H</span>
+<div class="viewcode-block" id="c.RULES_RULE_CONFIG_H"><span class="cp">#define RULES_RULE_CONFIG_H</span></div>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;schc.h&quot;</span>
+
+<div class="viewcode-block" id="c.devices"><a class="viewcode-back" href="../../cfiles/rules.html#c.devices">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * The devices registered to libSCHC.</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_device"><span class="k">extern</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_device</span><span class="w"> </span><span class="o">**</span><span class="n">devices</span><span class="p">;</span></div></div>
+
+<div class="viewcode-block" id="c.DEVICE_COUNT"><a class="viewcode-back" href="../../cfiles/rules.html#c.DEVICE_COUNT">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * The number entries in :c:var:`devices`.</span>
+<span class="cm"> */</span>
+<span class="k">extern</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">DEVICE_COUNT</span><span class="p">;</span></div>
+
+<span class="cp">#endif </span><span class="cm">/* RULES_RULE_CONFIG_H */</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
     <div class="footer">
       &copy;2023, Martine S. Lenders.
       
