@@ -60,6 +60,7 @@ int pylog_debug(const char *format, ...)
 
     if (_logger) {
         PyObject *level = PyObject_CallObject(_get_level, NULL);
+        PyObject *log_result;
 
         if (level && ((PyLong_AsLong(level) > _debug_level) || PyErr_Occurred())) {
             return 0;
@@ -110,10 +111,11 @@ int pylog_debug(const char *format, ...)
             str = &_concat_buffer[0];
             size = _concat_buffer_size;
         }
-        if (PyObject_CallFunction(_debug, "s", str) == NULL) {
+        if ((log_result = PyObject_CallFunction(_debug, "s", str)) == NULL) {
             size = -1;
             goto end;
         }
+        Py_DECREF(log_result);
 end:
         if (str_malloced) {
             free(str);
