@@ -17,13 +17,6 @@
 #define PYLOG_BUFFER_SIZE   1024
 
 /**
- * Initialize a :py:class:`logging.Logger` for :mod:`pylogging`.
- *
- * :param logger: a python logger.
- */
-void pylog_init(PyObject *logger);
-
-/**
  * Add a record to the python loggers :py:data:`logging.DEBUG` log.
  *
  * :param format: a ``printf()`` format string

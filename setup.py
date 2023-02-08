@@ -94,7 +94,7 @@ setup(
                 "src/libschc/picocoap.c",
                 "src/libschc/schc.c",
             ],
-            include_dirs=["src/libschc", "src"],
+            include_dirs=["src/libschc", "src", "pylibschc"],
             extra_compile_args=["-Wno-unused-variable"],
             define_macros=[],
         ),
