@@ -990,16 +990,17 @@ cdef class FragmentationConnection:
             ],
             None
         ]:
+            # ensure callback is still there, when we get it ...
+            # this has been an issue when valgrinding with >3 fragments
             Py_XINCREF(<PyObject *>self._py_post_timer_task)
-            try:
-                if (
-                    self._allocated()
-                    and self._py_post_timer_task is not None
-                ):
-                    return self._py_post_timer_task
-                return None
-            finally:
-                Py_XDECREF(<PyObject *>self._py_post_timer_task)
+            res = None
+            if (
+                self._allocated()
+                and self._py_post_timer_task is not None
+            ):
+                res = self._py_post_timer_task
+            Py_XDECREF(<PyObject *>self._py_post_timer_task)
+            return res
 
         def __set__(
             self,
