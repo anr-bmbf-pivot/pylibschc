@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "libschc.h"
+#include "libschc.h"  /* generated from pylibschc/libschc.pyx */
 
 #include "pylogging.h"
 
