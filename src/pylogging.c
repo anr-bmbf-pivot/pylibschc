@@ -103,19 +103,11 @@ int pylog_debug(const char *format, ...)
         else if ((size == 0) && (!_concat_buffer)) {
             goto end;
         }
-        PyObject *args;
         if (_concat_buffer) {  /* if concat buffer is initialized, log it */
-            args = Py_BuildValue("(s)", _concat_buffer);
+            str = &_concat_buffer[0];
             size = _concat_buffer_size;
         }
-        else {  /* else log current line */
-            args = Py_BuildValue("(s)", str);
-        }
-        if (args == NULL) {
-            size = -1;
-            goto end;
-        }
-        if (PyObject_CallObject(_debug, args) == NULL) {
+        if (PyObject_CallFunction(_debug, "s", str) == NULL) {
             size = -1;
             goto end;
         }
@@ -127,9 +119,9 @@ end:
             if (_concat_buffer) {
                 free(_concat_buffer);
             }
-            _concat_buffer = NULL;
-            _concat_buffer_size = 0;
         }
+        _concat_buffer = NULL;
+        _concat_buffer_size = 0;
         return size;
     }
     return 0;

@@ -18,6 +18,7 @@ __email__ = "m.lenders@fu-berlin.de"
 # pylint: disable=import-error
 from .libschc import (
     BitArray,
+    FragmenterOps,
     FragmentationConnection,
     FragmentationMode,
     FragmentationResult,
@@ -31,7 +32,7 @@ class ReassemblyStatus(enum.Enum):
     ACK_HANDLED = 256
 
 
-class BaseFragmenterReassembler(abc.ABC):
+class BaseFragmenterReassembler(FragmenterOps):
     # pylint: disable=too-many-instance-attributes,too-few-public-methods
     conn_cls = FragmentationConnection
 
@@ -41,22 +42,26 @@ class BaseFragmenterReassembler(abc.ABC):
         duty_cycle_ms: int,
         mtu: int = None,
         mode: FragmentationMode = None,
-        end_rx: typing.Callable[[object], None] = None,
-        end_tx: typing.Callable[[object], None] = None,
+        end_rx: typing.Callable[[FragmentationConnection], None] = None,
+        end_tx: typing.Callable[[FragmentationConnection], None] = None,
         post_timer_task: typing.Callable[
-            [object, typing.Callable[[object], None], float, object], None
+            [FragmentationConnection, typing.Callable[[object], None], float, object],
+            None,
         ] = None,
-        remove_timer_entry: typing.Callable[[object], None] = None,
+        remove_timer_entry: typing.Callable[[FragmentationConnection], None] = None,
     ):
+        super().__init__(
+            end_rx=end_rx,
+            end_tx=end_tx,
+            post_timer_task=post_timer_task,
+            remove_timer_entry=remove_timer_entry,
+        )
         self.device = device
         self.mtu = mtu
         self.duty_cycle_ms = duty_cycle_ms
         self.mode = mode
-        self._post_timer_task = post_timer_task
-        self._end_rx = end_rx
-        self._end_tx = end_tx
-        self._remove_timer_entry = remove_timer_entry
 
+    @abc.abstractmethod
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
         pass  # pragma: no cover
 
@@ -69,7 +74,7 @@ class Fragmenter(BaseFragmenterReassembler):
         mtu: int,
         mode: FragmentationMode,
         *args,
-        **kwargs
+        **kwargs,
     ):
         super().__init__(device, duty_cycle_ms, mtu, mode, *args, **kwargs)
         self._tx_conn = None
@@ -81,8 +86,8 @@ class Fragmenter(BaseFragmenterReassembler):
         self._tx_conn_lock.release()
 
     def _end_fragmentation_tx(self, conn: object):
-        if self._end_tx:  # pragma: no cover
-            self._end_tx(conn)
+        if self.end_tx:  # pragma: no cover
+            self.end_tx(conn)
         self._tx_conn_release()
 
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
@@ -97,7 +102,8 @@ class Fragmenter(BaseFragmenterReassembler):
         if new_conn != self._tx_conn:  # pragma: no cover
             # is equal when acknowledgment was received
             if not new_conn.fragmented:
-                new_conn.end_rx(new_conn)
+                if self.end_rx:
+                    self.end_rx(new_conn)
                 new_conn.reset()
             assert RuntimeError(
                 b"Unexpected state, input {data.hex()} should be an ACK"
@@ -111,12 +117,7 @@ class Fragmenter(BaseFragmenterReassembler):
             bit_array = BitArray(data)
         self._tx_conn_lock.acquire()  # pylint: disable=consider-using-with
         assert self._tx_conn is None
-        self._tx_conn = self.conn_cls(
-            post_timer_task=self._post_timer_task,
-            end_tx=self._end_tx,
-            end_rx=self._end_fragmentation_tx,
-            remove_timer_entry=self._remove_timer_entry,
-        )
+        self._tx_conn = self.conn_cls(outer=self)
         self._tx_conn.init_tx(
             self.device.device_id,
             bit_array,
@@ -150,12 +151,6 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
         self._rx_conn = None
         self._rx_conn_lock = threading.Lock()
 
-    def _end_reassembly_rx(self, conn: object):
-        if self._end_rx:  # pragma: no cover
-            self._end_rx(conn)
-        del self._rx_conn
-        self._rx_conn = None
-
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
         if isinstance(data, BitArray):
             bit_array = data
@@ -163,11 +158,7 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
             bit_array = BitArray(data)
         with self._rx_conn_lock:
             if self._rx_conn is None:
-                self._rx_conn = self.conn_cls(
-                    post_timer_task=self._post_timer_task,
-                    end_rx=self._end_reassembly_rx,
-                    remove_timer_entry=self._remove_timer_entry,
-                )
+                self._rx_conn = self.conn_cls(outer=self)
                 self._rx_conn.init_rx(
                     self.device.device_id, bit_array, self.duty_cycle_ms
                 )
@@ -181,7 +172,8 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
                     b"Unexpected state, input {data.hex()} should not be an ACK"
                 )
             if not new_conn.fragmented:
-                new_conn.end_rx(new_conn)
+                if self.end_rx:  # pragma: no cover
+                    self.end_rx(new_conn)
                 new_conn.reset()
                 return ReassemblyStatus.COMPLETED
             return ReassemblyStatus(new_conn.reassemble())

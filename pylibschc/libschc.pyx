@@ -54,11 +54,11 @@
    The value is 8 multiplied with :c:macro:`BITMAP_SIZE_BYTES`.
 """
 
+import abc
 import enum
 import logging
 import typing
 
-from cpython.ref cimport Py_INCREF, Py_DECREF, Py_XINCREF, Py_XDECREF
 from cpython.bool cimport bool
 from cpython.object cimport PyObject
 from cython.operator cimport postincrement as inc, postdecrement as dec
@@ -863,6 +863,26 @@ class FragmentationResult(enum.Enum):
     END = clibschc.SCHC_END
 
 
+class FragmenterOps(abc.ABC):
+    # pylint: disable=too-many-instance-attributes,too-few-public-methods
+    conn_cls = FragmentationConnection
+
+    def __init__(  # pylint: disable=too-many-arguments
+        self,
+        end_rx: typing.Callable[[FragmentationConnection], None] = None,
+        end_tx: typing.Callable[[FragmentationConnection], None] = None,
+        post_timer_task: typing.Callable[
+            [FragmentationConnection, typing.Callable[[object], None], float, object],
+            None,
+        ] = None,
+        remove_timer_entry: typing.Callable[[FragmentationConnection], None] = None,
+    ):
+        self.post_timer_task = post_timer_task
+        self.end_rx = end_rx
+        self.end_tx = end_tx
+        self.remove_timer_entry = remove_timer_entry
+
+
 cdef class _TimerTask:
     cdef intptr_t _arg
     cdef intptr_t _timer_task_ptr
@@ -870,20 +890,13 @@ cdef class _TimerTask:
 
     def __cinit__(
         self,
-        conn: "FragmentationConnection",
+        conn: FragmentationConnection,
         timer_task_ptr: intptr_t,
         arg: intptr_t,
     ):
-        Py_INCREF(conn)
-        self._conn = conn
+        self._conn = conn  # only kept to prevent accidental garbage collection of conn
         self._timer_task_ptr = timer_task_ptr
         self._arg = arg
-
-    def __dealloc__(self):
-        self._arg = 0
-        self._timer_task_ptr = 0
-        Py_DECREF(self._conn)
-        self._conn = None
 
     def __str__(self):
         return "<pylibschc.libschc._TimerTask: 0x%x(0x%x)>" % (
@@ -906,10 +919,7 @@ cdef class _TimerTask:
 
 cdef class FragmentationConnection:
     cdef public bool fragmented
-    cdef object _py_post_timer_task
-    cdef object _py_end_rx
-    cdef object _py_end_tx
-    cdef object _py_remove_timer_entry
+    cdef object outer
     cdef object _bit_arr
     cdef clibschc.schc_fragmentation_t *_frag_conn
     cdef uint8_t _malloced
@@ -917,27 +927,12 @@ cdef class FragmentationConnection:
 
     def __cinit__(
         self,
-        post_timer_task: typing.Callable[
-            [
-                'FragmentationConnection',
-                typing.Callable[[_TimerTask], None],
-                float,
-                _TimerTask,
-            ],
-            None
-        ] = None,
-        end_rx: typing.Callable[['FragmentationConnection'], None] = None,
-        end_tx: typing.Callable[['FragmentationConnection'], None] = None,
-        remove_timer_entry: typing.Callable[['FragmentationConnection'], None] = None,
+        outer: FragmenterOps,
         _malloc_inner: bool = True
     ):
-        self._bit_arr = None
-
-        self._py_post_timer_task = post_timer_task
-        self._py_end_rx = end_rx
-        self._py_end_tx = end_tx
-        self._py_remove_timer_entry = remove_timer_entry
+        self.outer = outer
         self.fragmented = False
+        self._bit_arr = None
         self._malloced = _malloc_inner
         if _malloc_inner:
             try:
@@ -980,101 +975,6 @@ cdef class FragmentationConnection:
     def __ne__(self, other: FragmentationConnection) -> bool:
         return not (self == other)
 
-    property post_timer_task:
-        def __get__(self) -> typing.Callable[
-            [
-                'FragmentationConnection',
-                typing.Callable[[_TimerTask], None],
-                float,
-                _TimerTask
-            ],
-            None
-        ]:
-            # ensure callback is still there, when we get it ...
-            # this has been an issue when valgrinding with >3 fragments
-            Py_XINCREF(<PyObject *>self._py_post_timer_task)
-            res = None
-            if (
-                self._allocated()
-                and (<void *>self._py_post_timer_task) is not NULL
-                and self._py_post_timer_task is not None
-            ):
-                res = self._py_post_timer_task
-            Py_XDECREF(<PyObject *>self._py_post_timer_task)
-            return res
-
-        def __set__(
-            self,
-            post_timer_task: typing.Optional[
-                typing.Callable[
-                    [
-                        'FragmentationConnection',
-                        typing.Callable[[_TimerTask], None],
-                        float,
-                        _TimerTask
-                    ],
-                    None
-                ]
-            ]
-        ):
-            self._py_post_timer_task = post_timer_task
-
-        def __del__(self):
-            self._py_post_timer_task = None
-
-    property end_rx:
-        def __get__(self) -> typing.Optional[
-            typing.Callable[['FragmentationConnection'], None]
-        ]:
-            if self._allocated() and self._py_end_rx is not None:
-                return self._py_end_rx
-            return None
-
-        def __set__(
-            self,
-            end_rx: typing.Optional[typing.Callable[['FragmentationConnection'], None]]
-        ):
-            self._py_end_rx = end_rx
-
-        def __del__(self):
-            self._py_end_rx = None
-
-    property end_tx:
-        def __get__(self) -> typing.Optional[
-            typing.Callable[['FragmentationConnection'], None]
-        ]:
-            if self._allocated() and self._py_end_tx is not None:
-                return self._py_end_tx
-            return None
-
-        def __set__(
-            self,
-            end_tx: typing.Optional[typing.Callable[['FragmentationConnection'], None]]
-        ):
-            self._py_end_tx = end_tx
-
-        def __del__(self):
-            self._py_end_tx = None
-
-    property remove_timer_entry:
-        def __get__(self) -> typing.Optional[
-            typing.Callable[['FragmentationConnection'], None]
-        ]:
-            if self._allocated() and self._py_remove_timer_entry is not None:
-                return self._py_remove_timer_entry
-            return None
-
-        def __set__(
-            self,
-            remove_timer_entry: typing.Optional[
-                typing.Callable[['FragmentationConnection'], None]
-            ]
-        ):
-            self._py_remove_timer_entry = remove_timer_entry
-
-        def __del__(self):
-            self._py_remove_timer_entry = None
-
     property bit_arr:
         def __get__(self) -> BitArray:
             return self._bit_arr
@@ -1102,7 +1002,9 @@ cdef class FragmentationConnection:
         return self._frag_conn is not NULL and self._frag_conn.timer_ctx is not NULL
 
     @staticmethod
-    cdef _outer_from_struct(clibschc.schc_fragmentation_t *conn):
+    cdef FragmentationConnection _outer_from_struct(
+        clibschc.schc_fragmentation_t *conn
+    ):
         if conn.timer_ctx:
             obj = <FragmentationConnection>conn.timer_ctx
             if not obj._allocated():
@@ -1126,8 +1028,8 @@ cdef class FragmentationConnection:
     cdef void _c_end_rx(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.end_rx:
-                obj.end_rx(obj)
+            if obj and obj.outer and obj.outer.end_rx:
+                obj.outer.end_rx(obj)
         except Exception:
             raise
 
@@ -1135,8 +1037,8 @@ cdef class FragmentationConnection:
     cdef void _c_end_tx(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.end_tx:
-                obj.end_tx(obj)
+            if obj and obj.outer and obj.outer.end_tx:
+                obj.outer.end_tx(obj)
         except Exception:
             raise
 
@@ -1144,8 +1046,8 @@ cdef class FragmentationConnection:
     cdef void _c_remove_timer_entry(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.remove_timer_entry:
-                obj.remove_timer_entry(obj)
+            if obj and obj.outer and obj.outer.remove_timer_entry:
+                obj.outer.remove_timer_entry(obj)
         except Exception:
             raise
 
@@ -1157,15 +1059,14 @@ cdef class FragmentationConnection:
         void *arg
     ):
         obj = FragmentationConnection._outer_from_struct(conn)
-        if obj:
-            if obj.post_timer_task:
-                task = _TimerTask(obj, <intptr_t>(<void *>timer_task), <intptr_t>arg)
-                obj.post_timer_task(
-                    obj,
-                    task.the_task,
-                    time_ms / 1000,
-                    task
-                )
+        if obj and obj.outer and obj.outer.post_timer_task:
+            task = _TimerTask(obj, <intptr_t>(<void *>timer_task), <intptr_t>arg)
+            obj.outer.post_timer_task(
+                obj,
+                task.the_task,
+                time_ms / 1000,
+                task
+            )
 
     @staticmethod
     def register_send(device_id: int, send: typing.Callable[[bytes], int]):
@@ -1185,8 +1086,8 @@ cdef class FragmentationConnection:
         assert device_id in FragmentationConnection._device_sends, (
             f"No send registered for device #{device_id}"
         )
-        assert self.end_rx is not None
-        assert self.remove_timer_entry is not None
+        assert self.outer.end_rx is not None
+        assert self.outer.remove_timer_entry is not None
         self._frag_conn.device_id = device_id
         self.bit_arr = bit_arr
         self._frag_conn.dc = dc
@@ -1203,8 +1104,7 @@ cdef class FragmentationConnection:
         assert device_id in FragmentationConnection._device_sends, (
             f"No send registered for device #{device_id}"
         )
-        assert self.end_rx is not None
-        assert self.remove_timer_entry is not None
+        assert self.outer.remove_timer_entry is not None
         if clibschc.schc_fragmenter_init(
             self._frag_conn, self._send, self._c_end_rx, self._c_remove_timer_entry
         ) != 1:
@@ -1267,12 +1167,9 @@ cdef class FragmentationConnection:
                     f"Unable to allocate a RX connection for {buffer.hex()}"
                 )
             elif self._frag_conn != conn_ptr:
-                res = FragmentationConnection(_malloc_inner=False)
+                res = FragmentationConnection(outer=self.outer, _malloc_inner=False)
                 conn_ptr.post_timer_task = self._c_post_timer_task
                 conn_ptr.dc = self._frag_conn.dc
-                res.post_timer_task = self._py_post_timer_task
-                res.end_rx = self._py_end_rx
-                res.remove_timer_entry = self._py_remove_timer_entry
                 FragmentationConnection._set_frag_conn(res, conn_ptr)
                 if (
                     not conn_ptr.fragmentation_rule
@@ -1308,8 +1205,8 @@ cdef class FragmentationConnection:
                 and self._frag_conn.fragmentation_rule != NULL
                 and self._frag_conn.fragmentation_rule.mode == clibschc.NO_ACK
             ):
-                if self._py_end_rx:
-                    self._py_end_rx(self)
+                if self.outer and self.outer.end_rx:
+                    self.outer.end_rx(self)
                 self.reset()
             return res
         except Exception:
