@@ -63,8 +63,10 @@ int pylog_debug(const char *format, ...)
         PyObject *log_result;
 
         if (level && ((PyLong_AsLong(level) > _debug_level) || PyErr_Occurred())) {
+            Py_DECREF(level);
             return 0;
         }
+        Py_DECREF(level);
         int size = PYLOG_BUFFER_SIZE;
         char *str;
         bool str_malloced = true;
