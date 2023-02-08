@@ -91,15 +91,76 @@
 <span class="cm"> */</span>
 
 <span class="cp">#ifndef RULES_H</span>
-<div class="viewcode-block" id="c.RULES_H"><a class="viewcode-back" href="../cfiles/rules.html#c.RULES_H">[docs]</a><span class="cp">#define RULES_H</span></div>
+<div class="viewcode-block" id="c.RULES_H"><span class="cp">#define RULES_H</span></div>
 
-<div class="viewcode-block" id="c.schc_rules_create_compr_ctx"><div class="viewcode-block" id="c.schc_compression_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_compr_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_compression_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_compr_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_ipv6_rule"><div class="viewcode-block" id="c.schc_ipv6_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_ipv6_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_ipv6_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_ipv6_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_ipv6_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_udp_rule"><div class="viewcode-block" id="c.schc_udp_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_udp_rule_t">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_udp_rule">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_udp_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_udp_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_coap_rule"><div class="viewcode-block" id="c.schc_coap_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_coap_rule">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_coap_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_coap_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_coap_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_create_frag_ctx"><div class="viewcode-block" id="c.schc_fragmentation_rule_t"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_frag_ctx">[docs]</a><a class="viewcode-back" href="../cfiles/rules.html#c.schc_fragmentation_rule_t">[docs]</a><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_frag_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
-<div class="viewcode-block" id="c.schc_rules_free_compr_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_compr_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_compr_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
-<div class="viewcode-block" id="c.schc_rules_free_frag_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_frag_ctx">[docs]</a><span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_frag_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
+<div class="viewcode-block" id="c.schc_rules_create_compr_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_compr_ctx">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Allocates the array for the compression context of a device.</span>
+<span class="cm"> *</span>
+<span class="cm"> * :param rule_count: The number of rule entries to be added to the compression context.</span>
+<span class="cm"> * :type rule_count: unsigned</span>
+<span class="cm"> * :return: An array of allocates ``struct schc_compression_rule_t`` pointers or ``NULL`` when the</span>
+<span class="cm"> *      context can not be allocated.</span>
+<span class="cm"> * :rtype: ``struct schc_compression_rule_t **``</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_compression_rule_t"><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_compr_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
+
+<div class="viewcode-block" id="c.schc_rules_create_ipv6_rule"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_ipv6_rule">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Allocate an IPv6 layer rule</span>
+<span class="cm"> *</span>
+<span class="cm"> * :return: A ``struct schc_ipv6_rule_t`` pointer or ``NULL`` when the layer rule can not be</span>
+<span class="cm"> *      allocated.</span>
+<span class="cm"> * :rtype: ``struct schc_ipv6_rule_t *``</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_ipv6_rule_t"><span class="k">struct</span><span class="w"> </span><span class="nc">schc_ipv6_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_ipv6_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+
+<div class="viewcode-block" id="c.schc_rules_create_udp_rule"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_udp_rule">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Allocate an UDP layer rule</span>
+<span class="cm"> *</span>
+<span class="cm"> * :return: A ``struct schc_udp_rule_t`` pointer or ``NULL`` when the layer rule can not be</span>
+<span class="cm"> *      allocated.</span>
+<span class="cm"> * :rtype: ``struct schc_udp_rule_t *``</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_udp_rule_t"><span class="k">struct</span><span class="w"> </span><span class="nc">schc_udp_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_udp_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+
+<div class="viewcode-block" id="c.schc_rules_create_coap_rule"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_coap_rule">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Allocate an CoAP layer rule</span>
+<span class="cm"> *</span>
+<span class="cm"> * :return: A ``struct schc_coap_rule_t`` pointer or ``NULL`` when the layer rule can not be</span>
+<span class="cm"> *      allocated.</span>
+<span class="cm"> * :rtype: ``struct schc_coap_rule_t *``</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_coap_rule_t"><span class="k">struct</span><span class="w"> </span><span class="nc">schc_coap_rule_t</span><span class="w"> </span><span class="o">*</span><span class="n">schc_rules_create_coap_rule</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span></div></div>
+
+<div class="viewcode-block" id="c.schc_rules_create_frag_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_create_frag_ctx">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Allocates the array for the fragmentation context of a device.</span>
+<span class="cm"> *</span>
+<span class="cm"> * :param rule_count: The number of rule entries to be added to the fragmentation context.</span>
+<span class="cm"> * :type rule_count: unsigned</span>
+<span class="cm"> * :return: An array of allocates ``struct schc_fragmentation_rule_t`` pointers or ``NULL`` when the</span>
+<span class="cm"> *      context can not be allocated.</span>
+<span class="cm"> * :rtype: ``struct schc_fragmentation_rule_t **``</span>
+<span class="cm"> */</span>
+<div class="viewcode-block" id="c.schc_fragmentation_rule_t"><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">schc_rules_create_frag_ctx</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div></div>
+
+<div class="viewcode-block" id="c.schc_rules_free_compr_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_compr_ctx">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Frees the compression context allocated with :func:`schc_rules_create_compr_ctx()`.</span>
+<span class="cm"> *</span>
+<span class="cm"> * :param ctx: The context to be free&#39;d.</span>
+<span class="cm"> * :type ctx: ``struct schc_compression_rule_t **``</span>
+<span class="cm"> * :param rule_count: The number of rules that are contained in ``ctx``.</span>
+<span class="cm"> * :type rule_count: unsigned</span>
+<span class="cm"> */</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_compr_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_compression_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
+
+<div class="viewcode-block" id="c.schc_rules_free_frag_ctx"><a class="viewcode-back" href="../cfiles/rules.html#c.schc_rules_free_frag_ctx">[docs]</a><span class="cm">/**</span>
+<span class="cm"> * Frees the fragmentation context allocated with :func:`schc_rules_create_frag_ctx()`.</span>
+<span class="cm"> *</span>
+<span class="cm"> * :param ctx: The context to be free&#39;d.</span>
+<span class="cm"> * :type ctx: ``struct schc_fragmentation_rule_t **``</span>
+<span class="cm"> * :param rule_count: The number of rules that are contained in ``ctx``.</span>
+<span class="cm"> * :type rule_count: unsigned</span>
+<span class="cm"> */</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">schc_rules_free_frag_ctx</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">schc_fragmentation_rule_t</span><span class="w"> </span><span class="o">**</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rule_count</span><span class="p">);</span></div>
 
 <span class="cp">#endif </span><span class="cm">/* !RULES_H */</span>
 </pre></div>
