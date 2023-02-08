@@ -60,7 +60,6 @@ import logging
 import typing
 
 from cpython.bool cimport bool
-from cpython.object cimport PyObject
 from cython.operator cimport postincrement as inc, postdecrement as dec
 from libc.stddef cimport size_t
 from libc.stdint cimport int8_t, uint8_t, uint16_t, uint32_t, intptr_t
