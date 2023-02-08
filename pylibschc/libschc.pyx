@@ -1244,11 +1244,14 @@ cdef class FragmentationConnection:
 
 PYLOG_BUFFER_SIZE = clibschc.PYLOG_BUFFER_SIZE
 
+
 cdef public int pylog_in_debug():
     return (<long>logger.getEffectiveLevel()) <= (<long>logging.DEBUG)
 
+
 cdef public void pylog_call_debug(char *string):
     logger.debug((<bytes>string).decode())
+
 
 def test_pylog_debug(fmt: bytes, str_arg: bytes, int_arg: int):
     clibschc.pylog_debug(fmt, <char *>str_arg, <int>int_arg)
