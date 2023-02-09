@@ -88,6 +88,8 @@
 <span class="c1">#</span>
 <span class="c1"># SPDX-License-Identifier: GPL-3.0-only</span>
 
+<span class="c1"># pylint: disable=missing-module-docstring</span>
+
 <span class="kn">import</span> <span class="nn">enum</span>
 
 <span class="kn">import</span> <span class="nn">pydantic.json</span>
@@ -98,7 +100,7 @@
 <span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;m.lenders@fu-berlin.de&quot;</span>
 
 
-<div class="viewcode-block" id="EnumByName"><a class="viewcode-back" href="../../pylibschc/pydantic.html#pylibschc._pydantic.EnumByName">[docs]</a><span class="k">class</span> <span class="nc">EnumByName</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
+<div class="viewcode-block" id="EnumByName"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc._pydantic.EnumByName">[docs]</a><span class="k">class</span> <span class="nc">EnumByName</span><span class="p">(</span><span class="n">enum</span><span class="o">.</span><span class="n">Enum</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;A custom Enum type for pydantic to validate by case-insensitive name.</span>
 
 <span class="sd">    Source: https://github.com/pydantic/pydantic/discussions/2980</span>

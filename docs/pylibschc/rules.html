@@ -17,7 +17,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pylogging.h" href="../cfiles/pylogging.html" />
-    <link rel="prev" title="pylibschc._pydantic" href="pydantic.html" />
+    <link rel="prev" title="pylibschc.libschc" href="libschc.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -55,7 +55,6 @@
 <li class="toctree-l3"><a class="reference internal" href="device.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="fragmenter.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="libschc.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydantic.html"><code class="docutils literal notranslate"><span class="pre">pylibschc._pydantic</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
 </ul>
 </li>
@@ -69,7 +68,7 @@
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../modules.html">API reference</a><ul>
-      <li>Previous: <a href="pydantic.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc._pydantic</span></code></a></li>
+      <li>Previous: <a href="libschc.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code></a></li>
       <li>Next: <a href="../cfiles/pylogging.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">pylogging.h</span></code></a></li>
   </ul></li>
   </ul></li>
@@ -403,6 +402,14 @@ be 0 ≤ <code class="xref py py-attr docutils literal notranslate"><span class=
 <p>The rule for an uncompressed packet.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
+</dd></dl>
+
+<span class="target" id="module-pylibschc._pydantic"></span><dl class="py class">
+<dt class="sig sig-object py" id="pylibschc._pydantic.EnumByName">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc._pydantic.</span></span><span class="sig-name descname"><span class="pre">EnumByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/_pydantic.html#EnumByName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc._pydantic.EnumByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>A custom Enum type for pydantic to validate by case-insensitive name.</p>
+<p>Source: <a class="reference external" href="https://github.com/pydantic/pydantic/discussions/2980">https://github.com/pydantic/pydantic/discussions/2980</a></p>
 </dd></dl>
 
 </section>
