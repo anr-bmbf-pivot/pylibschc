@@ -28,6 +28,7 @@ class CompressorDecompressor:
 
     This wraps :class:`pylibschc.libschc.CompressorDecompressor` for a more pythonic
     usage."""
+
     _inner_cls = InnerCompressorDecompressor
     _inner = None
 

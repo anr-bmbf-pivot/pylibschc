@@ -171,6 +171,7 @@ class Fragmenter(BaseFragmenterReassembler):
 
 class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-methods
     """A reassembler."""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._rx_conn = None

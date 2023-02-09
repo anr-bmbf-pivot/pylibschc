@@ -24,6 +24,7 @@ class Device:  # pylint: disable=too-many-instance-attributes
     multiton)
 
     """
+
     _devices = {}
 
     def __new__(cls, device_id: int, mtu: int, duty_cycle_ms: int):
