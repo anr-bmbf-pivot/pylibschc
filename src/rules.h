@@ -14,8 +14,8 @@
  *
  * :param rule_count: The number of rule entries to be added to the compression context.
  * :type rule_count: unsigned
- * :return: An array of allocates ``struct schc_compression_rule_t`` pointers or ``NULL`` when the
- *      context can not be allocated.
+ * :return: An array of allocates ``struct schc_compression_rule_t`` pointers.
+ * :retval NULL: when the context can not be allocated.
  * :rtype: ``struct schc_compression_rule_t **``
  */
 struct schc_compression_rule_t **schc_rules_create_compr_ctx(unsigned rule_count);
@@ -23,8 +23,8 @@ struct schc_compression_rule_t **schc_rules_create_compr_ctx(unsigned rule_count
 /**
  * Allocate an IPv6 layer rule
  *
- * :return: A ``struct schc_ipv6_rule_t`` pointer or ``NULL`` when the layer rule can not be
- *      allocated.
+ * :return: A ``struct schc_ipv6_rule_t`` pointer.
+ * :retval NULL: when the layer rule can not be allocated.
  * :rtype: ``struct schc_ipv6_rule_t *``
  */
 struct schc_ipv6_rule_t *schc_rules_create_ipv6_rule(void);
@@ -32,8 +32,8 @@ struct schc_ipv6_rule_t *schc_rules_create_ipv6_rule(void);
 /**
  * Allocate an UDP layer rule
  *
- * :return: A ``struct schc_udp_rule_t`` pointer or ``NULL`` when the layer rule can not be
- *      allocated.
+ * :return: A ``struct schc_udp_rule_t`` pointer.
+ * :retval NULL: when the layer rule can not be allocated.
  * :rtype: ``struct schc_udp_rule_t *``
  */
 struct schc_udp_rule_t *schc_rules_create_udp_rule(void);
@@ -41,8 +41,8 @@ struct schc_udp_rule_t *schc_rules_create_udp_rule(void);
 /**
  * Allocate an CoAP layer rule
  *
- * :return: A ``struct schc_coap_rule_t`` pointer or ``NULL`` when the layer rule can not be
- *      allocated.
+ * :return: A ``struct schc_coap_rule_t`` pointer.
+ * :retval NULL: when the layer rule can not be allocated.
  * :rtype: ``struct schc_coap_rule_t *``
  */
 struct schc_coap_rule_t *schc_rules_create_coap_rule(void);
@@ -52,8 +52,8 @@ struct schc_coap_rule_t *schc_rules_create_coap_rule(void);
  *
  * :param rule_count: The number of rule entries to be added to the fragmentation context.
  * :type rule_count: unsigned
- * :return: An array of allocates ``struct schc_fragmentation_rule_t`` pointers or ``NULL`` when the
- *      context can not be allocated.
+ * :return: An array of allocates ``struct schc_fragmentation_rule_t`` pointers.
+ * :retval NULL: When the context can not be allocated.
  * :rtype: ``struct schc_fragmentation_rule_t **``
  */
 struct schc_fragmentation_rule_t **schc_rules_create_frag_ctx(unsigned rule_count);

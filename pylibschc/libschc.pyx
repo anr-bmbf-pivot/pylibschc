@@ -853,12 +853,23 @@ cdef class CompressorDecompressor:
 
 
 class FragmentationResult(enum.Enum):
-    """The result of calling :py:meth:`FragmentationConnection.fragment()`"""
+    """The result of calling :py:meth:`FragmentationConnection.fragment()`.
+    Wraps ``SCHC_FRAG_INPUT``, ``SCHC_ACK_INPUT``, ``SCHC_SUCCESS``, ``SCHC_END``,
+    and ``SCHC_NO_FRAGMENTATION``."""
     NO_FRAGMENTATION = clibschc.SCHC_NO_FRAGMENTATION
     SUCCESS = clibschc.SCHC_SUCCESS
     ACK_INPUT = clibschc.SCHC_ACK_INPUT
     FRAG_INPUT = clibschc.SCHC_FRAG_INPUT
     END = clibschc.SCHC_END
+
+
+class ReassemblyStatus(enum.Enum):
+    """The state of reassembly after calling
+    :py:meth:`FragmentationConnection.reassemble()`."""
+    ONGOING = 0
+    COMPLETED = 1
+    STAY_ALIVE = 2
+    ACK_HANDLED = 256
 
 
 class FragmenterOps(abc.ABC):
@@ -912,7 +923,7 @@ cdef class _TimerTask:
         timer_task_ptr: intptr_t,
         arg: intptr_t,
     ):
-        self._conn = conn  # only kept to prevent accidental garbage collection of conn
+        self._conn = conn
         self._timer_task_ptr = timer_task_ptr
         self._arg = arg
 
@@ -936,20 +947,26 @@ cdef class _TimerTask:
 
 
 cdef class FragmentationConnection:
-    cdef public bool fragmented
-    cdef object outer
+    """
+    A fragmentation connection. Wraps the ``schc_fragmentation_t`` type of libSCHC.
+
+    :param ops: Operation callbacks.
+    :type ops: :py:class:`FragmenterOps`
+    """
+    cdef object ops
     cdef object _bit_arr
     cdef clibschc.schc_fragmentation_t *_frag_conn
+    cdef uint8_t _fragmented
     cdef uint8_t _malloced
     _device_sends = {}
 
     def __cinit__(
         self,
-        outer: FragmenterOps,
+        ops: FragmenterOps,
         _malloc_inner: bool = True
     ):
-        self.outer = outer
-        self.fragmented = False
+        self.ops = ops
+        self._fragmented = False
         self._bit_arr = None
         self._malloced = _malloc_inner
         if _malloc_inner:
@@ -994,6 +1011,13 @@ cdef class FragmentationConnection:
         return not (self == other)
 
     property bit_arr:
+        """
+        :type: :py:class:`BitArray`
+
+        The :py:class:`BitArray` of the fragmentation connection if initialized, None
+        otherwise.
+        Wraps the `bit_arr` member of `schc_fragmentation_t`.
+        """
         def __get__(self) -> BitArray:
             return self._bit_arr
 
@@ -1005,7 +1029,23 @@ cdef class FragmentationConnection:
             self._bit_arr = None
             self._frag_conn.bit_arr = NULL
 
+    property fragmented:
+        """
+        :type: bool
+
+        ``True`` after calling :py:func:`FragmentationConnection.fragment()` when the
+        received packet is a fragment, ``False`` if not.
+        """
+        def __get__(self) -> bool:
+            return bool(self._fragmented)
+
     property mbuf:
+        """
+        :type: bytes
+
+        The reassembly buffer of the fragmentation connection.
+        Wraps and combines the functionality of `get_mbuf_len()` and `mbuf_copy()`
+        """
         def __get__(self) -> bytes:
             return self._get_mbuf()
 
@@ -1046,8 +1086,8 @@ cdef class FragmentationConnection:
     cdef void _c_end_rx(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.outer and obj.outer.end_rx:
-                obj.outer.end_rx(obj)
+            if obj and obj.ops and obj.ops.end_rx:
+                obj.ops.end_rx(obj)
         except Exception:
             raise
 
@@ -1055,8 +1095,8 @@ cdef class FragmentationConnection:
     cdef void _c_end_tx(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.outer and obj.outer.end_tx:
-                obj.outer.end_tx(obj)
+            if obj and obj.ops and obj.ops.end_tx:
+                obj.ops.end_tx(obj)
         except Exception:
             raise
 
@@ -1064,8 +1104,8 @@ cdef class FragmentationConnection:
     cdef void _c_remove_timer_entry(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
-            if obj and obj.outer and obj.outer.remove_timer_entry:
-                obj.outer.remove_timer_entry(obj)
+            if obj and obj.ops and obj.ops.remove_timer_entry:
+                obj.ops.remove_timer_entry(obj)
         except Exception:
             raise
 
@@ -1077,9 +1117,9 @@ cdef class FragmentationConnection:
         void *arg
     ):
         obj = FragmentationConnection._outer_from_struct(conn)
-        if obj and obj.outer and obj.outer.post_timer_task:
+        if obj and obj.ops and obj.ops.post_timer_task:
             task = _TimerTask(obj, <intptr_t>(<void *>timer_task), <intptr_t>arg)
-            obj.outer.post_timer_task(
+            obj.ops.post_timer_task(
                 obj,
                 task.the_task,
                 time_ms / 1000,
@@ -1088,10 +1128,25 @@ cdef class FragmentationConnection:
 
     @staticmethod
     def register_send(device_id: int, send: typing.Callable[[bytes], int]):
+        """Register a send function for a device. Effectively sets the ``send`` member
+        for all ``schc_fragmentation_t``.
+
+        :param device_id: The identifier for the device.
+        :type device_id: int
+        :param send: The send function for the device identified by ``device_id``.
+        :type send: A callable that takes :py:class:`bytes` as a parameter and returns
+            an integer.
+        """
         FragmentationConnection._device_sends[device_id] = send
 
     @staticmethod
     def unregister_send(device_id: int):
+        """Remove a send function for a device. Effectively unsets the ``send`` member
+        for all ``schc_fragmentation_t``.
+
+        :param device_id: The identifier for the device.
+        :type device_id: int
+        """
         del FragmentationConnection._device_sends[device_id]
 
     def init_rx(
@@ -1100,12 +1155,22 @@ cdef class FragmentationConnection:
         bit_arr: BitArray,
         dc: uint32_t,
     ):
+        """Initialize connection for reception.
+
+        :param device_id: The identifier of the device this connection is to be used
+            with.
+        :type device_id: int
+        :param bit_arr: The :py:class:`BitArray` for the connection.
+        :type bit_arr: :py:class:`BitArray`
+        :param dc: Duty cycle in milliseconds for the connection.
+        :type ds: int
+        """
         assert self._frag_conn, "FragmentationConnection not properly initialized"
         assert device_id in FragmentationConnection._device_sends, (
             f"No send registered for device #{device_id}"
         )
-        assert self.outer.end_rx is not None
-        assert self.outer.remove_timer_entry is not None
+        assert self.ops.end_rx is not None
+        assert self.ops.remove_timer_entry is not None
         self._frag_conn.device_id = device_id
         self.bit_arr = bit_arr
         self._frag_conn.dc = dc
@@ -1118,11 +1183,25 @@ cdef class FragmentationConnection:
         dc: uint32_t,
         mode: clibschc.reliability_mode
     ):
+        """Initialize connection for transmission.
+
+        :param device_id: The identifier of the device this connection is to be used
+            with.
+        :type device_id: int
+        :param bit_arr: The :py:class:`BitArray` for the connection.
+        :type bit_arr: :py:class:`BitArray`
+        :param mtu: The link layer MTU for this connection in bytes.
+        :type ds: int
+        :param dc: Duty cycle in milliseconds for the connection.
+        :type ds: int
+        :param mode: The fragmentation mode for this connection.
+        :type mode: :py:class:`FragmentationMode`
+        """
         assert self._frag_conn, "FragmentationConnection not properly initialized"
         assert device_id in FragmentationConnection._device_sends, (
             f"No send registered for device #{device_id}"
         )
-        assert self.outer.remove_timer_entry is not None
+        assert self.ops.remove_timer_entry is not None
         if clibschc.schc_fragmenter_init(
             self._frag_conn, self._send, self._c_end_rx, self._c_remove_timer_entry
         ) != 1:
@@ -1155,6 +1234,17 @@ cdef class FragmentationConnection:
             raise
 
     def fragment(self) -> FragmentationResult:
+        """Send :py:attr:`FragmentationConnection.bit_arr`, if necessary fragmented.
+        Wraps ``schc_fragment()``.
+
+        :raises MemoryError:
+            - When no ``schc_mbuf_t`` in its ``head`` member could not be allocated,
+            - if no fragmentaftion rule for the initialized ``mode`` can be found, or
+            - if the state of the fragmentation connection is invalid.
+        :retval NO_FRAGMENTATION: If the packet was not fragmented.
+        :retval SUCCESS: If the packet was fragmented.
+        :rtype: :py:class:`FragmentationResult`
+        """
         return FragmentationResult(self._fragment())
 
     @staticmethod
@@ -1185,7 +1275,7 @@ cdef class FragmentationConnection:
                     f"Unable to allocate a RX connection for {buffer.hex()}"
                 )
             elif self._frag_conn != conn_ptr:
-                res = FragmentationConnection(outer=self.outer, _malloc_inner=False)
+                res = FragmentationConnection(ops=self.ops, _malloc_inner=False)
                 conn_ptr.post_timer_task = self._c_post_timer_task
                 conn_ptr.dc = self._frag_conn.dc
                 FragmentationConnection._set_frag_conn(res, conn_ptr)
@@ -1193,17 +1283,32 @@ cdef class FragmentationConnection:
                     not conn_ptr.fragmentation_rule
                     or conn_ptr.fragmentation_rule.mode == clibschc.NOT_FRAGMENTED
                 ):
-                    res.fragmented = False
+                    res._fragmented = 0
                 else:
-                    res.fragmented = True
+                    res._fragmented = 1
             else:  # buf was an ACK
                 res = self
-                self.fragmented = False
+                self._fragmented = 0
             return res
         except Exception:
             raise
 
     def input(self, buffer: [bytes, BitArray]):
+        """Must be called whenever a packet is received. Wraps `schc_input()`.
+
+        When the packet was a fragment, :py:attr:`FragmentationConnection.fragmented`
+        will be True, otherwise it will be False.
+
+        :param buffer: The received packet.
+        :type buffer: :py:class:`bytes`
+        :type buffer: :py:class:`BitArray`
+        :raises MemoryError: If a new connection object or one of its members could not
+            be allocated.
+        :return: This connection, if ``buffer`` was an ACK, a new
+            :py:class:`FragmentationConnection`, when it was a fragment.
+            :py:meth:`FragmentationConnection.reassemble()` shall be called in the
+            latter case to initialize or continue reassembly.
+        """
         try:
             if isinstance(buffer, BitArray):
                 return self._input(_bit_array_ptr(buffer), buffer.length)
@@ -1223,17 +1328,31 @@ cdef class FragmentationConnection:
                 and self._frag_conn.fragmentation_rule != NULL
                 and self._frag_conn.fragmentation_rule.mode == clibschc.NO_ACK
             ):
-                if self.outer and self.outer.end_rx:
-                    self.outer.end_rx(self)
+                if self.ops and self.ops.end_rx:
+                    self.ops.end_rx(self)
                 self.reset()
             return res
         except Exception:
             raise
 
     def reassemble(self) -> int:
-        return self._reassemble()
+        """Handle the last received fragment. Wraps ``schc_reassemble()``.
+
+        :retval ONGOING: If reassembly is still missing fragments.
+        :retval COMPLETED: If the fragment handled was the last missing fragment.
+        :retval STAY_ALIVE: If reassembly was completed, but the connection still is
+            kept open, e.g., in case another ACK needs to be sent.
+        :rtype: :py:class:`ReassemblyStatus`
+        """
+        return ReassemblyStatus(self._reassemble())
 
     def reset(self):
+        """Reset a connection.
+
+        .. warning::
+            After this method was called, a connection created by
+            :py:meth:`FragmentationConnection.input()` should not be used and is
+            recommended to be deleted after."""
         if (self._frag_conn):
             clibschc.schc_reset(self._frag_conn)
             if self._malloced:

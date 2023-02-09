@@ -22,14 +22,8 @@ from .libschc import (
     FragmentationConnection,
     FragmentationMode,
     FragmentationResult,
+    ReassemblyStatus,
 )
-
-
-class ReassemblyStatus(enum.Enum):
-    ONGOING = 0
-    COMPLETED = 1
-    STAY_ALIVE = 2
-    ACK_HANDLED = 256
 
 
 class BaseFragmenterReassembler(FragmenterOps):
@@ -117,7 +111,7 @@ class Fragmenter(BaseFragmenterReassembler):
             bit_array = BitArray(data)
         self._tx_conn_lock.acquire()  # pylint: disable=consider-using-with
         assert self._tx_conn is None
-        self._tx_conn = self.conn_cls(outer=self)
+        self._tx_conn = self.conn_cls(ops=self)
         self._tx_conn.init_tx(
             self.device.device_id,
             bit_array,
@@ -158,7 +152,7 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
             bit_array = BitArray(data)
         with self._rx_conn_lock:
             if self._rx_conn is None:
-                self._rx_conn = self.conn_cls(outer=self)
+                self._rx_conn = self.conn_cls(ops=self)
                 self._rx_conn.init_rx(
                     self.device.device_id, bit_array, self.duty_cycle_ms
                 )
@@ -176,4 +170,4 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
                     self.end_rx(new_conn)
                 new_conn.reset()
                 return ReassemblyStatus.COMPLETED
-            return ReassemblyStatus(new_conn.reassemble())
+            return new_conn.reassemble()
