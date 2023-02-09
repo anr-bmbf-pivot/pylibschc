@@ -41,7 +41,8 @@ generated using
 
 An example for such a dictionary is provided in
 `./tests/artifacts/rules_example.json <./tests/artifacts/rules_example.json>`_ as JSON, the
-concrete `pydantic`_ model you can find `./pylibschc/rules.py <./pylibschc/rules.py>`_.
+documentation of the concrete `pydantic`_ model you can find in the
+`API reference <https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html>`_.
 
 More documentation can be found `here <https://anr-bmbf-pivot.github.io/pylibschc>`_.
 

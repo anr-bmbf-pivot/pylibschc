@@ -42,7 +42,7 @@ __email__ = "m.lenders@fu-berlin.de"
 
 # pylint: disable=too-many-lines
 class BaseModel(PydanticBaseModel):
-    """Overrides pydantic to default to case-insensitivity:"""
+    """Overrides pydantic to default to case-insensitivity."""
 
     # pylint: disable=too-few-public-methods
     class Config:
@@ -56,13 +56,14 @@ class BaseRule(BaseModel):
 
     # pylint: disable=too-few-public-methods
     rule_id: int
-    """The Rule ID."""
+    """The Rule ID. Must fit into :attr:`BaseRule.rule_id_size_bits`."""
     rule_id_size_bits: conint(gt=0, le=32)
-    """Size of Rule ID in bits."""
+    """Size of Rule ID in bits. Must be 0 < :attr:`BaseRule.rule_id_size_bits` ≤ 32"""
 
     @validator("rule_id_size_bits", allow_reuse=True)
     @classmethod
     def check_rule_id_size_bits(cls, value, values):
+        # pylint: disable=missing-function-docstring
         if values.get("rule_id", 1 << 32) >= (1 << value):
             raise ValueError(
                 f"rule_id={values.get('rule_id')} does not fit into "
@@ -78,10 +79,13 @@ class CompressionRuleField(BaseModel):
     field: HeaderFieldID
     """Field identifier."""
     field_length: conint(ge=0x00, le=MAX_FIELD_LENGTH * 8)
-    """Field length in bits."""
+    """Field length in bits. Must be 0 ≤ :attr:`field_length`
+    ≤ :const:`pylibschc.libschc.MAX_FIELD_LENGTH`.
+    """
     field_pos: conint(ge=0x00, le=0xFF) = 1
     """Field position, i.e., when there are multiple occurrences of this field, which
-    occurrence this field descriptor applies to (default: 1)."""
+    occurrence this field descriptor applies to (default: 1). Must be
+    0 ≤ :attr:`CompressionRuleField.field_pos` ≤ 255."""
     dir: Direction
     """Direction indicator for this field descriptor."""
     MO: MO
@@ -89,7 +93,10 @@ class CompressionRuleField(BaseModel):
     action: CDA
     """Compression/decompression action for this field."""
     MO_param_length: conint(ge=0x00, le=0xFF) = 0
-    """Parameter length for the matching operator (default: 0)."""
+    """Parameter length for the matching operator (default: 0). Must be
+    0 ≤ :attr:`CompressionRuleField.MO_param_length` ≤ 255. When being a parameter for
+    :attr:`pylibschc.libschc.MO.MSB` it must be lesser or equal to
+    :attr:`CompressionRuleField.field_length`."""
     target_value: typing.Union[
         typing.List[
             typing.Union[
@@ -102,25 +109,17 @@ class CompressionRuleField(BaseModel):
         ipaddress.IPv6Interface,
         conbytes(max_length=MAX_FIELD_LENGTH),
     ] = b""
-    """Target value for the matching operator (default: 0)."""
+    """Target value for the matching operator (default: b""). Any integers in
+    :attr:`CompressionRuleField.target_value` are restricted to 64 bits of width. The
+    length of this must fit :attr:`CompressionRuleField.field_length` and, depending on
+    :attr:`CompressionRuleField.MO`, :attr:`CompressionRuleField.MO_param_length`. Will
+    be converted to :class:`bytes` after validation.
+    """
 
     @validator("MO_param_length", allow_reuse=True, always=True, pre=False)
     @classmethod
     def check_mo_param_length(cls, value, values):
-        """Validator to check if :attr:`CompressionRuleField.MO_param_length`
-        is lesser or equal to :attr:`CompressionRuleField.field_length` when
-        :attr:`CompressionRuleField.MO` is :attr:`pylibschc.libschc.MO.MSB` or
-        :attr:`CompressionRuleField.action` is :attr:`pylibschc.libschc.CDA.LSB`
-
-        :param value: The value to validate
-        :param values: name-to-value mapping of previously validated fields
-        :raise ValueError: When :attr:`CompressionRuleField.MO` is
-            :attr:`pylibschc.libschc.MO.MSB` or :attr:`CompressionRuleField.action`
-            is :attr:`pylibschc.libschc.CDA.LSB` but
-            :attr:`CompressionRuleField.MO_param_length` is greater than
-            :attr:`CompressionRuleField.field_length`
-        :return: The validated value
-        """
+        # pylint: disable=missing-function-docstring
         if values.get("MO") == MO.MSB or values.get("action") == CDA.LSB:
             if value > values.get("field_length", 0):
                 raise ValueError(
@@ -209,7 +208,7 @@ class CompressionRuleField(BaseModel):
         return bytes_value
 
     @staticmethod
-    def field_length_bytes(field_length_bits):
+    def _field_length_bytes(field_length_bits):
         field_length_bytes = field_length_bits // 8
         field_length_mod = field_length_bits % 8
         if field_length_mod:
@@ -219,8 +218,9 @@ class CompressionRuleField(BaseModel):
     @validator("target_value", allow_reuse=True, always=True, pre=False)
     @classmethod
     def check_field_length_for_target_value(cls, value, values):
+        # pylint: disable=missing-function-docstring
         bytes_value = None
-        field_length_bytes, field_length_mod = cls.field_length_bytes(
+        field_length_bytes, field_length_mod = cls._field_length_bytes(
             values.get("field_length")
         )
         if values.get("MO") == MO.MATCHMAP or values.get("action") == CDA.MAPPINGSENT:
@@ -271,12 +271,14 @@ class CompressionRuleField(BaseModel):
         return bytes_value
 
     @property
-    def c_MO(self):  # pylint: disable=invalid-name
+    def c_MO(self) -> str:  # pylint: disable=invalid-name
+        # pylint: disable=missing-function-docstring
         if self.MO == MO.MSB:
             return "&mo_MSB"
         return f"&mo_{self.MO.name.lower()}"
 
     def c_schc_field_declaration(self):
+        # pylint: disable=missing-function-docstring
         def bytes_to_hex_list(byts: bytes):
             return ", ".join(f"0x{int(b):02x}" for b in byts)
 
@@ -299,7 +301,7 @@ class CompressionRuleField(BaseModel):
         res += f"{self.dir.name},"
         res += (5 - len(self.dir.name)) * " "
         if self.MO == MO.MATCHMAP and len(self.target_value) > 3:
-            field_length_bytes, _ = self.field_length_bytes(self.field_length)
+            field_length_bytes, _ = self._field_length_bytes(self.field_length)
             res += chunk_bytes(self.target_value, field_length_bytes)
         elif len(self.target_value) > 3:
             res += chunk_bytes(self.target_value)
@@ -315,9 +317,20 @@ class CompressionRuleField(BaseModel):
 
 
 class CompressionRule(BaseRule):
+    """A compression rule."""
+
     ipv6_rule: conlist(CompressionRuleField, max_items=IP6_FIELDS) = None
+    """The field descriptors for the IPv6 layer (default: None). Must at most be
+    :const:`pylibschc.libschc.IP6_FIELDS` long and only contain field descriptors for
+    which the name of :attr:`CompressionRuleField.field` starts with `IP6_`."""
     udp_rule: conlist(CompressionRuleField, max_items=UDP_FIELDS) = None
+    """The field descriptors for the UDP layer (default: None). Must at most be
+    :const:`pylibschc.libschc.UDP_FIELDS` long and only contain field descriptors for
+    which the name of :attr:`CompressionRuleField.field` starts with `UDP_`."""
     coap_rule: conlist(CompressionRuleField, max_items=COAP_FIELDS) = None
+    """The field descriptors for the CoAP layer (default: None). Must at most be
+    :const:`pylibschc.libschc.COAP_FIELDS` long and only contain field descriptors for
+    which the name of :attr:`CompressionRuleField.field` starts with `COAP_`."""
 
     @staticmethod
     def _check_field_identifiers(value, expected_start, rule_type):
@@ -330,17 +343,20 @@ class CompressionRule(BaseRule):
 
     @validator("ipv6_rule", allow_reuse=True)
     @classmethod
-    def check_ipv6_rule(cls, value):
+    def check_ipv6_rule(cls, value) -> conlist:
+        # pylint: disable=missing-function-docstring
         return cls._check_field_identifiers(value, "IP6_", "ipv6_rule")
 
     @validator("udp_rule", allow_reuse=True)
     @classmethod
-    def check_udp_rule(cls, value):
+    def check_udp_rule(cls, value) -> conlist:
+        # pylint: disable=missing-function-docstring
         return cls._check_field_identifiers(value, "UDP_", "udp_rule")
 
     @validator("coap_rule", allow_reuse=True)
     @classmethod
-    def check_coap_rule(cls, value):
+    def check_coap_rule(cls, value) -> conlist:
+        # pylint: disable=missing-function-docstring
         return cls._check_field_identifiers(value, "COAP_", "coap_rule")
 
     def _c_schc_layer_rule_declaration(self, layer_fields):
@@ -373,18 +389,22 @@ class CompressionRule(BaseRule):
         res += "}"
         return res
 
-    def c_schc_ipv6_rule_declaration(self):
+    def c_schc_ipv6_rule_declaration(self) -> str:
+        # pylint: disable=missing-function-docstring
         return self._c_schc_layer_rule_declaration(self.ipv6_rule)
 
-    def c_schc_udp_rule_declaration(self):
+    def c_schc_udp_rule_declaration(self) -> str:
+        # pylint: disable=missing-function-docstring
         return self._c_schc_layer_rule_declaration(self.udp_rule)
 
-    def c_schc_coap_rule_declaration(self):
+    def c_schc_coap_rule_declaration(self) -> str:
+        # pylint: disable=missing-function-docstring
         return self._c_schc_layer_rule_declaration(self.coap_rule)
 
     def c_schc_compression_rule_declaration(
-        self, ipv6_rule_name, udp_rule_name, coap_rule_name
-    ):
+        self, ipv6_rule_name: str, udp_rule_name: str, coap_rule_name: str
+    ) -> str:
+        # pylint: disable=missing-function-docstring
         ipv6_rule_ptr = f"&{ipv6_rule_name}" if self.ipv6_rule else "NULL"
         udp_rule_ptr = f"&{udp_rule_name}" if self.udp_rule else "NULL"
         coap_rule_ptr = f"&{coap_rule_name}" if self.coap_rule else "NULL"
@@ -407,19 +427,33 @@ class CompressionRule(BaseRule):
 
 class UncompressedRule(BaseRule):
     # pylint: disable=too-few-public-methods
-    pass
+    """The rule for an uncompressed packet."""
 
 
 class FragmentationRule(BaseRule):
     # pylint: disable=too-few-public-methods
+    """A fragmentation rule."""
+
     mode: FragmentationMode
+    """The reliability mode for this rule."""
     dir: Direction
+    """The direction for which this rule applies."""
     FCN_SIZE: conint(ge=0x00, le=FCN_SIZE_BITS) = 1
+    """The FCN field length of the SCHC fragmentation header in bits (default: 1). Must
+    be 0 ≤ :attr:`BaseRule.FCN_SIZE` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`."""
     MAX_WND_FCN: conint(ge=0x00, lt=BITMAP_SIZE_BITS) = 0
+    """The maximum number of fragments per window (default: 0). Must be
+    0 ≤ :attr:`BaseRule.MAX_WND_FCN` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`."""
     WINDOW_SIZE: conint(ge=0x00, le=0xFF) = 0
+    """The window size field length of the SCHC fragmentation header in bits
+    (default: 0). Must be 0 ≤ :attr:`BaseRule.MAX_WND_FCN`
+    ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`."""
     DTAG_SIZE: conint(ge=0x00, le=DTAG_SIZE_BITS) = 0
+    """The DTAG field length of the SCHC fragmentation header in bits (default: 0). Must
+    be 0 ≤ :attr:`BaseRule.MAX_WND_FCN` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`."""
 
     def c_schc_fragmentation_rule_declaration(self):
+        # pylint: disable=missing-function-docstring
         return (
             "{\n"
             f"    .rule_id = {self.rule_id}U,\n"
@@ -440,16 +474,33 @@ class FragmentationRule(BaseRule):
 
 class Device(BaseModel):
     # pylint: disable=too-few-public-methods
-    device_id: conint(ge=0x00000000, le=0xFFFFFFFF)
+    """The device for which to configure the rules for."""
+    device_id: conint(gt=0x00000000, le=0xFFFFFFFF)
+    """The libSCHC-internal identifier for the device. Must be 0
+    < :attr:`Device.device_id` ≤ :math:`(2^{32} - 1)`."""
     mtu: conint(ge=0x0000, le=MAX_MTU_LENGTH)
+    """The maximum transmission unit of the link layer of the device. Must be 0
+    < :attr:`Device.mtu` ≤ :attr:`pylibschc.libschc.MAX_MTU_LENGTH`."""
     duty_cycle: conint(ge=0x00000000, le=0xFFFFFFFF)
+    """The duty cycle in milliseconds of the device. Must be 0
+    < :attr:`Device.duty_cycle` ≤ :math:`(2^{32} - 1)`."""
     uncompressed_rule: UncompressedRule
+    """The rule for an uncompressed packet on this device. Must not contain any
+    duplicate rule IDs (i.e., same value of same bit width) with
+    :attr:`Device.compression_rules` or :attr:`Device.fragmentation_rules`."""
     compression_rules: typing.List[CompressionRule] = []
+    """The compression rules on this device (default: []). Must not contain any
+    duplicate rule IDs (i.e., same value of same bit width) with
+    :attr:`Device.uncompressed_rule` or :attr:`Device.fragmentation_rules`."""
     fragmentation_rules: typing.List[FragmentationRule] = []
+    """The fragmentation rules on this device (default: []). Must not contain any
+    duplicate rule IDs (i.e., same value of same bit width) with
+    :attr:`Device.uncompressed_rule` or :attr:`Device.compression_rules`."""
 
     @validator("fragmentation_rules", always=True, pre=False)
     @classmethod
     def check_rule_id_duplicates(cls, fragmentation_rules, values):
+        # pylint: disable=missing-function-docstring
         uncompressed_rule = values.get("uncompressed_rule")
         compression_rules = values.get("compression_rules", [])
 
@@ -470,6 +521,7 @@ class Device(BaseModel):
     def c_schc_device_declaration(
         self, compression_rules_name, fragmentation_rules_name
     ):
+        # pylint: disable=missing-function-docstring
         compression_rules_ptr = (
             f"&{compression_rules_name}" if self.compression_rules else "NULL"
         )
@@ -502,12 +554,17 @@ class Device(BaseModel):
 
 
 class Config(BaseModel):
+    """The overall rule configuration for libSCHC."""
+
     # pylint: disable=too-few-public-methods
     devices: typing.List[Device]
+    """The devices for libSCHC. Must not contain any devices with duplicate
+    :attr:`Device`.device_id."""
 
     @validator("devices")
     @classmethod
     def device_ids_unique(cls, devices):
+        # pylint: disable=missing-function-docstring
         device_ids = set()
         for device in devices:
             if device.device_id in device_ids:
@@ -524,7 +581,17 @@ class Config(BaseModel):
         visited_layer_rules[rule_name] = (rule, decl_func())
         return rule_name
 
-    def deploy(self):
+    def deploy(self) -> argparse.Namespace:
+        """Deploys the rule configuration with the binary libSCHC.
+
+        .. warning::
+            This method **must** be called whenever a rule or device is changed.
+            Otherwise, libSCHC will not register this change.
+
+        :return: A :class:`argparse.Namespace` with the following attributes:
+            - ``devices``: The devices modeled with :class:`Device` as
+            :class:`pylibschc.device.Device`.
+        :rtype: :class:`argparse.Namespace`"""
         devices = []
         for device_config in self.devices:
             device = pylibschc.device.Device(device_config.device_id)
@@ -534,8 +601,12 @@ class Config(BaseModel):
             devices.append(device)
         return argparse.Namespace(devices=devices)
 
-    def to_c_header(self):  # noqa: C901
+    def to_c_header(self) -> str:  # noqa: C901
         # pylint: disable=too-many-locals,too-many-branches,too-many-statements
+        """Provides the C header file for this rules configuration as a string.
+
+        :return: The C header file for libSCHC representing this rules configuration.
+        :rtype: str"""
         visited_compression_layer_rules = {
             "ipv6": {},
             "udp": {},
