@@ -72,6 +72,11 @@ jobs:
     - name: Test with tox
       run: |
         tox -e ${{ matrix.testenv }}
+    - name: Upload Coverage to Codecov
+      uses: codecov/codecov-action@main
+      if: matrix.testenv == 'test'
+      with:
+        flags: ${{ matrix.python-version }}
     - name: Upload doc
       if: matrix.testenv == 'build-doc'
       run: |
