@@ -114,8 +114,6 @@ variables as input.
     >>> loop = None
     >>> timer_tasks = {}
     >>> reassembly_buffer = None
-    >>> # shorten waiting times for this example
-    >>> config.devices[0].duty_cycle_ms = 500
     >>>
     >>> def send(buffer):
     ...     fragmenter_queue.put_nowait({"cmd": "send", "data": buffer})
@@ -151,6 +149,8 @@ variables as input.
     ...     reassembly_buffer = loop.create_future()
     ...     fragmenter = pylibschc.fragmenter.Fragmenter(
     ...         device=config.devices[0],
+    ...         mtu=60,
+    ...         duty_cycle_ms=500,
     ...         mode=pylibschc.fragmenter.FragmentationMode.NO_ACK,
     ...         post_timer_task=post_timer_task,
     ...         end_tx=end_tx,
@@ -159,6 +159,7 @@ variables as input.
     ...     fragmenter.register_send(config.devices[0], send)
     ...     reassembler = pylibschc.fragmenter.Reassembler(
     ...         device=config.devices[0],
+    ...         duty_cycle_ms=500,
     ...         post_timer_task=post_timer_task,
     ...         end_rx=end_rx,
     ...         remove_timer_entry=remove_timer_entry,

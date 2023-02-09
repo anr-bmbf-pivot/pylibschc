@@ -200,8 +200,6 @@ variables as input.</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">loop</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">timer_tasks</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">reassembly_buffer</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># shorten waiting times for this example</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">duty_cycle_ms</span> <span class="o">=</span> <span class="mi">500</span>
 <span class="go">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="n">buffer</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="n">fragmenter_queue</span><span class="o">.</span><span class="n">put_nowait</span><span class="p">({</span><span class="s2">&quot;cmd&quot;</span><span class="p">:</span> <span class="s2">&quot;send&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="n">buffer</span><span class="p">})</span>
@@ -237,6 +235,8 @@ variables as input.</p>
 <span class="gp">... </span>    <span class="n">reassembly_buffer</span> <span class="o">=</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_future</span><span class="p">()</span>
 <span class="gp">... </span>    <span class="n">fragmenter</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">Fragmenter</span><span class="p">(</span>
 <span class="gp">... </span>        <span class="n">device</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">mtu</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span>
+<span class="gp">... </span>        <span class="n">duty_cycle_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">mode</span><span class="o">=</span><span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">FragmentationMode</span><span class="o">.</span><span class="n">NO_ACK</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">post_timer_task</span><span class="o">=</span><span class="n">post_timer_task</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">end_tx</span><span class="o">=</span><span class="n">end_tx</span><span class="p">,</span>
@@ -245,6 +245,7 @@ variables as input.</p>
 <span class="gp">... </span>    <span class="n">fragmenter</span><span class="o">.</span><span class="n">register_send</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">send</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="n">reassembler</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">fragmenter</span><span class="o">.</span><span class="n">Reassembler</span><span class="p">(</span>
 <span class="gp">... </span>        <span class="n">device</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">devices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+<span class="gp">... </span>        <span class="n">duty_cycle_ms</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">post_timer_task</span><span class="o">=</span><span class="n">post_timer_task</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">end_rx</span><span class="o">=</span><span class="n">end_rx</span><span class="p">,</span>
 <span class="gp">... </span>        <span class="n">remove_timer_entry</span><span class="o">=</span><span class="n">remove_timer_entry</span><span class="p">,</span>
