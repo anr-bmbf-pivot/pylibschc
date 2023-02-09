@@ -57,7 +57,6 @@
 import abc
 import enum
 import logging
-import time
 import typing
 
 from cpython.bool cimport bool
