@@ -18,6 +18,7 @@ from pydantic import (
 )
 
 import pylibschc.device
+from ._pydantic import EnumByName  # noqa: F401 pylint: disable=unused-import
 from .libschc import (  # pylint: disable=import-error
     HeaderFieldID,
     Direction,

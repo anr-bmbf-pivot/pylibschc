@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+# pylint: disable=missing-module-docstring
+
 import enum
 
 import pydantic.json
