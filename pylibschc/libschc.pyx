@@ -57,6 +57,7 @@
 import abc
 import enum
 import logging
+import time
 import typing
 
 from cpython.bool cimport bool
@@ -1060,11 +1061,11 @@ cdef class FragmentationConnection:
         clibschc.mbuf_copy(conn, <uint8_t *>(<char *>buf))
         return buf
 
-    cdef _allocated(self):
+    cdef int _allocated(self):
         return (<void *>self._frag_conn) is not NULL
 
-    cdef _is_conn(self, clibschc.schc_fragmentation_t *conn):
-        return <void *>self._frag_conn == conn
+    cdef int _is_conn(self, clibschc.schc_fragmentation_t *conn):
+        return self._frag_conn == conn
 
     def is_conn(self, conn: intptr_t):
         return bool(self._is_conn(<clibschc.schc_fragmentation_t *>(<void *>conn)))
@@ -1268,6 +1269,15 @@ cdef class FragmentationConnection:
         """
         return FragmentationResult(self._fragment())
 
+    cdef FragmentationConnection _new_conn(self, clibschc.schc_fragmentation_t *conn):
+        if conn.timer_ctx:
+            res = <FragmentationConnection>conn.timer_ctx
+        else:
+            res = FragmentationConnection(ops=self.ops, _malloc_inner=False)
+            conn.dc = self._frag_conn.dc
+            FragmentationConnection._set_frag_conn(res, conn)
+        return res
+
     @staticmethod
     cdef _set_frag_conn(
         FragmentationConnection obj, clibschc.schc_fragmentation_t *conn
@@ -1296,9 +1306,7 @@ cdef class FragmentationConnection:
                     f"Unable to allocate a RX connection for {buffer.hex()}"
                 )
             elif self._frag_conn != conn_ptr:
-                res = FragmentationConnection(ops=self.ops, _malloc_inner=False)
-                conn_ptr.dc = self._frag_conn.dc
-                FragmentationConnection._set_frag_conn(res, conn_ptr)
+                res = self._new_conn(conn_ptr)
                 if (
                     not conn_ptr.fragmentation_rule
                     or conn_ptr.fragmentation_rule.mode == clibschc.NOT_FRAGMENTED
