@@ -1,3 +1,9 @@
+.. image:: https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg
+   :target: https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml
+
+.. image:: https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H
+   :target: https://codecov.io/gh/anr-bmbf-pivot/pylibschc
+
 =======================================
 pylibschc: A python wrapper for libSCHC
 =======================================
