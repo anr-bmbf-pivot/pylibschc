@@ -1058,7 +1058,7 @@ cdef class FragmentationConnection:
         return buf
 
     def _allocated(self):
-        return self._frag_conn is not NULL
+        return (<void *>self._frag_conn) is not NULL
 
     @staticmethod
     cdef FragmentationConnection _outer_from_struct(
@@ -1127,12 +1127,16 @@ cdef class FragmentationConnection:
                 task
             )
 
+    cdef _free_conn(self):
+        if not self._malloced:
+            self._frag_conn = NULL
+
     @staticmethod
     cdef void _c_free_conn_cb(clibschc.schc_fragmentation_t *conn):
         try:
             obj = FragmentationConnection._outer_from_struct(conn)
             if obj:
-                obj._frag_conn = NULL
+                obj._free_conn()
         except Exception:
             raise
 
@@ -1360,7 +1364,7 @@ cdef class FragmentationConnection:
             After this method was called, a connection created by
             :py:meth:`FragmentationConnection.input()` should not be used and is
             recommended to be deleted after."""
-        if (self._frag_conn):
+        if self._frag_conn:
             clibschc.schc_reset(self._frag_conn)
             if self._malloced:
                 self._frag_conn.timer_ctx = <void *>self

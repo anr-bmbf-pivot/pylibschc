@@ -1,3 +1,4 @@
 [submodule "libschc"]
 	path = src/libschc
-	url = git@github.com:imec-idlab/libschc.git
+	url = git@github.com:miri64/libschc.git
+	branch = fragmenter/fix/NULL-timer_ctx-after-free_cb
