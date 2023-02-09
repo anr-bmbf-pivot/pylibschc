@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+"""User-facing fragmenter/reassembler functionality"""
+
 import abc
 import threading
 import typing
@@ -26,6 +28,8 @@ from .libschc import (
 
 
 class BaseFragmenterReassembler(FragmenterOps):
+    """Base class for both fragmenters and reassemblers."""
+
     # pylint: disable=too-few-public-methods
     conn_cls = FragmentationConnection
 
@@ -41,6 +45,18 @@ class BaseFragmenterReassembler(FragmenterOps):
         ] = None,
         remove_timer_entry: typing.Callable[[FragmentationConnection], None] = None,
     ):
+        """
+        :param device: The device to use for fragmentation/reassembly.
+        :param mode: (optional) The :class:`pylibschc.libschc.FragmentationMode` to use.
+        :param end_rx: (optional) The callback that is called when the reception of a
+            packet is complete.
+        :param end_tx: (optional) Callback that is called when the transmission of a
+            packet is complete.
+        :param post_timer_task: (optional) Callback that is called when a timer task
+            needs to be scheduled.
+        :param remove_timer_entry: (optional) Callback that is called when a timer task
+            needs to be canceled. May be None.
+        """
         super().__init__(
             end_rx=end_rx,
             end_tx=end_tx,
@@ -54,11 +70,15 @@ class BaseFragmenterReassembler(FragmenterOps):
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
         """Handle incoming data.
 
-        :param data: Either an ACK, a fragment, or an unfragmented packet."""
+        :param data: Either an ACK, a fragment, or an unfragmented packet.
+        :return: Status of reassembly or if ACK was handled.
+        """
         pass  # pragma: no cover pylint: disable=unnecessary-pass
 
 
 class Fragmenter(BaseFragmenterReassembler):
+    """A fragmenter."""
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._tx_conn = None
@@ -75,6 +95,11 @@ class Fragmenter(BaseFragmenterReassembler):
         self._tx_conn_release()
 
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
+        """Handle incoming an ACK.
+
+        :param data: An ACK.
+        :raise RuntimeError: if ``data`` was not an ACK.
+        :retval ACK_HANDLED: when the ACK was handled."""
         if isinstance(data, BitArray):
             bit_array = data
         else:
@@ -95,6 +120,12 @@ class Fragmenter(BaseFragmenterReassembler):
         return ReassemblyStatus.ACK_HANDLED  # pragma: no cover
 
     def output(self, data: typing.Union[bytes, BitArray]) -> FragmentationResult:
+        """Send ``data``, fragmented if necessary.
+
+        :param data: The data to send.
+        :retval NO_FRAGMENTATION: If the packet was not fragmented.
+        :retval SUCCESS: If the packet was fragmented.
+        """
         if isinstance(data, BitArray):
             bit_array = data
         else:
@@ -122,20 +153,40 @@ class Fragmenter(BaseFragmenterReassembler):
     def register_send(
         cls, device: pylibschc.device.Device, send: typing.Callable[[bytes], int]
     ):
+        """Register a send function for a device.
+
+        :param device: A device,
+        :param send: The send function for ``device``.
+        """
         return cls.conn_cls.register_send(device.device_id, send)
 
     @classmethod
     def unregister_send(cls, device: pylibschc.device.Device):
+        """Remove a send function for a device.
+
+        :param device: A device,
+        """
         return cls.conn_cls.unregister_send(device.device_id)
 
 
 class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-methods
+    """A reassembler."""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._rx_conn = None
         self._rx_conn_lock = threading.Lock()
 
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
+        """Handle incoming data.
+
+        :param data: Either a fragment or an unfragmented packet.
+        :raise RuntimeError: if ``data`` was an ACK.
+        :retval ONGOING: If reassembly is still missing fragments.
+        :retval COMPLETED: If the fragment handled was the last missing fragment (or if
+            the data was not fragmented).
+        :retval STAY_ALIVE: If reassembly was completed, but the connection still is
+            kept open, e.g., in case another ACK needs to be sent.
+        """
         if isinstance(data, BitArray):
             bit_array = data
         else:

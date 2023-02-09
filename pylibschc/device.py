@@ -2,6 +2,8 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+"""User-facing representation of libSCHC devices."""
+
 from __future__ import annotations
 import typing
 
@@ -15,6 +17,13 @@ __email__ = "m.lenders@fu-berlin.de"
 
 
 class Device:  # pylint: disable=too-many-instance-attributes
+    """A libSCHC device.
+
+    This wraps :class:`pylibschc.libschc.Device` for a more pythonic usage. Two devices
+    with the same ``device_id`` are effectively the same object (i.e., this class is a
+    multiton)
+
+    """
     _devices = {}
 
     def __new__(cls, device_id: int, mtu: int, duty_cycle_ms: int):
@@ -26,6 +35,22 @@ class Device:  # pylint: disable=too-many-instance-attributes
         return cls._devices[device_id]
 
     def __init__(self, device_id: int, mtu: int, duty_cycle_ms: int):
+        """
+        :param device_id: The libSCHC-internal identifier of the device.
+        :param mtu: The maximum transmission unit of the link layer of the device.
+        :param duty_cycle_ms: The duty cycle in milliseconds of the device.
+
+        .. py:attribute:: mtu
+           :type: pylibschc.device.Device
+
+           The maximum transmission unit of the link layer of the device.
+
+
+        .. py:attribute:: duty_cycle_ms
+           :type: pylibschc.libschc.Direction
+
+           The duty cycle in milliseconds of the device.
+        """
         try:
             self._inner = libschc.Device.get(device_id)
         except KeyError:
@@ -38,6 +63,10 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @classmethod
     def delete(cls, device_id: int):
+        """Delete device identified by ``device_id`` from libSCHC.
+
+        :param device_id: The libSCHC-internal identifier of the device.
+        :type device_id: :py:class:`int`"""
         if device_id not in cls._devices:
             return
         device = cls._devices[device_id]
@@ -49,6 +78,10 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @classmethod
     def get(cls, device_id: int) -> Device:
+        """Get device identified by ``device_id``.
+
+        :param device_id: The libSCHC-internal identifier of the device.
+        :type device_id: :py:class:`int`"""
         try:
             return cls._devices[device_id]
         except KeyError as exc:
@@ -61,6 +94,7 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @classmethod
     def iter(cls) -> typing.Generator[Device]:
+        """Iterates over all devices deployed in libSCHC."""
         for _, device in sorted(cls._devices.items()):
             yield device
 
@@ -70,6 +104,12 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @property
     def compression_rules(self) -> typing.List[rules.CompressionRule]:
+        """The compression rules of this device.
+
+        If they are set to None, the internal compression context of the libSCHC version
+        of this device will be free'd and its rule count set to 0. If it is set to a
+        list of compression rules, the context will be updated accordingly.
+        """
         if self._compression_rules is None:
             self._compression_rules = [
                 rules.CompressionRule(**r) for r in self._inner.compression_rules
@@ -88,6 +128,7 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @property
     def device_id(self) -> int:
+        """The libSCHC-internal identifier of the device."""
         try:
             return self._inner.device_id
         except AttributeError as exc:  # pragma: no cover, only happens on init error
@@ -97,6 +138,12 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @property
     def fragmentation_rules(self) -> typing.List[rules.FragmentationRule]:
+        """The fragmentation rules of this device.
+
+        If they are set to None, the internal fragmentation context of the libSCHC
+        version of this device will be free'd and its rule count set to 0. If it is set
+        to a list of fragmentation rules, the context will be updated accordingly.
+        """
         if self._fragmentation_rules is None:
             self._fragmentation_rules = [
                 rules.FragmentationRule(**r) for r in self._inner.fragmentation_rules
@@ -115,6 +162,11 @@ class Device:  # pylint: disable=too-many-instance-attributes
 
     @property
     def uncompressed_rule(self) -> rules.UncompressedRule:
+        """The rule for uncompressed packets on this device..
+
+        If this is set to None, the internal rule ID will be set to 0 and its bit size
+        to 0. Otherwise, the rule will be updated accordingly.
+        """
         if (
             self._uncompressed_rule is None
             and self._inner.uncompressed_rule_id_size_bits > 0

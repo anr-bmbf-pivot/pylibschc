@@ -2,6 +2,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+
 import os
 import pathlib
 import subprocess
@@ -9,6 +13,7 @@ import subprocess
 import pytest
 
 import pylibschc.rules
+
 
 __author__ = "Martine S. Lenders"
 __copyright__ = "Copyright 2023 Freie Universität Berlin"

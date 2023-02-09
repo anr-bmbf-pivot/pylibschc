@@ -2,6 +2,10 @@
 #
 # SPDX-License-Identifier: GPL-3.0-only
 
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=missing-function-docstring
+
 import asyncio
 import queue
 import threading
