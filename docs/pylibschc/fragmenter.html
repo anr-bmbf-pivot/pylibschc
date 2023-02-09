@@ -101,23 +101,25 @@
             
   <section id="module-pylibschc.fragmenter">
 <span id="pylibschc-fragmenter"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code><a class="headerlink" href="#module-pylibschc.fragmenter" title="Permalink to this heading">¶</a></h1>
+<p>User-facing fragmenter/reassembler functionality</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pylibschc.fragmenter.BaseFragmenterReassembler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.fragmenter.</span></span><span class="sig-name descname"><span class="pre">BaseFragmenterReassembler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">Device</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><span class="pre">FragmentationMode</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_rx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationConnection" title="pylibschc.libschc.FragmentationConnection"><span class="pre">FragmentationConnection</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_tx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationConnection" title="pylibschc.libschc.FragmentationConnection"><span class="pre">FragmentationConnection</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">post_timer_task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationConnection" title="pylibschc.libschc.FragmentationConnection"><span class="pre">FragmentationConnection</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">object</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_timer_entry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationConnection" title="pylibschc.libschc.FragmentationConnection"><span class="pre">FragmentationConnection</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#BaseFragmenterReassembler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.BaseFragmenterReassembler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="libschc.html#pylibschc.libschc.FragmenterOps" title="pylibschc.libschc.FragmenterOps"><code class="xref py py-class docutils literal notranslate"><span class="pre">FragmenterOps</span></code></a></p>
+<p>Base class for both fragmenters and reassemblers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>end_rx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the reception of a packet is
-complete. May be None.</p></li>
-<li><p><strong>end_tx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the transmission of a packet is
-complete. May be None.</p></li>
-<li><p><strong>post_timer_task</strong> – Callback that is called when a timer task needs to be
-scheduled. May be None.</p></li>
-<li><p><strong>remove_timer_entry</strong> – Callback that is called when a timer task needs to be
-canceled. May be None.</p></li>
+<li><p><strong>device</strong> – The device to use for fragmentation/reassembly.</p></li>
+<li><p><strong>mode</strong> – (optional) The <a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.FragmentationMode</span></code></a> to use.</p></li>
+<li><p><strong>end_rx</strong> – (optional) The callback that is called when the reception of a
+packet is complete.</p></li>
+<li><p><strong>end_tx</strong> – (optional) Callback that is called when the transmission of a
+packet is complete.</p></li>
+<li><p><strong>post_timer_task</strong> – (optional) Callback that is called when a timer task
+needs to be scheduled.</p></li>
+<li><p><strong>remove_timer_entry</strong> – (optional) Callback that is called when a timer task
+needs to be canceled. May be None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -135,6 +137,9 @@ canceled. May be None.</p></li>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>data</strong> – Either an ACK, a fragment, or an unfragmented packet.</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Status of reassembly or if ACK was handled.</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -144,29 +149,36 @@ canceled. May be None.</p></li>
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Fragmenter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.fragmenter.</span></span><span class="sig-name descname"><span class="pre">Fragmenter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Fragmenter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Fragmenter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.fragmenter.BaseFragmenterReassembler" title="pylibschc.fragmenter.BaseFragmenterReassembler"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFragmenterReassembler</span></code></a></p>
+<p>A fragmenter.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>end_rx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the reception of a packet is
-complete. May be None.</p></li>
-<li><p><strong>end_tx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the transmission of a packet is
-complete. May be None.</p></li>
-<li><p><strong>post_timer_task</strong> – Callback that is called when a timer task needs to be
-scheduled. May be None.</p></li>
-<li><p><strong>remove_timer_entry</strong> – Callback that is called when a timer task needs to be
-canceled. May be None.</p></li>
+<li><p><strong>device</strong> – The device to use for fragmentation/reassembly.</p></li>
+<li><p><strong>mode</strong> – (optional) The <a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.FragmentationMode</span></code></a> to use.</p></li>
+<li><p><strong>end_rx</strong> – (optional) The callback that is called when the reception of a
+packet is complete.</p></li>
+<li><p><strong>end_tx</strong> – (optional) Callback that is called when the transmission of a
+packet is complete.</p></li>
+<li><p><strong>post_timer_task</strong> – (optional) Callback that is called when a timer task
+needs to be scheduled.</p></li>
+<li><p><strong>remove_timer_entry</strong> – (optional) Callback that is called when a timer task
+needs to be canceled. May be None.</p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Fragmenter.input">
 <span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="libschc.html#pylibschc.libschc.ReassemblyStatus" title="pylibschc.libschc.ReassemblyStatus"><span class="pre">ReassemblyStatus</span></a></span></span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Fragmenter.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Fragmenter.input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Handle incoming data.</p>
+<dd><p>Handle incoming an ACK.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – Either an ACK, a fragment, or an unfragmented packet.</p>
+<dd class="field-odd"><p><strong>data</strong> – An ACK.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – if <code class="docutils literal notranslate"><span class="pre">data</span></code> was not an ACK.</p>
+</dd>
+<dt class="field-odd">Retval ACK_HANDLED<span class="colon">:</span></dt>
+<dd class="field-odd"><p>when the ACK was handled.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -174,17 +186,44 @@ canceled. May be None.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Fragmenter.output">
 <span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationResult" title="pylibschc.libschc.FragmentationResult"><span class="pre">FragmentationResult</span></a></span></span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Fragmenter.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Fragmenter.output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Send <code class="docutils literal notranslate"><span class="pre">data</span></code>, fragmented if necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – The data to send.</p>
+</dd>
+<dt class="field-even">Retval NO_FRAGMENTATION<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the packet was not fragmented.</p>
+</dd>
+<dt class="field-odd">Retval SUCCESS<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the packet was fragmented.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Fragmenter.register_send">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">Device</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">send</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Fragmenter.register_send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Fragmenter.register_send" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Register a send function for a device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> – A device,</p></li>
+<li><p><strong>send</strong> – The send function for <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Fragmenter.unregister_send">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unregister_send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">Device</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Fragmenter.unregister_send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Fragmenter.unregister_send" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove a send function for a device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device</strong> – A device,</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -192,19 +231,20 @@ canceled. May be None.</p></li>
 <dt class="sig sig-object py" id="pylibschc.fragmenter.Reassembler">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.fragmenter.</span></span><span class="sig-name descname"><span class="pre">Reassembler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/fragmenter.html#Reassembler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.fragmenter.Reassembler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.fragmenter.BaseFragmenterReassembler" title="pylibschc.fragmenter.BaseFragmenterReassembler"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFragmenterReassembler</span></code></a></p>
+<p>A reassembler.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>end_rx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the reception of a packet is
-complete. May be None.</p></li>
-<li><p><strong>end_tx</strong> (A callable which takes a <code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code> as an
-argument and returns nothing) – Callback that is called when the transmission of a packet is
-complete. May be None.</p></li>
-<li><p><strong>post_timer_task</strong> – Callback that is called when a timer task needs to be
-scheduled. May be None.</p></li>
-<li><p><strong>remove_timer_entry</strong> – Callback that is called when a timer task needs to be
-canceled. May be None.</p></li>
+<li><p><strong>device</strong> – The device to use for fragmentation/reassembly.</p></li>
+<li><p><strong>mode</strong> – (optional) The <a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.FragmentationMode</span></code></a> to use.</p></li>
+<li><p><strong>end_rx</strong> – (optional) The callback that is called when the reception of a
+packet is complete.</p></li>
+<li><p><strong>end_tx</strong> – (optional) Callback that is called when the transmission of a
+packet is complete.</p></li>
+<li><p><strong>post_timer_task</strong> – (optional) Callback that is called when a timer task
+needs to be scheduled.</p></li>
+<li><p><strong>remove_timer_entry</strong> – (optional) Callback that is called when a timer task
+needs to be canceled. May be None.</p></li>
 </ul>
 </dd>
 </dl>
@@ -214,7 +254,21 @@ canceled. May be None.</p></li>
 <dd><p>Handle incoming data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> – Either an ACK, a fragment, or an unfragmented packet.</p>
+<dd class="field-odd"><p><strong>data</strong> – Either a fragment or an unfragmented packet.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – if <code class="docutils literal notranslate"><span class="pre">data</span></code> was an ACK.</p>
+</dd>
+<dt class="field-odd">Retval ONGOING<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If reassembly is still missing fragments.</p>
+</dd>
+<dt class="field-even">Retval COMPLETED<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the fragment handled was the last missing fragment (or if
+the data was not fragmented).</p>
+</dd>
+<dt class="field-odd">Retval STAY_ALIVE<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If reassembly was completed, but the connection still is
+kept open, e.g., in case another ACK needs to be sent.</p>
 </dd>
 </dl>
 </dd></dl>

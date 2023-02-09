@@ -88,6 +88,8 @@
 <span class="c1">#</span>
 <span class="c1"># SPDX-License-Identifier: GPL-3.0-only</span>
 
+<span class="sd">&quot;&quot;&quot;User-facing fragmenter/reassembler functionality&quot;&quot;&quot;</span>
+
 <span class="kn">import</span> <span class="nn">abc</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">typing</span>
@@ -112,6 +114,8 @@
 
 
 <div class="viewcode-block" id="BaseFragmenterReassembler"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.BaseFragmenterReassembler">[docs]</a><span class="k">class</span> <span class="nc">BaseFragmenterReassembler</span><span class="p">(</span><span class="n">FragmenterOps</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for both fragmenters and reassemblers.&quot;&quot;&quot;</span>
+
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="n">conn_cls</span> <span class="o">=</span> <span class="n">FragmentationConnection</span>
 
@@ -127,6 +131,18 @@
         <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">remove_timer_entry</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="n">FragmentationConnection</span><span class="p">],</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param device: The device to use for fragmentation/reassembly.</span>
+<span class="sd">        :param mode: (optional) The :class:`pylibschc.libschc.FragmentationMode` to use.</span>
+<span class="sd">        :param end_rx: (optional) The callback that is called when the reception of a</span>
+<span class="sd">            packet is complete.</span>
+<span class="sd">        :param end_tx: (optional) Callback that is called when the transmission of a</span>
+<span class="sd">            packet is complete.</span>
+<span class="sd">        :param post_timer_task: (optional) Callback that is called when a timer task</span>
+<span class="sd">            needs to be scheduled.</span>
+<span class="sd">        :param remove_timer_entry: (optional) Callback that is called when a timer task</span>
+<span class="sd">            needs to be canceled. May be None.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">end_rx</span><span class="o">=</span><span class="n">end_rx</span><span class="p">,</span>
             <span class="n">end_tx</span><span class="o">=</span><span class="n">end_tx</span><span class="p">,</span>
@@ -140,11 +156,15 @@
     <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ReassemblyStatus</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming data.</span>
 
-<span class="sd">        :param data: Either an ACK, a fragment, or an unfragmented packet.&quot;&quot;&quot;</span>
+<span class="sd">        :param data: Either an ACK, a fragment, or an unfragmented packet.</span>
+<span class="sd">        :return: Status of reassembly or if ACK was handled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span>  <span class="c1"># pragma: no cover pylint: disable=unnecessary-pass</span></div></div>
 
 
 <div class="viewcode-block" id="Fragmenter"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter">[docs]</a><span class="k">class</span> <span class="nc">Fragmenter</span><span class="p">(</span><span class="n">BaseFragmenterReassembler</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A fragmenter.&quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_tx_conn</span> <span class="o">=</span> <span class="kc">None</span>
@@ -161,6 +181,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_tx_conn_release</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Fragmenter.input"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ReassemblyStatus</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming an ACK.</span>
+
+<span class="sd">        :param data: An ACK.</span>
+<span class="sd">        :raise RuntimeError: if ``data`` was not an ACK.</span>
+<span class="sd">        :retval ACK_HANDLED: when the ACK was handled.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
@@ -181,6 +206,12 @@
         <span class="k">return</span> <span class="n">ReassemblyStatus</span><span class="o">.</span><span class="n">ACK_HANDLED</span>  <span class="c1"># pragma: no cover</span></div>
 
 <div class="viewcode-block" id="Fragmenter.output"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">FragmentationResult</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send ``data``, fragmented if necessary.</span>
+
+<span class="sd">        :param data: The data to send.</span>
+<span class="sd">        :retval NO_FRAGMENTATION: If the packet was not fragmented.</span>
+<span class="sd">        :retval SUCCESS: If the packet was fragmented.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
@@ -208,20 +239,40 @@
     <span class="k">def</span> <span class="nf">register_send</span><span class="p">(</span>
         <span class="bp">cls</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">Device</span><span class="p">,</span> <span class="n">send</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Callable</span><span class="p">[[</span><span class="nb">bytes</span><span class="p">],</span> <span class="nb">int</span><span class="p">]</span>
     <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register a send function for a device.</span>
+
+<span class="sd">        :param device: A device,</span>
+<span class="sd">        :param send: The send function for ``device``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">conn_cls</span><span class="o">.</span><span class="n">register_send</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">device_id</span><span class="p">,</span> <span class="n">send</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Fragmenter.unregister_send"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.unregister_send">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">unregister_send</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">Device</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Remove a send function for a device.</span>
+
+<span class="sd">        :param device: A device,</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">conn_cls</span><span class="o">.</span><span class="n">unregister_send</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">device_id</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="Reassembler"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler">[docs]</a><span class="k">class</span> <span class="nc">Reassembler</span><span class="p">(</span><span class="n">BaseFragmenterReassembler</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-few-public-methods</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A reassembler.&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rx_conn</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rx_conn_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Reassembler.input"><a class="viewcode-back" href="../../pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ReassemblyStatus</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming data.</span>
+
+<span class="sd">        :param data: Either a fragment or an unfragmented packet.</span>
+<span class="sd">        :raise RuntimeError: if ``data`` was an ACK.</span>
+<span class="sd">        :retval ONGOING: If reassembly is still missing fragments.</span>
+<span class="sd">        :retval COMPLETED: If the fragment handled was the last missing fragment (or if</span>
+<span class="sd">            the data was not fragmented).</span>
+<span class="sd">        :retval STAY_ALIVE: If reassembly was completed, but the connection still is</span>
+<span class="sd">            kept open, e.g., in case another ACK needs to be sent.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>

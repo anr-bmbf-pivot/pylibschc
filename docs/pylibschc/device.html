@@ -101,44 +101,95 @@
             
   <section id="module-pylibschc.device">
 <span id="pylibschc-device"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code><a class="headerlink" href="#module-pylibschc.device" title="Permalink to this heading">¶</a></h1>
+<p>User-facing representation of libSCHC devices.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pylibschc.device.Device">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.device.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mtu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty_cycle_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/device.html#Device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.device.Device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A libSCHC device.</p>
+<p>This wraps <a class="reference internal" href="libschc.html#pylibschc.libschc.Device" title="pylibschc.libschc.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Device</span></code></a> for a more pythonic usage. Two devices
+with the same <code class="docutils literal notranslate"><span class="pre">device_id</span></code> are effectively the same object (i.e., this class is a
+multiton)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_id</strong> – The libSCHC-internal identifier of the device.</p></li>
+<li><p><strong>mtu</strong> – The maximum transmission unit of the link layer of the device.</p></li>
+<li><p><strong>duty_cycle_ms</strong> – The duty cycle in milliseconds of the device.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.device.Device.mtu">
+<span class="sig-name descname"><span class="pre">mtu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">pylibschc.device.Device</span></a></em><a class="headerlink" href="#pylibschc.device.Device.mtu" title="Permalink to this definition">¶</a></dt>
+<dd><p>The maximum transmission unit of the link layer of the device.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.device.Device.duty_cycle_ms">
+<span class="sig-name descname"><span class="pre">duty_cycle_ms</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><span class="pre">pylibschc.libschc.Direction</span></a></em><a class="headerlink" href="#pylibschc.device.Device.duty_cycle_ms" title="Permalink to this definition">¶</a></dt>
+<dd><p>The duty cycle in milliseconds of the device.</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pylibschc.device.Device.compression_rules">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compression_rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="rules.html#pylibschc.rules.CompressionRule" title="pylibschc.rules.CompressionRule"><span class="pre">CompressionRule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.device.Device.compression_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The compression rules of this device.</p>
+<p>If they are set to None, the internal compression context of the libSCHC version
+of this device will be free’d and its rule count set to 0. If it is set to a
+list of compression rules, the context will be updated accordingly.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.device.Device.delete">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/device.html#Device.delete"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.device.Device.delete" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Delete device identified by <code class="docutils literal notranslate"><span class="pre">device_id</span></code> from libSCHC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The libSCHC-internal identifier of the device.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pylibschc.device.Device.device_id">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.device.Device.device_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The libSCHC-internal identifier of the device.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pylibschc.device.Device.fragmentation_rules">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">fragmentation_rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="rules.html#pylibschc.rules.FragmentationRule" title="pylibschc.rules.FragmentationRule"><span class="pre">FragmentationRule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.device.Device.fragmentation_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The fragmentation rules of this device.</p>
+<p>If they are set to None, the internal fragmentation context of the libSCHC
+version of this device will be free’d and its rule count set to 0. If it is set
+to a list of fragmentation rules, the context will be updated accordingly.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.device.Device.get">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">Device</span></a></span></span><a class="reference internal" href="../_modules/pylibschc/device.html#Device.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.device.Device.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get device identified by <code class="docutils literal notranslate"><span class="pre">device_id</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_id</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>) – The libSCHC-internal identifier of the device.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.device.Device.iter">
 <em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">iter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Generator</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">Device</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pylibschc/device.html#Device.iter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.device.Device.iter" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Iterates over all devices deployed in libSCHC.</p>
+</dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="pylibschc.device.Device.uncompressed_rule">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">uncompressed_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="rules.html#pylibschc.rules.UncompressedRule" title="pylibschc.rules.UncompressedRule"><span class="pre">UncompressedRule</span></a></em><a class="headerlink" href="#pylibschc.device.Device.uncompressed_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The rule for uncompressed packets on this device..</p>
+<p>If this is set to None, the internal rule ID will be set to 0 and its bit size
+to 0. Otherwise, the rule will be updated accordingly.</p>
+</dd></dl>
 
 </dd></dl>
 

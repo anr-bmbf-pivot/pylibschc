@@ -88,6 +88,8 @@
 <span class="c1">#</span>
 <span class="c1"># SPDX-License-Identifier: GPL-3.0-only</span>
 
+<span class="sd">&quot;&quot;&quot;User-facing representation of libSCHC devices.&quot;&quot;&quot;</span>
+
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">import</span> <span class="nn">typing</span>
 
@@ -101,6 +103,13 @@
 
 
 <div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A libSCHC device.</span>
+
+<span class="sd">    This wraps :class:`pylibschc.libschc.Device` for a more pythonic usage. Two devices</span>
+<span class="sd">    with the same ``device_id`` are effectively the same object (i.e., this class is a</span>
+<span class="sd">    multiton)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_devices</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mtu</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duty_cycle_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
@@ -112,6 +121,22 @@
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">device_id</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mtu</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duty_cycle_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param device_id: The libSCHC-internal identifier of the device.</span>
+<span class="sd">        :param mtu: The maximum transmission unit of the link layer of the device.</span>
+<span class="sd">        :param duty_cycle_ms: The duty cycle in milliseconds of the device.</span>
+
+<span class="sd">        .. py:attribute:: mtu</span>
+<span class="sd">           :type: pylibschc.device.Device</span>
+
+<span class="sd">           The maximum transmission unit of the link layer of the device.</span>
+
+
+<span class="sd">        .. py:attribute:: duty_cycle_ms</span>
+<span class="sd">           :type: pylibschc.libschc.Direction</span>
+
+<span class="sd">           The duty cycle in milliseconds of the device.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">libschc</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
@@ -124,6 +149,10 @@
 
 <div class="viewcode-block" id="Device.delete"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device.delete">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Delete device identified by ``device_id`` from libSCHC.</span>
+
+<span class="sd">        :param device_id: The libSCHC-internal identifier of the device.</span>
+<span class="sd">        :type device_id: :py:class:`int`&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">device_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="n">device</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">device_id</span><span class="p">]</span>
@@ -135,6 +164,10 @@
 
 <div class="viewcode-block" id="Device.get"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device.get">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Device</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get device identified by ``device_id``.</span>
+
+<span class="sd">        :param device_id: The libSCHC-internal identifier of the device.</span>
+<span class="sd">        :type device_id: :py:class:`int`&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">device_id</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
@@ -147,6 +180,7 @@
 
 <div class="viewcode-block" id="Device.iter"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device.iter">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">iter</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Generator</span><span class="p">[</span><span class="n">Device</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Iterates over all devices deployed in libSCHC.&quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">device</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="k">yield</span> <span class="n">device</span></div>
 
@@ -156,6 +190,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">compression_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">rules</span><span class="o">.</span><span class="n">CompressionRule</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The compression rules of this device.</span>
+
+<span class="sd">        If they are set to None, the internal compression context of the libSCHC version</span>
+<span class="sd">        of this device will be free&#39;d and its rule count set to 0. If it is set to a</span>
+<span class="sd">        list of compression rules, the context will be updated accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compression_rules</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_compression_rules</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">rules</span><span class="o">.</span><span class="n">CompressionRule</span><span class="p">(</span><span class="o">**</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">compression_rules</span>
@@ -174,6 +214,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">device_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The libSCHC-internal identifier of the device.&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">device_id</span>
         <span class="k">except</span> <span class="ne">AttributeError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>  <span class="c1"># pragma: no cover, only happens on init error</span>
@@ -183,6 +224,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">fragmentation_rules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">rules</span><span class="o">.</span><span class="n">FragmentationRule</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The fragmentation rules of this device.</span>
+
+<span class="sd">        If they are set to None, the internal fragmentation context of the libSCHC</span>
+<span class="sd">        version of this device will be free&#39;d and its rule count set to 0. If it is set</span>
+<span class="sd">        to a list of fragmentation rules, the context will be updated accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fragmentation_rules</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_fragmentation_rules</span> <span class="o">=</span> <span class="p">[</span>
                 <span class="n">rules</span><span class="o">.</span><span class="n">FragmentationRule</span><span class="p">(</span><span class="o">**</span><span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">fragmentation_rules</span>
@@ -201,6 +248,11 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">uncompressed_rule</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">rules</span><span class="o">.</span><span class="n">UncompressedRule</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The rule for uncompressed packets on this device..</span>
+
+<span class="sd">        If this is set to None, the internal rule ID will be set to 0 and its bit size</span>
+<span class="sd">        to 0. Otherwise, the rule will be updated accordingly.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_uncompressed_rule</span> <span class="ow">is</span> <span class="kc">None</span>
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">uncompressed_rule_id_size_bits</span> <span class="o">&gt;</span> <span class="mi">0</span>

@@ -101,32 +101,82 @@
             
   <section id="module-pylibschc.compressor">
 <span id="pylibschc-compressor"></span><h1><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code><a class="headerlink" href="#module-pylibschc.compressor" title="Permalink to this heading">¶</a></h1>
-<p>Exposes libSCHC’s compressor/decompressor functionality</p>
+<p>User-facing compressor/decompressor functionality</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.compressor.</span></span><span class="sig-name descname"><span class="pre">CompressorDecompressor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Compressor/Decompressor.</p>
+<p>A Compressor/Decompressor.</p>
+<p>This wraps <a class="reference internal" href="libschc.html#pylibschc.libschc.CompressorDecompressor" title="pylibschc.libschc.CompressorDecompressor"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.CompressorDecompressor</span></code></a> for a more pythonic
+usage.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>device</strong> (<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>) – Device to be used for compression/decompression</p></li>
-<li><p><strong>direction</strong> (<a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction</span></code></a>) – Direction to use for compression/decompression</p></li>
+<li><p><strong>device</strong> (<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>) – Device to be used for compression/decompression.</p></li>
+<li><p><strong>direction</strong> (<a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction</span></code></a>) – Direction to use for compression/decompression.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="libschc.html#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a></p>
+<dd class="field-even"><p><strong>ValueError</strong> – When direction is <a class="reference internal" href="libschc.html#pylibschc.libschc.Direction.BI" title="pylibschc.libschc.Direction.BI"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.Direction.BI</span></code></a>.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.device">
+<span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><span class="pre">pylibschc.device.Device</span></a></em><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Device to be used for compression/decompression.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.direction">
+<span class="sig-name descname"><span class="pre">direction</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><span class="pre">pylibschc.libschc.Direction</span></a></em><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.direction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Direction to use for compression/decompression.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.input">
 <span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.input" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Decompress according to the compression rules of
+<a class="reference internal" href="#pylibschc.compressor.CompressorDecompressor.device" title="pylibschc.compressor.CompressorDecompressor.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressorDecompressor.device</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – The data to decompress.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – When <code class="docutils literal notranslate"><span class="pre">data</span></code> is not of the expected input type.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The decompressed data.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.compressor.CompressorDecompressor.output">
 <span class="sig-name descname"><span class="pre">output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="libschc.html#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><span class="pre">CompressionResult</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><span class="pre">BitArray</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pylibschc/compressor.html#CompressorDecompressor.output"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.compressor.CompressorDecompressor.output" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Compress according to the compression rules of
+<a class="reference internal" href="#pylibschc.compressor.CompressorDecompressor.device" title="pylibschc.compressor.CompressorDecompressor.device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressorDecompressor.device</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> – The data to compress.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>TypeError</strong> – When <code class="docutils literal notranslate"><span class="pre">data</span></code> is not of the expected input type.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether the packet was compressed or the uncompressed rule was used
+and the compressed packet as a <a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.BitArray</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Tuple</span></code> [
+<a class="reference internal" href="libschc.html#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.CompressionResult</span></code></a> ,
+<a class="reference internal" href="libschc.html#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.libschc.BitArray</span></code></a>
+]</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
