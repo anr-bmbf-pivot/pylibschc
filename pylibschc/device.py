@@ -66,7 +66,7 @@ class Device:
         return self._inner
 
     @property
-    def compression_rules(self):
+    def compression_rules(self) -> typing.List[rules.CompressionRule]:
         if self._compression_rules is None:
             self._compression_rules = [
                 rules.CompressionRule(**r) for r in self._inner.compression_rules
@@ -93,7 +93,7 @@ class Device:
             ) from exc
 
     @property
-    def fragmentation_rules(self):
+    def fragmentation_rules(self) -> typing.List[rules.FragmentationRule]:
         if self._fragmentation_rules is None:
             self._fragmentation_rules = [
                 rules.FragmentationRule(**r) for r in self._inner.fragmentation_rules
@@ -111,7 +111,7 @@ class Device:
         self._fragmentation_rules = None
 
     @property
-    def uncompressed_rule(self):
+    def uncompressed_rule(self) -> rules.UncompressedRule:
         if (
             self._uncompressed_rule is None
             and self._inner.uncompressed_rule_id_size_bits > 0

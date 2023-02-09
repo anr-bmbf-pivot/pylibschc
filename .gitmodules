@@ -1,4 +1,3 @@
 [submodule "libschc"]
 	path = src/libschc
-	url = git@github.com:miri64/libschc.git
-	branch = pylibschc
+	url = git@github.com:imec-idlab/libschc.git

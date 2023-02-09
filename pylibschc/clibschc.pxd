@@ -256,6 +256,7 @@ cdef extern from "libschc/fragmenter.h":
 
     ctypedef struct schc_fragmentation_t:
         schc_fragmentation_t *next
+        void (*free_conn_cb)(schc_fragmentation_t *conn)
         uint32_t device_id
         schc_bitarray_t *bit_arr
         uint8_t *tail_ptr
@@ -289,12 +290,7 @@ cdef extern from "libschc/fragmenter.h":
         schc_fragmentation_rule_t *fragmentation_rule
         uint8_t rule_id[4]
 
-    int8_t schc_fragmenter_init(
-        schc_fragmentation_t* tx_conn,
-        uint8_t (*send)(uint8_t* data, uint16_t length, uint32_t device_id),
-        void (*end_rx)(schc_fragmentation_t* conn),
-        void (*remove_timer_entry)(schc_fragmentation_t* conn)
-    );
+    int8_t schc_fragmenter_init(schc_fragmentation_t* tx_conn);
     int8_t schc_fragment(schc_fragmentation_t *tx_conn)
     int8_t schc_reassemble(schc_fragmentation_t *rx_conn)
     void schc_reset(schc_fragmentation_t *conn)

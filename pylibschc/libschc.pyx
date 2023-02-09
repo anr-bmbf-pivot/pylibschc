@@ -986,13 +986,14 @@ cdef class FragmentationConnection:
         else:
             self._frag_conn = NULL
 
-    def _init_ops(self):
+    cdef _init_ops(self):
         self._frag_conn.timer_ctx = <void *>self
         self._frag_conn.send = self._send
         self._frag_conn.post_timer_task = self._c_post_timer_task
         self._frag_conn.end_rx = self._c_end_rx
         self._frag_conn.end_tx = self._c_end_tx
         self._frag_conn.remove_timer_entry = self._c_remove_timer_entry
+        self._frag_conn.free_conn_cb = self._c_free_conn_cb
 
     def __dealloc__(self):
         if self._frag_conn and self._malloced:
@@ -1057,7 +1058,7 @@ cdef class FragmentationConnection:
         return buf
 
     def _allocated(self):
-        return self._frag_conn is not NULL and self._frag_conn.timer_ctx is not NULL
+        return self._frag_conn is not NULL
 
     @staticmethod
     cdef FragmentationConnection _outer_from_struct(
@@ -1125,6 +1126,15 @@ cdef class FragmentationConnection:
                 time_ms / 1000,
                 task
             )
+
+    @staticmethod
+    cdef void _c_free_conn_cb(clibschc.schc_fragmentation_t *conn):
+        try:
+            obj = FragmentationConnection._outer_from_struct(conn)
+            if obj:
+                obj._frag_conn = NULL
+        except Exception:
+            raise
 
     @staticmethod
     def register_send(device_id: int, send: typing.Callable[[bytes], int]):
@@ -1202,9 +1212,7 @@ cdef class FragmentationConnection:
             f"No send registered for device #{device_id}"
         )
         assert self.ops.remove_timer_entry is not None
-        if clibschc.schc_fragmenter_init(
-            self._frag_conn, self._send, self._c_end_rx, self._c_remove_timer_entry
-        ) != 1:
+        if clibschc.schc_fragmenter_init(self._frag_conn) != 1:
             raise MemoryError("Unable to initialize FragmentationConnection")
         self._init_ops()
         self._frag_conn.fragmentation_rule = (
@@ -1276,7 +1284,6 @@ cdef class FragmentationConnection:
                 )
             elif self._frag_conn != conn_ptr:
                 res = FragmentationConnection(ops=self.ops, _malloc_inner=False)
-                conn_ptr.post_timer_task = self._c_post_timer_task
                 conn_ptr.dc = self._frag_conn.dc
                 FragmentationConnection._set_frag_conn(res, conn_ptr)
                 if (
