@@ -1270,9 +1270,8 @@ cdef class FragmentationConnection:
         return FragmentationResult(self._fragment())
 
     cdef FragmentationConnection _new_conn(self, clibschc.schc_fragmentation_t *conn):
-        if conn.timer_ctx:
-            res = <FragmentationConnection>conn.timer_ctx
-        else:
+        res = FragmentationConnection._outer_from_struct(conn)
+        if res is None:
             res = FragmentationConnection(ops=self.ops, _malloc_inner=False)
             conn.dc = self._frag_conn.dc
             FragmentationConnection._set_frag_conn(res, conn)
