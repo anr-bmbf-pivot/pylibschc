@@ -14,21 +14,24 @@ __license__ = "GPLv3"
 __email__ = "m.lenders@fu-berlin.de"
 
 
-class Device:
+class Device:  # pylint: disable=too-many-instance-attributes
     _devices = {}
 
-    def __new__(cls, device_id: int):
+    def __new__(cls, device_id: int, mtu: int, duty_cycle_ms: int):
+        # pylint: disable=unused-argument
         if device_id <= 0:
             raise ValueError(f"device_id must be > 0 (was {device_id})")
         if device_id not in cls._devices:
             cls._devices[device_id] = super().__new__(cls)
         return cls._devices[device_id]
 
-    def __init__(self, device_id: int):
+    def __init__(self, device_id: int, mtu: int, duty_cycle_ms: int):
         try:
             self._inner = libschc.Device.get(device_id)
         except KeyError:
             self._inner = libschc.Device(device_id)
+        self.mtu = mtu
+        self.duty_cycle_ms = duty_cycle_ms
         self._compression_rules = None
         self._fragmentation_rules = None
         self._uncompressed_rule = None

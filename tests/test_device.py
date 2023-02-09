@@ -16,19 +16,19 @@ __email__ = "m.lenders@fu-berlin.de"
 # pylint: disable=R0801
 def test_device_init():
     with pytest.raises(ValueError):
-        pylibschc.device.Device(0)
-    device = pylibschc.device.Device(1)
-    assert device == pylibschc.device.Device(1)
+        pylibschc.device.Device(0, 50, 5000)
+    device = pylibschc.device.Device(1, 50, 5000)
+    assert device == pylibschc.device.Device(1, 50, 5000)
 
 
 def test_device_delete():
     # test what happens if device does not exist (it should be nothing)
     pylibschc.device.Device.delete(1)
-    old_device = pylibschc.device.Device(1)
+    old_device = pylibschc.device.Device(1, 50, 5000)
     pylibschc.device.Device.delete(1)
     with pytest.raises(KeyError):
         pylibschc.device.Device.get(1)
-    new_device = pylibschc.device.Device(1)
+    new_device = pylibschc.device.Device(1, 50, 5000)
     assert old_device != new_device
     # test idempotency
     pylibschc.device.Device.delete(1)
@@ -37,7 +37,7 @@ def test_device_delete():
 def test_device_get():
     with pytest.raises(KeyError):
         pylibschc.device.Device.get(1)
-    init_device = pylibschc.device.Device(1)
+    init_device = pylibschc.device.Device(1, 50, 5000)
     get_device = pylibschc.device.Device.get(1)
     assert init_device == get_device
 
@@ -45,13 +45,13 @@ def test_device_get():
 def test_device_iter():
     devices = []
     for i in range(1, 12):
-        devices.append(pylibschc.device.Device(i))
+        devices.append(pylibschc.device.Device(i, 50, 5000))
     for device, iter_device in zip(devices, pylibschc.device.Device.iter()):
         assert device == iter_device
 
 
 def test_device_compression_rules():
-    device = pylibschc.device.Device(1)
+    device = pylibschc.device.Device(1, 50, 5000)
     compression_rules = [
         pylibschc.rules.CompressionRule(
             rule_id=1,
@@ -101,12 +101,12 @@ def test_device_compression_rules():
 
 
 def test_device_device_id():
-    device = pylibschc.device.Device(60182)
+    device = pylibschc.device.Device(60182, 50, 5000)
     assert device.device_id == 60182
 
 
 def test_device_fragmentation_rules():
-    device = pylibschc.device.Device(1)
+    device = pylibschc.device.Device(1, 50, 5000)
     fragmentation_rules = [
         pylibschc.rules.FragmentationRule(
             rule_id=22,
@@ -139,7 +139,7 @@ def test_device_fragmentation_rules():
 
 
 def test_device_uncompressed_rule():
-    device = pylibschc.device.Device(1)
+    device = pylibschc.device.Device(1, 50, 5000)
     uncompressed_rule = pylibschc.rules.UncompressedRule(
         rule_id=21, rule_id_size_bits=8
     )

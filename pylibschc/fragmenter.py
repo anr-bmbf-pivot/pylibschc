@@ -32,8 +32,6 @@ class BaseFragmenterReassembler(FragmenterOps):
     def __init__(  # pylint: disable=too-many-arguments
         self,
         device: pylibschc.device.Device,
-        duty_cycle_ms: int,
-        mtu: int = None,
         mode: FragmentationMode = None,
         end_rx: typing.Callable[[FragmentationConnection], None] = None,
         end_tx: typing.Callable[[FragmentationConnection], None] = None,
@@ -50,26 +48,19 @@ class BaseFragmenterReassembler(FragmenterOps):
             remove_timer_entry=remove_timer_entry,
         )
         self.device = device
-        self.mtu = mtu
-        self.duty_cycle_ms = duty_cycle_ms
         self.mode = mode
 
     @abc.abstractmethod
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
-        pass  # pragma: no cover
+        """Handle incoming data.
+
+        :param data: Either an ACK, a fragment, or an unfragmented packet."""
+        pass  # pragma: no cover pylint: disable=unnecessary-pass
 
 
 class Fragmenter(BaseFragmenterReassembler):
-    def __init__(
-        self,
-        device: pylibschc.device.Device,
-        duty_cycle_ms: int,
-        mtu: int,
-        mode: FragmentationMode,
-        *args,
-        **kwargs,
-    ):
-        super().__init__(device, duty_cycle_ms, mtu, mode, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self._tx_conn = None
         self._tx_conn_lock = threading.Lock()
 
@@ -114,8 +105,8 @@ class Fragmenter(BaseFragmenterReassembler):
         self._tx_conn.init_tx(
             self.device.device_id,
             bit_array,
-            self.mtu,
-            self.duty_cycle_ms,
+            self.device.mtu,
+            self.device.duty_cycle_ms,
             self.mode.value,
         )
         try:
@@ -153,7 +144,7 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
             if self._rx_conn is None:
                 self._rx_conn = self.conn_cls(ops=self)
                 self._rx_conn.init_rx(
-                    self.device.device_id, bit_array, self.duty_cycle_ms
+                    self.device.device_id, bit_array, self.device.duty_cycle_ms
                 )
             else:
                 self._rx_conn.bit_arr = bit_array

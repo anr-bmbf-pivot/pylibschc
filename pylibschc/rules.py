@@ -595,7 +595,11 @@ class Config(BaseModel):
         :rtype: :class:`argparse.Namespace`"""
         devices = []
         for device_config in self.devices:
-            device = pylibschc.device.Device(device_config.device_id)
+            device = pylibschc.device.Device(
+                device_id=device_config.device_id,
+                mtu=device_config.mtu,
+                duty_cycle_ms=device_config.duty_cycle,
+            )
             device.compression_rules = device_config.compression_rules
             device.fragmentation_rules = device_config.fragmentation_rules
             device.uncompressed_rule = device_config.uncompressed_rule

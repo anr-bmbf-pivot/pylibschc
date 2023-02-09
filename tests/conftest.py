@@ -531,8 +531,8 @@ def test_rules():
         devices=[
             pylibschc.rules.Device(
                 device_id=1,
-                mtu=500,
-                duty_cycle=5000,
+                mtu=60,
+                duty_cycle=100,
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
                     rule_id=20, rule_id_size_bits=8
                 ),

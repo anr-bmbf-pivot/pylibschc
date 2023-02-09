@@ -279,6 +279,8 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
     ):
         config = test_rules.deploy()
         device = config.devices[0]
+        assert device.mtu == MTU
+        assert device.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
         cr = (  # pylint: disable=invalid-name
             pylibschc.compressor.CompressorDecompressor(
@@ -287,8 +289,6 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         )
         self.fragmenter = pylibschc.fragmenter.Fragmenter(
             device=device,
-            mtu=MTU,
-            duty_cycle_ms=DUTY_CYCLE_MS,
             mode=mode,
             post_timer_task=self.post_timer_task,
             end_tx=self.end_tx,
@@ -296,7 +296,6 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         )
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
-            duty_cycle_ms=DUTY_CYCLE_MS,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
@@ -408,6 +407,8 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         self.reassembly_buffer = self.loop.create_future()
         config = test_rules.deploy()
         device = config.devices[0]
+        assert device.mtu == MTU
+        assert device.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
         cr = (  # pylint: disable=invalid-name
             pylibschc.compressor.CompressorDecompressor(
@@ -416,8 +417,6 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         )
         self.fragmenter = pylibschc.fragmenter.Fragmenter(
             device=device,
-            mtu=MTU,
-            duty_cycle_ms=DUTY_CYCLE_MS,
             mode=mode,
             post_timer_task=self.post_timer_task,
             end_tx=self.end_tx,
@@ -425,7 +424,6 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         )
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
-            duty_cycle_ms=DUTY_CYCLE_MS,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
