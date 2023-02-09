@@ -100,21 +100,24 @@
 <span class="n">__email__</span> <span class="o">=</span> <span class="s2">&quot;m.lenders@fu-berlin.de&quot;</span>
 
 
-<div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>
+<div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../pylibschc/device.html#pylibschc.device.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
     <span class="n">_devices</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mtu</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duty_cycle_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=unused-argument</span>
         <span class="k">if</span> <span class="n">device_id</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;device_id must be &gt; 0 (was </span><span class="si">{</span><span class="n">device_id</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">device_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">:</span>
             <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">device_id</span><span class="p">]</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_devices</span><span class="p">[</span><span class="n">device_id</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mtu</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">duty_cycle_ms</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">libschc</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span> <span class="o">=</span> <span class="n">libschc</span><span class="o">.</span><span class="n">Device</span><span class="p">(</span><span class="n">device_id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtu</span> <span class="o">=</span> <span class="n">mtu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">duty_cycle_ms</span> <span class="o">=</span> <span class="n">duty_cycle_ms</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_compression_rules</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_fragmentation_rules</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_uncompressed_rule</span> <span class="o">=</span> <span class="kc">None</span>
