@@ -1,6 +1,8 @@
 test-report.xml
-pylibschc/libschc.c
+pylibschc/libschc.[ch]
 rule_config.h
+vgcore.*
+pylibschc-*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
