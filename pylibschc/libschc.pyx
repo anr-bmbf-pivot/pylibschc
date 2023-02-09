@@ -942,7 +942,7 @@ cdef class _TimerTask:
 
     @staticmethod
     def the_task(obj: _TimerTask):
-        if obj._conn._allocated() and obj._timer_task_ptr:
+        if obj._conn.is_conn(obj._arg) and obj._timer_task_ptr:
             _TimerTask.call_the_task(
                 <void (*)(void *)>(<void *>obj._timer_task_ptr),
                 <void *>obj._arg
@@ -1060,8 +1060,14 @@ cdef class FragmentationConnection:
         clibschc.mbuf_copy(conn, <uint8_t *>(<char *>buf))
         return buf
 
-    def _allocated(self):
+    cdef _allocated(self):
         return (<void *>self._frag_conn) is not NULL
+
+    cdef _is_conn(self, clibschc.schc_fragmentation_t *conn):
+        return <void *>self._frag_conn == conn
+
+    def is_conn(self, conn: intptr_t):
+        return bool(self._is_conn(<clibschc.schc_fragmentation_t *>(<void *>conn)))
 
     @staticmethod
     cdef FragmentationConnection _outer_from_struct(
