@@ -15,7 +15,7 @@
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pylibschc.rules" href="rules.html" />
+    <link rel="next" title="pylogging.h" href="../cfiles/pylogging.html" />
     <link rel="prev" title="pylibschc.fragmenter" href="fragmenter.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -50,11 +50,11 @@
 <li class="toctree-l1"><a class="reference internal" href="../about.html">pylibschc: A python wrapper for libSCHC</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../modules.html">API reference</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="../modules.html#submodules">Submodules</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="compressor.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="rules.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="device.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="compressor.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="fragmenter.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">pylibschc.libschc</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="rules.html"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../modules.html#c-api">C API</a></li>
@@ -68,7 +68,7 @@
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="../modules.html">API reference</a><ul>
       <li>Previous: <a href="fragmenter.html" title="previous chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter</span></code></a></li>
-      <li>Next: <a href="rules.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a></li>
+      <li>Next: <a href="../cfiles/pylogging.html" title="next chapter"><code class="docutils literal notranslate"><span class="pre">pylogging.h</span></code></a></li>
   </ul></li>
   </ul></li>
 </ul>
@@ -369,7 +369,10 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">CDA</span
 and the compressed packet as a <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>.</p>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Tuple`[:class:`CompressionResult</span></code>, <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>]</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">typing.Tuple</span></code> [
+<a class="reference internal" href="#pylibschc.libschc.CompressionResult" title="pylibschc.libschc.CompressionResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">CompressionResult</span></code></a> ,
+<a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>
+]</p>
 </dd>
 </dl>
 </dd></dl>
