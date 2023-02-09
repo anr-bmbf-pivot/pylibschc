@@ -128,7 +128,7 @@
 
 <span class="c1"># pylint: disable=too-many-lines</span>
 <div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">PydanticBaseModel</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Overrides pydantic to default to case-insensitivity:&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Overrides pydantic to default to case-insensitivity.&quot;&quot;&quot;</span>
 
     <span class="c1"># pylint: disable=too-few-public-methods</span>
 <div class="viewcode-block" id="BaseModel.Config"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.BaseModel.Config">[docs]</a>    <span class="k">class</span> <span class="nc">Config</span><span class="p">:</span>
@@ -142,19 +142,20 @@
 
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="n">rule_id</span><span class="p">:</span> <span class="nb">int</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Rule ID.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The Rule ID. Must fit into :attr:`BaseRule.rule_id_size_bits`.&quot;&quot;&quot;</span>
     <span class="n">rule_id_size_bits</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Size of Rule ID in bits.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Size of Rule ID in bits. Must be 0 &lt; :attr:`BaseRule.rule_id_size_bits` ≤ 32&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="BaseRule.check_rule_id_size_bits"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.BaseRule.check_rule_id_size_bits">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;rule_id_size_bits&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;rule_id_size_bits&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">check_rule_id_size_bits</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rule_id&quot;</span><span class="p">,</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">value</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">&quot;rule_id=</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rule_id&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> does not fit into &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;rule_id_size_bits=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span></div></div>
+        <span class="k">return</span> <span class="n">value</span></div>
 
 
 <div class="viewcode-block" id="CompressionRuleField"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRuleField">[docs]</a><span class="k">class</span> <span class="nc">CompressionRuleField</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -164,10 +165,13 @@
     <span class="n">field</span><span class="p">:</span> <span class="n">HeaderFieldID</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Field identifier.&quot;&quot;&quot;</span>
     <span class="n">field_length</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">MAX_FIELD_LENGTH</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Field length in bits.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Field length in bits. Must be 0 ≤ :attr:`field_length`</span>
+<span class="sd">    ≤ :const:`pylibschc.libschc.MAX_FIELD_LENGTH`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">field_pos</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFF</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Field position, i.e., when there are multiple occurrences of this field, which</span>
-<span class="sd">    occurrence this field descriptor applies to (default: 1).&quot;&quot;&quot;</span>
+<span class="sd">    occurrence this field descriptor applies to (default: 1). Must be</span>
+<span class="sd">    0 ≤ :attr:`CompressionRuleField.field_pos` ≤ 255.&quot;&quot;&quot;</span>
     <span class="nb">dir</span><span class="p">:</span> <span class="n">Direction</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Direction indicator for this field descriptor.&quot;&quot;&quot;</span>
     <span class="n">MO</span><span class="p">:</span> <span class="n">MO</span>
@@ -175,7 +179,10 @@
     <span class="n">action</span><span class="p">:</span> <span class="n">CDA</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Compression/decompression action for this field.&quot;&quot;&quot;</span>
     <span class="n">MO_param_length</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFF</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter length for the matching operator (default: 0).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parameter length for the matching operator (default: 0). Must be</span>
+<span class="sd">    0 ≤ :attr:`CompressionRuleField.MO_param_length` ≤ 255. When being a parameter for</span>
+<span class="sd">    :attr:`pylibschc.libschc.MO.MSB` it must be lesser or equal to</span>
+<span class="sd">    :attr:`CompressionRuleField.field_length`.&quot;&quot;&quot;</span>
     <span class="n">target_value</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
         <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span>
             <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span>
@@ -188,25 +195,17 @@
         <span class="n">ipaddress</span><span class="o">.</span><span class="n">IPv6Interface</span><span class="p">,</span>
         <span class="n">conbytes</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="n">MAX_FIELD_LENGTH</span><span class="p">),</span>
     <span class="p">]</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Target value for the matching operator (default: 0).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Target value for the matching operator (default: b&quot;&quot;). Any integers in</span>
+<span class="sd">    :attr:`CompressionRuleField.target_value` are restricted to 64 bits of width. The</span>
+<span class="sd">    length of this must fit :attr:`CompressionRuleField.field_length` and, depending on</span>
+<span class="sd">    :attr:`CompressionRuleField.MO`, :attr:`CompressionRuleField.MO_param_length`. Will</span>
+<span class="sd">    be converted to :class:`bytes` after validation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="CompressionRuleField.check_mo_param_length"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRuleField.check_mo_param_length">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;MO_param_length&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;MO_param_length&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">check_mo_param_length</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validator to check if :attr:`CompressionRuleField.MO_param_length`</span>
-<span class="sd">        is lesser or equal to :attr:`CompressionRuleField.field_length` when</span>
-<span class="sd">        :attr:`CompressionRuleField.MO` is :attr:`pylibschc.libschc.MO.MSB` or</span>
-<span class="sd">        :attr:`CompressionRuleField.action` is :attr:`pylibschc.libschc.CDA.LSB`</span>
-
-<span class="sd">        :param value: The value to validate</span>
-<span class="sd">        :param values: name-to-value mapping of previously validated fields</span>
-<span class="sd">        :raise ValueError: When :attr:`CompressionRuleField.MO` is</span>
-<span class="sd">            :attr:`pylibschc.libschc.MO.MSB` or :attr:`CompressionRuleField.action`</span>
-<span class="sd">            is :attr:`pylibschc.libschc.CDA.LSB` but</span>
-<span class="sd">            :attr:`CompressionRuleField.MO_param_length` is greater than</span>
-<span class="sd">            :attr:`CompressionRuleField.field_length`</span>
-<span class="sd">        :return: The validated value</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">MO</span><span class="o">.</span><span class="n">MSB</span> <span class="ow">or</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">CDA</span><span class="o">.</span><span class="n">LSB</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">value</span> <span class="o">&gt;</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;field_length&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -214,7 +213,7 @@
                     <span class="sa">f</span><span class="s2">&quot;field_length=</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;field_length&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> elements with &quot;</span>
                     <span class="sa">f</span><span class="s2">&quot;MO=</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;MO&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> or action=</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;action&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
-        <span class="k">return</span> <span class="n">value</span></div>
+        <span class="k">return</span> <span class="n">value</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_check_bits_overflow</span><span class="p">(</span><span class="n">bytes_value</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">field_length_mod</span><span class="p">):</span>
@@ -294,19 +293,20 @@
             <span class="k">return</span> <span class="n">padding</span> <span class="o">+</span> <span class="n">bytes_value</span>
         <span class="k">return</span> <span class="n">bytes_value</span>
 
-<div class="viewcode-block" id="CompressionRuleField.field_length_bytes"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRuleField.field_length_bytes">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">field_length_bytes</span><span class="p">(</span><span class="n">field_length_bits</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_field_length_bytes</span><span class="p">(</span><span class="n">field_length_bits</span><span class="p">):</span>
         <span class="n">field_length_bytes</span> <span class="o">=</span> <span class="n">field_length_bits</span> <span class="o">//</span> <span class="mi">8</span>
         <span class="n">field_length_mod</span> <span class="o">=</span> <span class="n">field_length_bits</span> <span class="o">%</span> <span class="mi">8</span>
         <span class="k">if</span> <span class="n">field_length_mod</span><span class="p">:</span>
             <span class="n">field_length_bytes</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">return</span> <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">field_length_mod</span></div>
+        <span class="k">return</span> <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">field_length_mod</span>
 
-<div class="viewcode-block" id="CompressionRuleField.check_field_length_for_target_value"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRuleField.check_field_length_for_target_value">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;target_value&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;target_value&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">check_field_length_for_target_value</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="n">bytes_value</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">field_length_mod</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">field_length_bytes</span><span class="p">(</span>
+        <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">field_length_mod</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_field_length_bytes</span><span class="p">(</span>
             <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;field_length&quot;</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">MO</span><span class="o">.</span><span class="n">MATCHMAP</span> <span class="ow">or</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;action&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">CDA</span><span class="o">.</span><span class="n">MAPPINGSENT</span><span class="p">:</span>
@@ -354,15 +354,17 @@
                 <span class="sa">f</span><span class="s2">&quot;target_value=</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> does not fit into &quot;</span>
                 <span class="sa">f</span><span class="s2">&quot;field_length=</span><span class="si">{</span><span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;field_length&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2"> bits&quot;</span>
             <span class="p">)</span>
-        <span class="k">return</span> <span class="n">bytes_value</span></div>
+        <span class="k">return</span> <span class="n">bytes_value</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">c_MO</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># pylint: disable=invalid-name</span>
+    <span class="k">def</span> <span class="nf">c_MO</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MO</span> <span class="o">==</span> <span class="n">MO</span><span class="o">.</span><span class="n">MSB</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">&quot;&amp;mo_MSB&quot;</span>
         <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;&amp;mo_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">MO</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
 
-<div class="viewcode-block" id="CompressionRuleField.c_schc_field_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRuleField.c_schc_field_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_field_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">c_schc_field_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="k">def</span> <span class="nf">bytes_to_hex_list</span><span class="p">(</span><span class="n">byts</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">):</span>
             <span class="k">return</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;0x</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">byts</span><span class="p">)</span>
 
@@ -385,7 +387,7 @@
         <span class="n">res</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">,&quot;</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">5</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">MO</span> <span class="o">==</span> <span class="n">MO</span><span class="o">.</span><span class="n">MATCHMAP</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_length_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_length</span><span class="p">)</span>
+            <span class="n">field_length_bytes</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field_length_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">field_length</span><span class="p">)</span>
             <span class="n">res</span> <span class="o">+=</span> <span class="n">chunk_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">,</span> <span class="n">field_length_bytes</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
             <span class="n">res</span> <span class="o">+=</span> <span class="n">chunk_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_value</span><span class="p">)</span>
@@ -397,13 +399,24 @@
         <span class="n">res</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">15</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">c_MO</span><span class="p">))</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
         <span class="n">res</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">12</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="p">))</span> <span class="o">*</span> <span class="s2">&quot; &quot;</span>
-        <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span></div></div>
+        <span class="k">return</span> <span class="n">res</span> <span class="o">+</span> <span class="s2">&quot;}&quot;</span></div>
 
 
 <div class="viewcode-block" id="CompressionRule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule">[docs]</a><span class="k">class</span> <span class="nc">CompressionRule</span><span class="p">(</span><span class="n">BaseRule</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A compression rule.&quot;&quot;&quot;</span>
+
     <span class="n">ipv6_rule</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">CompressionRuleField</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="n">IP6_FIELDS</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The field descriptors for the IPv6 layer (default: None). Must at most be</span>
+<span class="sd">    :const:`pylibschc.libschc.IP6_FIELDS` long and only contain field descriptors for</span>
+<span class="sd">    which the name of :attr:`CompressionRuleField.field` starts with `IP6_`.&quot;&quot;&quot;</span>
     <span class="n">udp_rule</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">CompressionRuleField</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="n">UDP_FIELDS</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The field descriptors for the UDP layer (default: None). Must at most be</span>
+<span class="sd">    :const:`pylibschc.libschc.UDP_FIELDS` long and only contain field descriptors for</span>
+<span class="sd">    which the name of :attr:`CompressionRuleField.field` starts with `UDP_`.&quot;&quot;&quot;</span>
     <span class="n">coap_rule</span><span class="p">:</span> <span class="n">conlist</span><span class="p">(</span><span class="n">CompressionRuleField</span><span class="p">,</span> <span class="n">max_items</span><span class="o">=</span><span class="n">COAP_FIELDS</span><span class="p">)</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The field descriptors for the CoAP layer (default: None). Must at most be</span>
+<span class="sd">    :const:`pylibschc.libschc.COAP_FIELDS` long and only contain field descriptors for</span>
+<span class="sd">    which the name of :attr:`CompressionRuleField.field` starts with `COAP_`.&quot;&quot;&quot;</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">expected_start</span><span class="p">,</span> <span class="n">rule_type</span><span class="p">):</span>
@@ -414,20 +427,23 @@
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2"> is not a valid </span><span class="si">{</span><span class="n">rule_type</span><span class="si">}</span><span class="s2"> field&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">value</span>
 
-<div class="viewcode-block" id="CompressionRule.check_ipv6_rule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.check_ipv6_rule">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;ipv6_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;ipv6_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">check_ipv6_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;IP6_&quot;</span><span class="p">,</span> <span class="s2">&quot;ipv6_rule&quot;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">check_ipv6_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">conlist</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;IP6_&quot;</span><span class="p">,</span> <span class="s2">&quot;ipv6_rule&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CompressionRule.check_udp_rule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.check_udp_rule">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;udp_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;udp_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">check_udp_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;UDP_&quot;</span><span class="p">,</span> <span class="s2">&quot;udp_rule&quot;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">check_udp_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">conlist</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;UDP_&quot;</span><span class="p">,</span> <span class="s2">&quot;udp_rule&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CompressionRule.check_coap_rule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.check_coap_rule">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;coap_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;coap_rule&quot;</span><span class="p">,</span> <span class="n">allow_reuse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">check_coap_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;COAP_&quot;</span><span class="p">,</span> <span class="s2">&quot;coap_rule&quot;</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">check_coap_rule</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">conlist</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_check_field_identifiers</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;COAP_&quot;</span><span class="p">,</span> <span class="s2">&quot;coap_rule&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_fields</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">layer_fields</span><span class="p">:</span>
@@ -459,18 +475,22 @@
         <span class="n">res</span> <span class="o">+=</span> <span class="s2">&quot;}&quot;</span>
         <span class="k">return</span> <span class="n">res</span>
 
-<div class="viewcode-block" id="CompressionRule.c_schc_ipv6_rule_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.c_schc_ipv6_rule_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_ipv6_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ipv6_rule</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">c_schc_ipv6_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ipv6_rule</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CompressionRule.c_schc_udp_rule_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.c_schc_udp_rule_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_udp_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">udp_rule</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">c_schc_udp_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">udp_rule</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CompressionRule.c_schc_coap_rule_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.c_schc_coap_rule_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_coap_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coap_rule</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">c_schc_coap_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_schc_layer_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">coap_rule</span><span class="p">)</span>
 
-<div class="viewcode-block" id="CompressionRule.c_schc_compression_rule_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.CompressionRule.c_schc_compression_rule_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_compression_rule_declaration</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">ipv6_rule_name</span><span class="p">,</span> <span class="n">udp_rule_name</span><span class="p">,</span> <span class="n">coap_rule_name</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="nf">c_schc_compression_rule_declaration</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">ipv6_rule_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">udp_rule_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">coap_rule_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="n">ipv6_rule_ptr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">ipv6_rule_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ipv6_rule</span> <span class="k">else</span> <span class="s2">&quot;NULL&quot;</span>
         <span class="n">udp_rule_ptr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">udp_rule_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_rule</span> <span class="k">else</span> <span class="s2">&quot;NULL&quot;</span>
         <span class="n">coap_rule_ptr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">coap_rule_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coap_rule</span> <span class="k">else</span> <span class="s2">&quot;NULL&quot;</span>
@@ -488,24 +508,38 @@
             <span class="sa">f</span><span class="s2">&quot;    .coap_rule = </span><span class="si">{</span><span class="n">coap_rule_ptr</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;#endif</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;}&quot;</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="UncompressedRule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.UncompressedRule">[docs]</a><span class="k">class</span> <span class="nc">UncompressedRule</span><span class="p">(</span><span class="n">BaseRule</span><span class="p">):</span>
     <span class="c1"># pylint: disable=too-few-public-methods</span>
-    <span class="k">pass</span></div>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The rule for an uncompressed packet.&quot;&quot;&quot;</span></div>
 
 
 <div class="viewcode-block" id="FragmentationRule"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.FragmentationRule">[docs]</a><span class="k">class</span> <span class="nc">FragmentationRule</span><span class="p">(</span><span class="n">BaseRule</span><span class="p">):</span>
     <span class="c1"># pylint: disable=too-few-public-methods</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">FragmentationMode</span>
-    <span class="nb">dir</span><span class="p">:</span> <span class="n">Direction</span>
-    <span class="n">FCN_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">FCN_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">MAX_WND_FCN</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">lt</span><span class="o">=</span><span class="n">BITMAP_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">WINDOW_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFF</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">DTAG_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">DTAG_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A fragmentation rule.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FragmentationRule.c_schc_fragmentation_rule_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.FragmentationRule.c_schc_fragmentation_rule_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_fragmentation_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">FragmentationMode</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The reliability mode for this rule.&quot;&quot;&quot;</span>
+    <span class="nb">dir</span><span class="p">:</span> <span class="n">Direction</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The direction for which this rule applies.&quot;&quot;&quot;</span>
+    <span class="n">FCN_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">FCN_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The FCN field length of the SCHC fragmentation header in bits (default: 1). Must</span>
+<span class="sd">    be 0 ≤ :attr:`BaseRule.FCN_SIZE` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`.&quot;&quot;&quot;</span>
+    <span class="n">MAX_WND_FCN</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">lt</span><span class="o">=</span><span class="n">BITMAP_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum number of fragments per window (default: 0). Must be</span>
+<span class="sd">    0 ≤ :attr:`BaseRule.MAX_WND_FCN` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`.&quot;&quot;&quot;</span>
+    <span class="n">WINDOW_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFF</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The window size field length of the SCHC fragmentation header in bits</span>
+<span class="sd">    (default: 0). Must be 0 ≤ :attr:`BaseRule.MAX_WND_FCN`</span>
+<span class="sd">    ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`.&quot;&quot;&quot;</span>
+    <span class="n">DTAG_SIZE</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">DTAG_SIZE_BITS</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The DTAG field length of the SCHC fragmentation header in bits (default: 0). Must</span>
+<span class="sd">    be 0 ≤ :attr:`BaseRule.MAX_WND_FCN` ≤ :attr:`pylibschc.libschc.FCN_SIZE_BITS`.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">c_schc_fragmentation_rule_declaration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="k">return</span> <span class="p">(</span>
             <span class="s2">&quot;{</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;    .rule_id = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rule_id</span><span class="si">}</span><span class="s2">U,</span><span class="se">\n</span><span class="s2">&quot;</span>
@@ -521,21 +555,38 @@
             <span class="sa">f</span><span class="s2">&quot;    .DTAG_SIZE = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">DTAG_SIZE</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2">U     &quot;</span>
             <span class="s2">&quot;/* DTAG field size (T in RFC) */</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;}&quot;</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Device"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Device">[docs]</a><span class="k">class</span> <span class="nc">Device</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="c1"># pylint: disable=too-few-public-methods</span>
-    <span class="n">device_id</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00000000</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFFFFFFFF</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The device for which to configure the rules for.&quot;&quot;&quot;</span>
+    <span class="n">device_id</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">gt</span><span class="o">=</span><span class="mh">0x00000000</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFFFFFFFF</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The libSCHC-internal identifier for the device. Must be 0</span>
+<span class="sd">    &lt; :attr:`Device.device_id` ≤ :math:`(2^{32} - 1)`.&quot;&quot;&quot;</span>
     <span class="n">mtu</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x0000</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="n">MAX_MTU_LENGTH</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The maximum transmission unit of the link layer of the device. Must be 0</span>
+<span class="sd">    &lt; :attr:`Device.mtu` ≤ :attr:`pylibschc.libschc.MAX_MTU_LENGTH`.&quot;&quot;&quot;</span>
     <span class="n">duty_cycle</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00000000</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFFFFFFFF</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The duty cycle in milliseconds of the device. Must be 0</span>
+<span class="sd">    &lt; :attr:`Device.duty_cycle` ≤ :math:`(2^{32} - 1)`.&quot;&quot;&quot;</span>
     <span class="n">uncompressed_rule</span><span class="p">:</span> <span class="n">UncompressedRule</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The rule for an uncompressed packet on this device. Must not contain any</span>
+<span class="sd">    duplicate rule IDs (i.e., same value of same bit width) with</span>
+<span class="sd">    :attr:`Device.compression_rules` or :attr:`Device.fragmentation_rules`.&quot;&quot;&quot;</span>
     <span class="n">compression_rules</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">CompressionRule</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The compression rules on this device (default: []). Must not contain any</span>
+<span class="sd">    duplicate rule IDs (i.e., same value of same bit width) with</span>
+<span class="sd">    :attr:`Device.uncompressed_rule` or :attr:`Device.fragmentation_rules`.&quot;&quot;&quot;</span>
     <span class="n">fragmentation_rules</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">FragmentationRule</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The fragmentation rules on this device (default: []). Must not contain any</span>
+<span class="sd">    duplicate rule IDs (i.e., same value of same bit width) with</span>
+<span class="sd">    :attr:`Device.uncompressed_rule` or :attr:`Device.compression_rules`.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Device.check_rule_id_duplicates"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Device.check_rule_id_duplicates">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;fragmentation_rules&quot;</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;fragmentation_rules&quot;</span><span class="p">,</span> <span class="n">always</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">check_rule_id_duplicates</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">fragmentation_rules</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="n">uncompressed_rule</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;uncompressed_rule&quot;</span><span class="p">)</span>
         <span class="n">compression_rules</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;compression_rules&quot;</span><span class="p">,</span> <span class="p">[])</span>
 
@@ -551,11 +602,12 @@
                     <span class="sa">f</span><span class="s2">&quot;rule_id=</span><span class="si">{</span><span class="n">rule</span><span class="o">.</span><span class="n">rule_id</span><span class="si">}</span><span class="s2">/rule_id_size_bits=</span><span class="si">{</span><span class="n">rule</span><span class="o">.</span><span class="n">rule_id_size_bits</span><span class="si">}</span><span class="s2">&quot;</span>
                 <span class="p">)</span>
             <span class="n">rule_ids</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">rule</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span> <span class="n">rule</span><span class="o">.</span><span class="n">rule_id_size_bits</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">fragmentation_rules</span></div>
+        <span class="k">return</span> <span class="n">fragmentation_rules</span>
 
-<div class="viewcode-block" id="Device.c_schc_device_declaration"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Device.c_schc_device_declaration">[docs]</a>    <span class="k">def</span> <span class="nf">c_schc_device_declaration</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">c_schc_device_declaration</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">compression_rules_name</span><span class="p">,</span> <span class="n">fragmentation_rules_name</span>
     <span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="n">compression_rules_ptr</span> <span class="o">=</span> <span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;&amp;</span><span class="si">{</span><span class="n">compression_rules_name</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">compression_rules</span> <span class="k">else</span> <span class="s2">&quot;NULL&quot;</span>
         <span class="p">)</span>
@@ -584,22 +636,27 @@
             <span class="sa">f</span><span class="s2">&quot;    .fragmentation_rule_count = </span><span class="si">{</span><span class="n">fragmentation_rules_count</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="sa">f</span><span class="s2">&quot;    .fragmentation_context = </span><span class="si">{</span><span class="n">fragmentation_rules_ptr</span><span class="si">}</span><span class="s2">,</span><span class="se">\n</span><span class="s2">&quot;</span>
             <span class="s2">&quot;}&quot;</span>
-        <span class="p">)</span></div></div>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Config"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config">[docs]</a><span class="k">class</span> <span class="nc">Config</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The overall rule configuration for libSCHC.&quot;&quot;&quot;</span>
+
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="n">devices</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">List</span><span class="p">[</span><span class="n">Device</span><span class="p">]</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;The devices for libSCHC. Must not contain any devices with duplicate</span>
+<span class="sd">    :attr:`Device`.device_id.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Config.device_ids_unique"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config.device_ids_unique">[docs]</a>    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;devices&quot;</span><span class="p">)</span>
+    <span class="nd">@validator</span><span class="p">(</span><span class="s2">&quot;devices&quot;</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">device_ids_unique</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">devices</span><span class="p">):</span>
+        <span class="c1"># pylint: disable=missing-function-docstring</span>
         <span class="n">device_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">device</span> <span class="ow">in</span> <span class="n">devices</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">device</span><span class="o">.</span><span class="n">device_id</span> <span class="ow">in</span> <span class="n">device_ids</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;device_id=</span><span class="si">{</span><span class="n">device</span><span class="o">.</span><span class="n">device_id</span><span class="si">}</span><span class="s2"> is not unique&quot;</span><span class="p">)</span>
             <span class="n">device_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">device</span><span class="o">.</span><span class="n">device_id</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">devices</span></div>
+        <span class="k">return</span> <span class="n">devices</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">_layer_rule_to_c</span><span class="p">(</span><span class="n">visited_layer_rules</span><span class="p">,</span> <span class="n">layer_name</span><span class="p">,</span> <span class="n">rule</span><span class="p">,</span> <span class="n">decl_func</span><span class="p">):</span>
@@ -610,7 +667,17 @@
         <span class="n">visited_layer_rules</span><span class="p">[</span><span class="n">rule_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">rule</span><span class="p">,</span> <span class="n">decl_func</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">rule_name</span>
 
-<div class="viewcode-block" id="Config.deploy"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config.deploy">[docs]</a>    <span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Config.deploy"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config.deploy">[docs]</a>    <span class="k">def</span> <span class="nf">deploy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deploys the rule configuration with the binary libSCHC.</span>
+
+<span class="sd">        .. warning::</span>
+<span class="sd">            This method **must** be called whenever a rule or device is changed.</span>
+<span class="sd">            Otherwise, libSCHC will not register this change.</span>
+
+<span class="sd">        :return: A :class:`argparse.Namespace` with the following attributes:</span>
+<span class="sd">            - ``devices``: The devices modeled with :class:`Device` as</span>
+<span class="sd">            :class:`pylibschc.device.Device`.</span>
+<span class="sd">        :rtype: :class:`argparse.Namespace`&quot;&quot;&quot;</span>
         <span class="n">devices</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">device_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">devices</span><span class="p">:</span>
             <span class="n">device</span> <span class="o">=</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">Device</span><span class="p">(</span><span class="n">device_config</span><span class="o">.</span><span class="n">device_id</span><span class="p">)</span>
@@ -620,8 +687,12 @@
             <span class="n">devices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">argparse</span><span class="o">.</span><span class="n">Namespace</span><span class="p">(</span><span class="n">devices</span><span class="o">=</span><span class="n">devices</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Config.to_c_header"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config.to_c_header">[docs]</a>    <span class="k">def</span> <span class="nf">to_c_header</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: C901</span>
+<div class="viewcode-block" id="Config.to_c_header"><a class="viewcode-back" href="../../pylibschc/rules.html#pylibschc.rules.Config.to_c_header">[docs]</a>    <span class="k">def</span> <span class="nf">to_c_header</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>  <span class="c1"># noqa: C901</span>
         <span class="c1"># pylint: disable=too-many-locals,too-many-branches,too-many-statements</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides the C header file for this rules configuration as a string.</span>
+
+<span class="sd">        :return: The C header file for libSCHC representing this rules configuration.</span>
+<span class="sd">        :rtype: str&quot;&quot;&quot;</span>
         <span class="n">visited_compression_layer_rules</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">&quot;ipv6&quot;</span><span class="p">:</span> <span class="p">{},</span>
             <span class="s2">&quot;udp&quot;</span><span class="p">:</span> <span class="p">{},</span>

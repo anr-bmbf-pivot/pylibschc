@@ -12,6 +12,7 @@
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/sphinx_highlight.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="author" title="About these documents" href="../about.html" />
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -107,7 +108,7 @@
 <dt class="sig sig-object py" id="pylibschc.rules.BaseModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">BaseModel</span></span><a class="reference internal" href="../_modules/pylibschc/rules.html#BaseModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.BaseModel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
-<p>Overrides pydantic to default to case-insensitivity:</p>
+<p>Overrides pydantic to default to case-insensitivity.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
 <dl class="py class">
@@ -115,11 +116,6 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Config</span></span><a class="reference internal" href="../_modules/pylibschc/rules.html#BaseModel.Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.BaseModel.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Config meta-class for <a class="reference internal" href="#pylibschc.rules.BaseModel" title="pylibschc.rules.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a>.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pylibschc.rules.BaseModel.Config.case_sensitive">
-<span class="sig-name descname"><span class="pre">case_sensitive</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#pylibschc.rules.BaseModel.Config.case_sensitive" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 </dd></dl>
@@ -131,21 +127,16 @@
 <p>Base Rule definition.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.BaseRule.check_rule_id_size_bits">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_rule_id_size_bits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#BaseRule.check_rule_id_size_bits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.BaseRule.check_rule_id_size_bits" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.BaseRule.rule_id">
 <span class="sig-name descname"><span class="pre">rule_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#pylibschc.rules.BaseRule.rule_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>The Rule ID.</p>
+<dd><p>The Rule ID. Must fit into <a class="reference internal" href="#pylibschc.rules.BaseRule.rule_id_size_bits" title="pylibschc.rules.BaseRule.rule_id_size_bits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.rule_id_size_bits</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.BaseRule.rule_id_size_bits">
 <span class="sig-name descname"><span class="pre">rule_id_size_bits</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.BaseRule.rule_id_size_bits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Size of Rule ID in bits.</p>
+<dd><p>Size of Rule ID in bits. Must be 0 &lt; <a class="reference internal" href="#pylibschc.rules.BaseRule.rule_id_size_bits" title="pylibschc.rules.BaseRule.rule_id_size_bits"><code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.rule_id_size_bits</span></code></a> ≤ 32</p>
 </dd></dl>
 
 </dd></dl>
@@ -154,57 +145,32 @@
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRule">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">CompressionRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id_size_bits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ipv6_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coap_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.rules.BaseRule" title="pylibschc.rules.BaseRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRule</span></code></a></p>
+<p>A compression rule.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.c_schc_coap_rule_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_coap_rule_declaration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.c_schc_coap_rule_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.c_schc_coap_rule_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.c_schc_compression_rule_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_compression_rule_declaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ipv6_rule_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_rule_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coap_rule_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.c_schc_compression_rule_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.c_schc_compression_rule_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.c_schc_ipv6_rule_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_ipv6_rule_declaration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.c_schc_ipv6_rule_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.c_schc_ipv6_rule_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.c_schc_udp_rule_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_udp_rule_declaration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.c_schc_udp_rule_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.c_schc_udp_rule_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.check_coap_rule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_coap_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.check_coap_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.check_coap_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.check_ipv6_rule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ipv6_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.check_ipv6_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.check_ipv6_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.check_udp_rule">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_udp_rule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRule.check_udp_rule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRule.check_udp_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.coap_rule">
 <span class="sig-name descname"><span class="pre">coap_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.CompressionRule.coap_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The field descriptors for the CoAP layer (default: None). Must at most be
+<a class="reference internal" href="libschc.html#pylibschc.libschc.COAP_FIELDS" title="pylibschc.libschc.COAP_FIELDS"><code class="xref py py-const docutils literal notranslate"><span class="pre">pylibschc.libschc.COAP_FIELDS</span></code></a> long and only contain field descriptors for
+which the name of <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field" title="pylibschc.rules.CompressionRuleField.field"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field</span></code></a> starts with <cite>COAP_</cite>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.ipv6_rule">
 <span class="sig-name descname"><span class="pre">ipv6_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.CompressionRule.ipv6_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The field descriptors for the IPv6 layer (default: None). Must at most be
+<a class="reference internal" href="libschc.html#pylibschc.libschc.IP6_FIELDS" title="pylibschc.libschc.IP6_FIELDS"><code class="xref py py-const docutils literal notranslate"><span class="pre">pylibschc.libschc.IP6_FIELDS</span></code></a> long and only contain field descriptors for
+which the name of <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field" title="pylibschc.rules.CompressionRuleField.field"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field</span></code></a> starts with <cite>IP6_</cite>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRule.udp_rule">
 <span class="sig-name descname"><span class="pre">udp_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedListValue</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRuleField" title="pylibschc.rules.CompressionRuleField"><span class="pre">CompressionRuleField</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.CompressionRule.udp_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The field descriptors for the UDP layer (default: None). Must at most be
+<a class="reference internal" href="libschc.html#pylibschc.libschc.UDP_FIELDS" title="pylibschc.libschc.UDP_FIELDS"><code class="xref py py-const docutils literal notranslate"><span class="pre">pylibschc.libschc.UDP_FIELDS</span></code></a> long and only contain field descriptors for
+which the name of <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field" title="pylibschc.rules.CompressionRuleField.field"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field</span></code></a> starts with <cite>UDP_</cite>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -224,55 +190,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.MO_param_length">
 <span class="sig-name descname"><span class="pre">MO_param_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.MO_param_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Parameter length for the matching operator (default: 0).</p>
+<dd><p>Parameter length for the matching operator (default: 0). Must be
+0 ≤ <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO_param_length" title="pylibschc.rules.CompressionRuleField.MO_param_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO_param_length</span></code></a> ≤ 255. When being a parameter for
+<a class="reference internal" href="libschc.html#pylibschc.libschc.MO.MSB" title="pylibschc.libschc.MO.MSB"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.MO.MSB</span></code></a> it must be lesser or equal to
+<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_length" title="pylibschc.rules.CompressionRuleField.field_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field_length</span></code></a>.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.action">
 <span class="sig-name descname"><span class="pre">action</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.CDA" title="pylibschc.libschc.CDA"><span class="pre">CDA</span></a></em><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.action" title="Permalink to this definition">¶</a></dt>
 <dd><p>Compression/decompression action for this field.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.c_MO">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">c_MO</span></span><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.c_MO" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.c_schc_field_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_field_declaration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRuleField.c_schc_field_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.c_schc_field_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.check_field_length_for_target_value">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_field_length_for_target_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRuleField.check_field_length_for_target_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.check_field_length_for_target_value" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.check_mo_param_length">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_mo_param_length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRuleField.check_mo_param_length"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.check_mo_param_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Validator to check if <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO_param_length" title="pylibschc.rules.CompressionRuleField.MO_param_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO_param_length</span></code></a>
-is lesser or equal to <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_length" title="pylibschc.rules.CompressionRuleField.field_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field_length</span></code></a> when
-<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO" title="pylibschc.rules.CompressionRuleField.MO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO</span></code></a> is <a class="reference internal" href="libschc.html#pylibschc.libschc.MO.MSB" title="pylibschc.libschc.MO.MSB"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.MO.MSB</span></code></a> or
-<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.action" title="pylibschc.rules.CompressionRuleField.action"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.action</span></code></a> is <a class="reference internal" href="libschc.html#pylibschc.libschc.CDA.LSB" title="pylibschc.libschc.CDA.LSB"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.CDA.LSB</span></code></a></p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>value</strong> – The value to validate</p></li>
-<li><p><strong>values</strong> – name-to-value mapping of previously validated fields</p></li>
-</ul>
-</dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>ValueError</strong> – When <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO" title="pylibschc.rules.CompressionRuleField.MO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO</span></code></a> is
-<a class="reference internal" href="libschc.html#pylibschc.libschc.MO.MSB" title="pylibschc.libschc.MO.MSB"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.MO.MSB</span></code></a> or <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.action" title="pylibschc.rules.CompressionRuleField.action"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.action</span></code></a>
-is <a class="reference internal" href="libschc.html#pylibschc.libschc.CDA.LSB" title="pylibschc.libschc.CDA.LSB"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.CDA.LSB</span></code></a> but
-<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO_param_length" title="pylibschc.rules.CompressionRuleField.MO_param_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO_param_length</span></code></a> is greater than
-<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_length" title="pylibschc.rules.CompressionRuleField.field_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field_length</span></code></a></p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>The validated value</p>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py attribute">
@@ -290,25 +217,26 @@ is <a class="reference internal" href="libschc.html#pylibschc.libschc.CDA.LSB" t
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.field_length">
 <span class="sig-name descname"><span class="pre">field_length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.field_length" title="Permalink to this definition">¶</a></dt>
-<dd><p>Field length in bits.</p>
+<dd><p>Field length in bits. Must be 0 ≤ <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_length" title="pylibschc.rules.CompressionRuleField.field_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">field_length</span></code></a>
+≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.MAX_FIELD_LENGTH" title="pylibschc.libschc.MAX_FIELD_LENGTH"><code class="xref py py-const docutils literal notranslate"><span class="pre">pylibschc.libschc.MAX_FIELD_LENGTH</span></code></a>.</p>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.field_length_bytes">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field_length_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field_length_bits</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#CompressionRuleField.field_length_bytes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.field_length_bytes" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.field_pos">
 <span class="sig-name descname"><span class="pre">field_pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.field_pos" title="Permalink to this definition">¶</a></dt>
 <dd><p>Field position, i.e., when there are multiple occurrences of this field, which
-occurrence this field descriptor applies to (default: 1).</p>
+occurrence this field descriptor applies to (default: 1). Must be
+0 ≤ <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_pos" title="pylibschc.rules.CompressionRuleField.field_pos"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field_pos</span></code></a> ≤ 255.</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.CompressionRuleField.target_value">
 <span class="sig-name descname"><span class="pre">target_value</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">ConstrainedIntValue</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv6Interface</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ConstrainedBytesValue</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">IPv6Interface</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">ConstrainedBytesValue</span></em><a class="headerlink" href="#pylibschc.rules.CompressionRuleField.target_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Target value for the matching operator (default: 0).</p>
+<dd><p>Target value for the matching operator (default: b””). Any integers in
+<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.target_value" title="pylibschc.rules.CompressionRuleField.target_value"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.target_value</span></code></a> are restricted to 64 bits of width. The
+length of this must fit <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.field_length" title="pylibschc.rules.CompressionRuleField.field_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.field_length</span></code></a> and, depending on
+<a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO" title="pylibschc.rules.CompressionRuleField.MO"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO</span></code></a>, <a class="reference internal" href="#pylibschc.rules.CompressionRuleField.MO_param_length" title="pylibschc.rules.CompressionRuleField.MO_param_length"><code class="xref py py-attr docutils literal notranslate"><span class="pre">CompressionRuleField.MO_param_length</span></code></a>. Will
+be converted to <code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code> after validation.</p>
 </dd></dl>
 
 </dd></dl>
@@ -317,27 +245,50 @@ occurrence this field descriptor applies to (default: 1).</p>
 <dt class="sig sig-object py" id="pylibschc.rules.Config">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">devices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.Device" title="pylibschc.rules.Device"><span class="pre">Device</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.rules.BaseModel" title="pylibschc.rules.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>The overall rule configuration for libSCHC.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.rules.Config.deploy">
-<span class="sig-name descname"><span class="pre">deploy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config.deploy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config.deploy" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.Config.device_ids_unique">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">device_ids_unique</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">devices</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config.device_ids_unique"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config.device_ids_unique" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">deploy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Namespace</span></span></span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config.deploy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config.deploy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deploys the rule configuration with the binary libSCHC.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method <strong>must</strong> be called whenever a rule or device is changed.
+Otherwise, libSCHC will not register this change.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code> with the following attributes:
+- <code class="docutils literal notranslate"><span class="pre">devices</span></code>: The devices modeled with <a class="reference internal" href="#pylibschc.rules.Device" title="pylibschc.rules.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">Device</span></code></a> as
+<a class="reference internal" href="device.html#pylibschc.device.Device" title="pylibschc.device.Device"><code class="xref py py-class docutils literal notranslate"><span class="pre">pylibschc.device.Device</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">argparse.Namespace</span></code></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Config.devices">
 <span class="sig-name descname"><span class="pre">devices</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.Device" title="pylibschc.rules.Device"><span class="pre">Device</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.Config.devices" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The devices for libSCHC. Must not contain any devices with duplicate
+<a class="reference internal" href="#pylibschc.rules.Device" title="pylibschc.rules.Device"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device</span></code></a>.device_id.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.rules.Config.to_c_header">
-<span class="sig-name descname"><span class="pre">to_c_header</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config.to_c_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config.to_c_header" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<span class="sig-name descname"><span class="pre">to_c_header</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/pylibschc/rules.html#Config.to_c_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Config.to_c_header" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides the C header file for this rules configuration as a string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The C header file for libSCHC representing this rules configuration.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -345,47 +296,53 @@ occurrence this field descriptor applies to (default: 1).</p>
 <dt class="sig sig-object py" id="pylibschc.rules.Device">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">Device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mtu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">duty_cycle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uncompressed_rule</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pylibschc.rules.UncompressedRule" title="pylibschc.rules.UncompressedRule"><span class="pre">UncompressedRule</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">compression_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRule" title="pylibschc.rules.CompressionRule"><span class="pre">CompressionRule</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragmentation_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.FragmentationRule" title="pylibschc.rules.FragmentationRule"><span class="pre">FragmentationRule</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Device"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Device" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.rules.BaseModel" title="pylibschc.rules.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
+<p>The device for which to configure the rules for.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.Device.c_schc_device_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_device_declaration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">compression_rules_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fragmentation_rules_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Device.c_schc_device_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Device.c_schc_device_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.Device.check_rule_id_duplicates">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_rule_id_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fragmentation_rules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#Device.check_rule_id_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.Device.check_rule_id_duplicates" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.compression_rules">
 <span class="sig-name descname"><span class="pre">compression_rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.CompressionRule" title="pylibschc.rules.CompressionRule"><span class="pre">CompressionRule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.Device.compression_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The compression rules on this device (default: []). Must not contain any
+duplicate rule IDs (i.e., same value of same bit width) with
+<a class="reference internal" href="#pylibschc.rules.Device.uncompressed_rule" title="pylibschc.rules.Device.uncompressed_rule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.uncompressed_rule</span></code></a> or <a class="reference internal" href="#pylibschc.rules.Device.fragmentation_rules" title="pylibschc.rules.Device.fragmentation_rules"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.fragmentation_rules</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.device_id">
 <span class="sig-name descname"><span class="pre">device_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.Device.device_id" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The libSCHC-internal identifier for the device. Must be 0
+&lt; <a class="reference internal" href="#pylibschc.rules.Device.device_id" title="pylibschc.rules.Device.device_id"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.device_id</span></code></a> ≤ <span class="math notranslate nohighlight">\((2^{32} - 1)\)</span>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.duty_cycle">
 <span class="sig-name descname"><span class="pre">duty_cycle</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.Device.duty_cycle" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The duty cycle in milliseconds of the device. Must be 0
+&lt; <a class="reference internal" href="#pylibschc.rules.Device.duty_cycle" title="pylibschc.rules.Device.duty_cycle"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.duty_cycle</span></code></a> ≤ <span class="math notranslate nohighlight">\((2^{32} - 1)\)</span>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.fragmentation_rules">
 <span class="sig-name descname"><span class="pre">fragmentation_rules</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pylibschc.rules.FragmentationRule" title="pylibschc.rules.FragmentationRule"><span class="pre">FragmentationRule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#pylibschc.rules.Device.fragmentation_rules" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The fragmentation rules on this device (default: []). Must not contain any
+duplicate rule IDs (i.e., same value of same bit width) with
+<a class="reference internal" href="#pylibschc.rules.Device.uncompressed_rule" title="pylibschc.rules.Device.uncompressed_rule"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.uncompressed_rule</span></code></a> or <a class="reference internal" href="#pylibschc.rules.Device.compression_rules" title="pylibschc.rules.Device.compression_rules"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.compression_rules</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.mtu">
 <span class="sig-name descname"><span class="pre">mtu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.Device.mtu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The maximum transmission unit of the link layer of the device. Must be 0
+&lt; <a class="reference internal" href="#pylibschc.rules.Device.mtu" title="pylibschc.rules.Device.mtu"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.mtu</span></code></a> ≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.MAX_MTU_LENGTH" title="pylibschc.libschc.MAX_MTU_LENGTH"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.MAX_MTU_LENGTH</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.Device.uncompressed_rule">
 <span class="sig-name descname"><span class="pre">uncompressed_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#pylibschc.rules.UncompressedRule" title="pylibschc.rules.UncompressedRule"><span class="pre">UncompressedRule</span></a></em><a class="headerlink" href="#pylibschc.rules.Device.uncompressed_rule" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The rule for an uncompressed packet on this device. Must not contain any
+duplicate rule IDs (i.e., same value of same bit width) with
+<a class="reference internal" href="#pylibschc.rules.Device.compression_rules" title="pylibschc.rules.Device.compression_rules"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.compression_rules</span></code></a> or <a class="reference internal" href="#pylibschc.rules.Device.fragmentation_rules" title="pylibschc.rules.Device.fragmentation_rules"><code class="xref py py-attr docutils literal notranslate"><span class="pre">Device.fragmentation_rules</span></code></a>.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -393,42 +350,49 @@ occurrence this field descriptor applies to (default: 1).</p>
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">FragmentationRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id_size_bits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><span class="pre">FragmentationMode</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><span class="pre">Direction</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">FCN_SIZE</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">MAX_WND_FCN</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">WINDOW_SIZE</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DTAG_SIZE</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#FragmentationRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.FragmentationRule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.rules.BaseRule" title="pylibschc.rules.BaseRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRule</span></code></a></p>
+<p>A fragmentation rule.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.DTAG_SIZE">
 <span class="sig-name descname"><span class="pre">DTAG_SIZE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.DTAG_SIZE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The DTAG field length of the SCHC fragmentation header in bits (default: 0). Must
+be 0 ≤ <code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.MAX_WND_FCN</span></code> ≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.FCN_SIZE_BITS" title="pylibschc.libschc.FCN_SIZE_BITS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.FCN_SIZE_BITS</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.FCN_SIZE">
 <span class="sig-name descname"><span class="pre">FCN_SIZE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.FCN_SIZE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The FCN field length of the SCHC fragmentation header in bits (default: 1). Must
+be 0 ≤ <code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.FCN_SIZE</span></code> ≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.FCN_SIZE_BITS" title="pylibschc.libschc.FCN_SIZE_BITS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.FCN_SIZE_BITS</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.MAX_WND_FCN">
 <span class="sig-name descname"><span class="pre">MAX_WND_FCN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.MAX_WND_FCN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The maximum number of fragments per window (default: 0). Must be
+0 ≤ <code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.MAX_WND_FCN</span></code> ≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.FCN_SIZE_BITS" title="pylibschc.libschc.FCN_SIZE_BITS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.FCN_SIZE_BITS</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.WINDOW_SIZE">
 <span class="sig-name descname"><span class="pre">WINDOW_SIZE</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">ConstrainedIntValue</span></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.WINDOW_SIZE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.c_schc_fragmentation_rule_declaration">
-<span class="sig-name descname"><span class="pre">c_schc_fragmentation_rule_declaration</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#FragmentationRule.c_schc_fragmentation_rule_declaration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.FragmentationRule.c_schc_fragmentation_rule_declaration" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The window size field length of the SCHC fragmentation header in bits
+(default: 0). Must be 0 ≤ <code class="xref py py-attr docutils literal notranslate"><span class="pre">BaseRule.MAX_WND_FCN</span></code>
+≤ <a class="reference internal" href="libschc.html#pylibschc.libschc.FCN_SIZE_BITS" title="pylibschc.libschc.FCN_SIZE_BITS"><code class="xref py py-attr docutils literal notranslate"><span class="pre">pylibschc.libschc.FCN_SIZE_BITS</span></code></a>.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.dir">
 <span class="sig-name descname"><span class="pre">dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.Direction" title="pylibschc.libschc.Direction"><span class="pre">Direction</span></a></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.dir" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The direction for which this rule applies.</p>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.rules.FragmentationRule.mode">
 <span class="sig-name descname"><span class="pre">mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="libschc.html#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><span class="pre">FragmentationMode</span></a></em><a class="headerlink" href="#pylibschc.rules.FragmentationRule.mode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>The reliability mode for this rule.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -436,6 +400,7 @@ occurrence this field descriptor applies to (default: 1).</p>
 <dt class="sig sig-object py" id="pylibschc.rules.UncompressedRule">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.rules.</span></span><span class="sig-name descname"><span class="pre">UncompressedRule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rule_id_size_bits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ConstrainedIntValue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pylibschc/rules.html#UncompressedRule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pylibschc.rules.UncompressedRule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#pylibschc.rules.BaseRule" title="pylibschc.rules.BaseRule"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseRule</span></code></a></p>
+<p>The rule for an uncompressed packet.</p>
 <p>Create a new model by parsing and validating input data from keyword arguments.</p>
 <p>Raises ValidationError if the input data cannot be parsed to form a valid model.</p>
 </dd></dl>
