@@ -799,7 +799,10 @@ cdef class CompressorDecompressor:
         :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
         :return: Whether the packet was compressed or the uncompressed rule was used
             and the compressed packet as a :class:`BitArray`.
-        :rtype: :class:`typing.Tuple`[:class:`CompressionResult`, :class:`BitArray`]
+        :rtype: :class:`typing.Tuple` [
+            :class:`CompressionResult` ,
+            :class:`BitArray`
+            ]
         """
         cdef clibschc.schc_compression_rule_t *rule
 

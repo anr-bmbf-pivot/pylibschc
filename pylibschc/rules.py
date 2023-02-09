@@ -590,8 +590,9 @@ class Config(BaseModel):
             Otherwise, libSCHC will not register this change.
 
         :return: A :class:`argparse.Namespace` with the following attributes:
+
             - ``devices``: The devices modeled with :class:`Device` as
-            :class:`pylibschc.device.Device`.
+              :class:`pylibschc.device.Device`.
         :rtype: :class:`argparse.Namespace`"""
         devices = []
         for device_config in self.devices:

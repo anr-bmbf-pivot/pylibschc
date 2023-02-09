@@ -16,7 +16,11 @@ Submodules
        :maxdepth: 1
        :glob:
 
-       pylibschc/*
+       pylibschc/rules
+       pylibschc/device
+       pylibschc/compressor
+       pylibschc/fragmenter
+       pylibschc/libschc
 
 C API
 =====
