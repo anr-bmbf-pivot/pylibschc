@@ -928,7 +928,7 @@ cdef class _TimerTask:
 
     @staticmethod
     def the_task(obj: _TimerTask):
-        if obj._timer_task_ptr:
+        if obj._conn._allocated() and obj._timer_task_ptr:
             _TimerTask.call_the_task(
                 <void (*)(void *)>(<void *>obj._timer_task_ptr),
                 <void *>obj._arg
