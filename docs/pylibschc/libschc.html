@@ -538,60 +538,192 @@ or an empty list sets the fragmentation context to <code class="docutils literal
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationConnection</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A fragmentation connection. Wraps the <code class="docutils literal notranslate"><span class="pre">schc_fragmentation_t</span></code> type of libSCHC.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ops</strong> (<a class="reference internal" href="#pylibschc.libschc.FragmenterOps" title="pylibschc.libschc.FragmenterOps"><code class="xref py py-class docutils literal notranslate"><span class="pre">FragmenterOps</span></code></a>) – Operation callbacks.</p>
+</dd>
+</dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.bit_arr">
 <span class="sig-name descname"><span class="pre">bit_arr</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.bit_arr" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a></p>
+</dd>
+</dl>
+<p>The <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> of the fragmentation connection if initialized, None
+otherwise.
+Wraps the <cite>bit_arr</cite> member of <cite>schc_fragmentation_t</cite>.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.fragment">
 <span class="sig-name descname"><span class="pre">fragment</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.fragment" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Send <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.bit_arr" title="pylibschc.libschc.FragmentationConnection.bit_arr"><code class="xref py py-attr docutils literal notranslate"><span class="pre">FragmentationConnection.bit_arr</span></code></a>, if necessary fragmented.
+Wraps <code class="docutils literal notranslate"><span class="pre">schc_fragment()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>MemoryError</strong> – <ul class="simple">
+<li><p>When no <code class="docutils literal notranslate"><span class="pre">schc_mbuf_t</span></code> in its <code class="docutils literal notranslate"><span class="pre">head</span></code> member could not be allocated,</p></li>
+<li><p>if no fragmentaftion rule for the initialized <code class="docutils literal notranslate"><span class="pre">mode</span></code> can be found, or</p></li>
+<li><p>if the state of the fragmentation connection is invalid.</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-even">Retval NO_FRAGMENTATION<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the packet was not fragmented.</p>
+</dd>
+<dt class="field-odd">Retval SUCCESS<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If the packet was fragmented.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pylibschc.libschc.FragmentationResult" title="pylibschc.libschc.FragmentationResult"><code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationResult</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.fragmented">
 <span class="sig-name descname"><span class="pre">fragmented</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.fragmented" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+<p><code class="docutils literal notranslate"><span class="pre">True</span></code> after calling <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.fragment" title="pylibschc.libschc.FragmentationConnection.fragment"><code class="xref py py-func docutils literal notranslate"><span class="pre">FragmentationConnection.fragment()</span></code></a> when the
+received packet is a fragment, <code class="docutils literal notranslate"><span class="pre">False</span></code> if not.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.init_rx">
 <span class="sig-name descname"><span class="pre">init_rx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.init_rx" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize connection for reception.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_id</strong> (<em>int</em>) – The identifier of the device this connection is to be used
+with.</p></li>
+<li><p><strong>bit_arr</strong> (<a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>) – The <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> for the connection.</p></li>
+<li><p><strong>dc</strong> – Duty cycle in milliseconds for the connection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.init_tx">
 <span class="sig-name descname"><span class="pre">init_tx</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.init_tx" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Initialize connection for transmission.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_id</strong> (<em>int</em>) – The identifier of the device this connection is to be used
+with.</p></li>
+<li><p><strong>bit_arr</strong> (<a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>) – The <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> for the connection.</p></li>
+<li><p><strong>mtu</strong> – The link layer MTU for this connection in bytes.</p></li>
+<li><p><strong>dc</strong> – Duty cycle in milliseconds for the connection.</p></li>
+<li><p><strong>mode</strong> (<a class="reference internal" href="#pylibschc.libschc.FragmentationMode" title="pylibschc.libschc.FragmentationMode"><code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationMode</span></code></a>) – The fragmentation mode for this connection.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.input">
 <span class="sig-name descname"><span class="pre">input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.input" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Must be called whenever a packet is received. Wraps <cite>schc_input()</cite>.</p>
+<p>When the packet was a fragment, <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.fragmented" title="pylibschc.libschc.FragmentationConnection.fragmented"><code class="xref py py-attr docutils literal notranslate"><span class="pre">FragmentationConnection.fragmented</span></code></a>
+will be True, otherwise it will be False.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>buffer</strong> (<a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>) – The received packet.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>MemoryError</strong> – If a new connection object or one of its members could not
+be allocated.</p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>This connection, if <code class="docutils literal notranslate"><span class="pre">buffer</span></code> was an ACK, a new
+<a class="reference internal" href="#pylibschc.libschc.FragmentationConnection" title="pylibschc.libschc.FragmentationConnection"><code class="xref py py-class docutils literal notranslate"><span class="pre">FragmentationConnection</span></code></a>, when it was a fragment.
+<a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.reassemble" title="pylibschc.libschc.FragmentationConnection.reassemble"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.reassemble()</span></code></a> shall be called in the
+latter case to initialize or continue reassembly.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.mbuf">
 <span class="sig-name descname"><span class="pre">mbuf</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.mbuf" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+</dl>
+<p>The reassembly buffer of the fragmentation connection.
+Wraps and combines the functionality of <cite>get_mbuf_len()</cite> and <cite>mbuf_copy()</cite></p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.reassemble">
 <span class="sig-name descname"><span class="pre">reassemble</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.reassemble" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Handle the last received fragment. Wraps <code class="docutils literal notranslate"><span class="pre">schc_reassemble()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Retval ONGOING<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If reassembly is still missing fragments.</p>
+</dd>
+<dt class="field-even">Retval COMPLETED<span class="colon">:</span></dt>
+<dd class="field-even"><p>If the fragment handled was the last missing fragment.</p>
+</dd>
+<dt class="field-odd">Retval STAY_ALIVE<span class="colon">:</span></dt>
+<dd class="field-odd"><p>If reassembly was completed, but the connection still is
+kept open, e.g., in case another ACK needs to be sent.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pylibschc.libschc.ReassemblyStatus" title="pylibschc.libschc.ReassemblyStatus"><code class="xref py py-class docutils literal notranslate"><span class="pre">ReassemblyStatus</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.register_send">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_send</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.register_send" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Register a send function for a device. Effectively sets the <code class="docutils literal notranslate"><span class="pre">send</span></code> member
+for all <code class="docutils literal notranslate"><span class="pre">schc_fragmentation_t</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_id</strong> (<em>int</em>) – The identifier for the device.</p></li>
+<li><p><strong>send</strong> (A callable that takes <code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code> as a parameter and returns
+an integer.) – The send function for the device identified by <code class="docutils literal notranslate"><span class="pre">device_id</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.reset">
 <span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.reset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reset a connection.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>After this method was called, a connection created by
+<a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.input" title="pylibschc.libschc.FragmentationConnection.input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.input()</span></code></a> should not be used and is
+recommended to be deleted after.</p>
+</div>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.unregister_send">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">unregister_send</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.unregister_send" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Remove a send function for a device. Effectively unsets the <code class="docutils literal notranslate"><span class="pre">send</span></code> member
+for all <code class="docutils literal notranslate"><span class="pre">schc_fragmentation_t</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>device_id</strong> (<em>int</em>) – The identifier for the device.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -626,7 +758,9 @@ or an empty list sets the fragmentation context to <code class="docutils literal
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">FragmentationResult</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.FragmentationResult" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
-<p>The result of calling <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.fragment" title="pylibschc.libschc.FragmentationConnection.fragment"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.fragment()</span></code></a></p>
+<p>The result of calling <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.fragment" title="pylibschc.libschc.FragmentationConnection.fragment"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.fragment()</span></code></a>.
+Wraps <code class="docutils literal notranslate"><span class="pre">SCHC_FRAG_INPUT</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHC_ACK_INPUT</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHC_SUCCESS</span></code>, <code class="docutils literal notranslate"><span class="pre">SCHC_END</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">SCHC_NO_FRAGMENTATION</span></code>.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.FragmentationResult.ACK_INPUT">
 <span class="sig-name descname"><span class="pre">ACK_INPUT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.FragmentationResult.ACK_INPUT" title="Permalink to this definition">¶</a></dt>
@@ -919,6 +1053,34 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">COAPO_fie
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.MO.MSB">
 <span class="sig-name descname"><span class="pre">MSB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.MO.MSB" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">ReassemblyStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>The state of reassembly after calling
+<a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.reassemble" title="pylibschc.libschc.FragmentationConnection.reassemble"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.reassemble()</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.ACK_HANDLED">
+<span class="sig-name descname"><span class="pre">ACK_HANDLED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">256</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.ACK_HANDLED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.COMPLETED">
+<span class="sig-name descname"><span class="pre">COMPLETED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.COMPLETED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.ONGOING">
+<span class="sig-name descname"><span class="pre">ONGOING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.ONGOING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.STAY_ALIVE">
+<span class="sig-name descname"><span class="pre">STAY_ALIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.STAY_ALIVE" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

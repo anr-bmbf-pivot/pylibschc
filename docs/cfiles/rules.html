@@ -123,11 +123,13 @@
 <dd><p>Allocate an CoAP layer rule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_coap_rule_t</span></code> pointer or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when the layer rule can not be
-allocated.</p>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_coap_rule_t</span></code> pointer.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_coap_rule_t</span> <span class="pre">*</span></code></p>
+<dt class="field-even">Return values<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NULL</strong> – when the layer rule can not be allocated.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_coap_rule_t</span> <span class="pre">*</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -143,11 +145,13 @@ allocated.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An array of allocates <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_compression_rule_t</span></code> pointers or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when the
-context can not be allocated.</p>
+<dd class="field-even"><p>An array of allocates <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_compression_rule_t</span></code> pointers.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_compression_rule_t</span> <span class="pre">**</span></code></p>
+<dt class="field-odd">Return values<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NULL</strong> – when the context can not be allocated.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_compression_rule_t</span> <span class="pre">**</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -163,11 +167,13 @@ context can not be allocated.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>An array of allocates <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_fragmentation_rule_t</span></code> pointers or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when the
-context can not be allocated.</p>
+<dd class="field-even"><p>An array of allocates <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_fragmentation_rule_t</span></code> pointers.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_fragmentation_rule_t</span> <span class="pre">**</span></code></p>
+<dt class="field-odd">Return values<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>NULL</strong> – When the context can not be allocated.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_fragmentation_rule_t</span> <span class="pre">**</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -178,11 +184,13 @@ context can not be allocated.</p>
 <dd><p>Allocate an IPv6 layer rule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_ipv6_rule_t</span></code> pointer or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when the layer rule can not be
-allocated.</p>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_ipv6_rule_t</span></code> pointer.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_ipv6_rule_t</span> <span class="pre">*</span></code></p>
+<dt class="field-even">Return values<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NULL</strong> – when the layer rule can not be allocated.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_ipv6_rule_t</span> <span class="pre">*</span></code></p>
 </dd>
 </dl>
 </dd></dl>
@@ -193,11 +201,13 @@ allocated.</p>
 <dd><p>Allocate an UDP layer rule</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_udp_rule_t</span></code> pointer or <code class="docutils literal notranslate"><span class="pre">NULL</span></code> when the layer rule can not be
-allocated.</p>
+<dd class="field-odd"><p>A <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_udp_rule_t</span></code> pointer.</p>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_udp_rule_t</span> <span class="pre">*</span></code></p>
+<dt class="field-even">Return values<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>NULL</strong> – when the layer rule can not be allocated.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">schc_udp_rule_t</span> <span class="pre">*</span></code></p>
 </dd>
 </dl>
 </dd></dl>
