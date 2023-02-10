@@ -65,7 +65,7 @@ setup(
     packages=find_packages(exclude=["env", "*.tests", "*.tests.*", "tests.*", "tests"]),
     package_data={PACKAGE: ["pylibschc/clibschc.pxd"]},
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
