@@ -8,18 +8,24 @@ pylibschc: A python wrapper for libSCHC
 .. image:: https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H
    :target: https://codecov.io/gh/anr-bmbf-pivot/pylibschc
 
+.. image:: https://img.shields.io/pypi/status/pylibschc
+   :alt: PyPI - Status
+   :target: https://pypi.org/project/pylibschc/
+
+.. image:: https://img.shields.io/pypi/pyversions/pylibschc
+   :alt: PyPI - Python Version
+   :target: https://pypi.org/project/pylibschc/
+
 This provides a pythonic wrapper for `libSCHC`_.
 
 Installation
 ============
 
-You can use ``pip`` to install the package once you cloned this repo:
+You can use ``pip`` to install the package once from `PyPI`_:
 
 .. code:: bash
 
-   git clone https://github.com/anr-bmbf-pivot/pylibschc.git
-   cd pylibschc
-   pip install .
+   pip install pylibschc
 
 Usage
 =====
@@ -203,6 +209,7 @@ that libSCHC is dual licensed for non-open source use. For more, have a look at 
 libSCHC.
 
 .. _`libSCHC`: https://github.com/imec-idlab/libschc
+.. _`PyPI`: https://pypi.org/project/pylibschc
 .. _`pydantic`: https://pydantic.dev
 .. _`scapy`: https://scapy.net/
 .. |pylibschc.rules| replace:: ``pylibschc.rules``
