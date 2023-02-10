@@ -55,6 +55,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#fragmentation-reassembly">Fragmentation/Reassembly</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#license">License</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">API reference</a></li>
@@ -95,10 +96,10 @@
 
           <div class="body" role="main">
             
-  <a class="reference external image-reference" href="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml"><img alt="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg" src="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg" /></a>
-<a class="reference external image-reference" href="https://codecov.io/gh/anr-bmbf-pivot/pylibschc"><img alt="https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H" src="https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H" /></a>
-<section id="pylibschc-a-python-wrapper-for-libschc">
+  <section id="pylibschc-a-python-wrapper-for-libschc">
 <h1>pylibschc: A python wrapper for libSCHC<a class="headerlink" href="#pylibschc-a-python-wrapper-for-libschc" title="Permalink to this heading">¶</a></h1>
+<a class="reference external image-reference" href="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml"><img alt="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg" src="https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg" /></a>
+<a class="reference external image-reference" href="https://codecov.io/gh/anr-bmbf-pivot/pylibschc"><img alt="https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H" src="https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H" /></a>
 <p>This provides a pythonic wrapper for <a class="reference external" href="https://github.com/imec-idlab/libschc">libSCHC</a>.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h2>
@@ -111,10 +112,11 @@ pip<span class="w"> </span>install<span class="w"> </span>.
 </section>
 <section id="usage">
 <h2>Usage<a class="headerlink" href="#usage" title="Permalink to this heading">¶</a></h2>
+<p>More documentation can be found <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc">here</a>.</p>
 <section id="rules">
 <h3>Rules<a class="headerlink" href="#rules" title="Permalink to this heading">¶</a></h3>
 <p>Rules are managed using a <a class="reference external" href="https://pydantic.dev">pydantic</a> model, i.e., they can be loaded from a correctly typed
-dictionary (e.g. generated from a JSON or YAML file):</p>
+dictionary (e.g. generated from a JSON or YAML file) using the <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html#pylibschc.rules"><code class="docutils literal notranslate"><span class="pre">pylibschc.rules</span></code></a> module:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">json</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pylibschc.rules</span> <span class="kn">import</span> <span class="n">Config</span>
 <span class="go">&gt;&gt;&gt;</span>
@@ -123,25 +125,24 @@ dictionary (e.g. generated from a JSON or YAML file):</p>
 <span class="gp">... </span>   <span class="n">config</span> <span class="o">=</span> <span class="n">rules</span><span class="o">.</span><span class="n">deploy</span><span class="p">()</span>
 </pre></div>
 </div>
-<p><strong>Do not forget</strong> to call <code class="docutils literal notranslate"><span class="pre">rules.deploy()</span></code> if you change any rules to re-deploy the rules with
-libSCHC.</p>
+<p><strong>Do not forget</strong> to call the <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html#pylibschc.rules.Config.deploy"><code class="docutils literal notranslate"><span class="pre">deploy()</span></code></a> method if you change any rules to
+re-deploy the rules with libSCHC.</p>
 <p>The header file for the rules, so they can be used with libSCHC on an embedded device, can be
 generated using</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;rule_config.h&quot;</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">written</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rules</span><span class="o">.</span><span class="n">to_c_header</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>An example for such a dictionary is provided in
-<a class="reference external" href="./tests/artifacts/rules_example.json">./tests/artifacts/rules_example.json</a> as JSON, the
-documentation of the concrete <a class="reference external" href="https://pydantic.dev">pydantic</a> model you can find in the
+<p>An example for such a dictionary is provided in <a class="reference external" href="https://github.com/anr-bmbf-pivot/pylibschc/blob/main/tests/artifacts/rules_example.json">rules_example.json</a> as JSON, the documentation of
+the concrete <a class="reference external" href="https://pydantic.dev">pydantic</a> model you can find its
 <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html">API reference</a>.</p>
-<p>More documentation can be found <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc">here</a>.</p>
 </section>
 <section id="compression-decompression">
 <h3>Compression/Decompression<a class="headerlink" href="#compression-decompression" title="Permalink to this heading">¶</a></h3>
-<p>Both compression and decompression can be achieved by using the <cite>CompressorDecompressor</cite> class from
-the submodule <a class="reference external" href="./pylibschc/compressor.py">pylibschc.compressor</a>. We use <a class="reference external" href="https://scapy.net/">scapy</a> in our example
-to construct a valid CoAP over IPv6 packet for compression for which the <code class="docutils literal notranslate"><span class="pre">output()</span></code> method is
+<p>Both compression and decompression can be achieved by using the
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor"><code class="docutils literal notranslate"><span class="pre">pylibschc.compressor.Decompressor</span></code></a> class. We use <a class="reference external" href="https://scapy.net/">scapy</a> in our example
+to construct a valid CoAP over IPv6 packet for compression for which the
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.output"><code class="docutils literal notranslate"><span class="pre">output()</span></code></a> method is
 called:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scapy.all</span> <span class="kn">import</span> <span class="n">IPv6</span><span class="p">,</span> <span class="n">UDP</span><span class="p">,</span> <span class="n">raw</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">scapy.contrib.coap</span> <span class="kn">import</span> <span class="n">CoAP</span>
@@ -176,24 +177,27 @@ called:</p>
 <span class="go">b&#39;\x01\t3#\xaf:5\xb7\xb2&amp;\x96B#\xa3\x12\xc2\x02&amp;\xe6\x16\xd6R#\xa2$4\xa2\xe4\x82\xe4\xc2\xe2\x84\xa6\xf6R\x92\x04\xc6V6\xf6\xd7FR\x92\x04\x86V\xc6\x97\x06\xf7\&#39;B&quot;\xc2&amp;6\xf6FR#\xa2%\x94\xf5\x92&quot;\xc2&amp;6\xf7V\xe7G\&#39;\x92#\xa2$4\x12\&#39;\xd5\xd0&#39;</span>
 </pre></div>
 </div>
-<p>For decompression, the <cite>input()</cite> method is called:</p>
+<p>For decompression, the <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input"><code class="docutils literal notranslate"><span class="pre">input()</span></code></a> method is called:</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">comp_dec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">bit_array</span><span class="p">)</span>
 <span class="go">b&#39;`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{&quot;id&quot;:1, &quot;name&quot;:&quot;CJ.H.L.(Joe) Lecomte) Heliport&quot;,&quot;code&quot;:&quot;YOY&quot;,&quot;country&quot;:&quot;CA&quot;}]&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">pkt</span> <span class="o">==</span> <span class="n">comp_dec</span><span class="o">.</span><span class="n">input</span><span class="p">(</span><span class="n">bit_array</span><span class="p">)</span>
 <span class="go">True</span>
 </pre></div>
 </div>
-<p>Both <code class="docutils literal notranslate"><span class="pre">input()</span></code> and <code class="docutils literal notranslate"><span class="pre">output()</span></code> take either <code class="docutils literal notranslate"><span class="pre">BitArray</span></code>- or <code class="docutils literal notranslate"><span class="pre">bytes</span></code>-typed variables as input.</p>
+<p>Both <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input"><code class="docutils literal notranslate"><span class="pre">input()</span></code></a> and
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.output"><code class="docutils literal notranslate"><span class="pre">output()</span></code></a> take either <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/libschc.html#pylibschc.libschc.BitArray"><code class="docutils literal notranslate"><span class="pre">BitArray</span></code></a>- or
+<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes"><code class="docutils literal notranslate"><span class="pre">bytes</span></code></a>-typed variables as input.</p>
 </section>
 <section id="fragmentation-reassembly">
 <h3>Fragmentation/Reassembly<a class="headerlink" href="#fragmentation-reassembly" title="Permalink to this heading">¶</a></h3>
-<p>For fragmentation, call the <code class="docutils literal notranslate"><span class="pre">output()</span></code> method of a <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code> object.
-To actually send then from the, a send function needs to be registered for the device of the
-fragmenter.
-For reassembly, call the <code class="docutils literal notranslate"><span class="pre">input()</span></code> method of a <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Reassembler</span></code> object.
-Acknowledgements can be handled by the <code class="docutils literal notranslate"><span class="pre">input()</span></code> method of the <code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code>
-object. Again, both <code class="docutils literal notranslate"><span class="pre">input()</span></code> and <code class="docutils literal notranslate"><span class="pre">output()</span></code> take either <code class="docutils literal notranslate"><span class="pre">BitArray</span></code>- or <code class="docutils literal notranslate"><span class="pre">bytes</span></code>-typed
-variables as input.</p>
+<p>For fragmentation, call the <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output"><code class="docutils literal notranslate"><span class="pre">output()</span></code></a> method of a
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code></a> object. To actually send then from the, a send function needs to
+be <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.register_send">registered for the device</a> of the fragmenter. For reassembly, call the
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input"><code class="docutils literal notranslate"><span class="pre">input()</span></code></a> method of a <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Reassembler</span></code></a> object.
+Acknowledgements can be handled by the <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output"><code class="docutils literal notranslate"><span class="pre">output()</span></code></a> method of the
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter"><code class="docutils literal notranslate"><span class="pre">pylibschc.fragmenter.Fragmenter</span></code></a> object. Again, either <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.input"><code class="docutils literal notranslate"><span class="pre">input()</span></code></a> or
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input"><code class="docutils literal notranslate"><span class="pre">input()</span></code></a>, and <a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output"><code class="docutils literal notranslate"><span class="pre">output()</span></code></a> take either
+<a class="reference external" href="https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/libschc.html#pylibschc.libschc.BitArray"><code class="docutils literal notranslate"><span class="pre">BitArray</span></code></a>- or <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes"><code class="docutils literal notranslate"><span class="pre">bytes</span></code></a>-typed variables as input.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">logging</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">pylibschc.fragmenter</span>
@@ -269,11 +273,18 @@ variables as input.</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-<p>While this example uses <cite>asyncio</cite> to parallelize timer calls, any method to establish concurrency
-can be used (see <a class="reference external" href="./tests/test_fragmenter.py">./tests/test_fragmenter.py</a> for an example using the
-<cite>threading</cite> module) as long as the access to libSCHC (including calls to timer tasks) is
+<p>While this example uses <a class="reference external" href="https://docs.python.org/3/library/asyncio.html">asyncio</a> to parallelize timer calls, any method to establish concurrency
+can be used (see <a class="reference external" href="https://github.com/anr-bmbf-pivot/pylibschc/blob/main/tests/test_fragmenter.py">test for a threaded fragmenter/reassembler</a> for an example using the
+<a class="reference external" href="https://docs.python.org/3/library/threading.html">threading</a> module) as long as the access to libSCHC (including calls to timer tasks) is
 synchronized.</p>
 </section>
+</section>
+<section id="license">
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
+<p>This code is published under the GNU General Public License Version 3 (GPLv3). Please keep in mind,
+that libSCHC is dual licensed for non-open source use. For more, have a look at the
+<a class="reference external" href="https://github.com/imec-idlab/libschc/blob/master/README.md#license">license information</a> over at
+libSCHC.</p>
 </section>
 </section>
 
