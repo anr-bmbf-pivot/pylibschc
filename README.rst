@@ -1,12 +1,12 @@
+=======================================
+pylibschc: A python wrapper for libSCHC
+=======================================
+
 .. image:: https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml/badge.svg
    :target: https://github.com/anr-bmbf-pivot/pylibschc/actions/workflows/test.yml
 
 .. image:: https://codecov.io/gh/anr-bmbf-pivot/pylibschc/branch/main/graph/badge.svg?token=KPOQ0ERP9H
    :target: https://codecov.io/gh/anr-bmbf-pivot/pylibschc
-
-=======================================
-pylibschc: A python wrapper for libSCHC
-=======================================
 
 This provides a pythonic wrapper for `libSCHC`_.
 
@@ -24,10 +24,12 @@ You can use ``pip`` to install the package once you cloned this repo:
 Usage
 =====
 
+More documentation can be found `here <https://anr-bmbf-pivot.github.io/pylibschc>`_.
+
 Rules
 -----
 Rules are managed using a `pydantic`_ model, i.e., they can be loaded from a correctly typed
-dictionary (e.g. generated from a JSON or YAML file):
+dictionary (e.g. generated from a JSON or YAML file) using the |pylibschc.rules|_ module:
 
     >>> import json
     >>> from pylibschc.rules import Config
@@ -36,8 +38,8 @@ dictionary (e.g. generated from a JSON or YAML file):
     ...    rules = Config(**json.load(f))
     ...    config = rules.deploy()
 
-**Do not forget** to call ``rules.deploy()`` if you change any rules to re-deploy the rules with
-libSCHC.
+**Do not forget** to call the |pylibschc.rules.Config.deploy|_ method if you change any rules to
+re-deploy the rules with libSCHC.
 
 The header file for the rules, so they can be used with libSCHC on an embedded device, can be
 generated using
@@ -45,19 +47,17 @@ generated using
     >>> with open("rule_config.h", "w", encoding="utf-8") as f:
     ...     written = f.write(rules.to_c_header())
 
-An example for such a dictionary is provided in
-`./tests/artifacts/rules_example.json <./tests/artifacts/rules_example.json>`_ as JSON, the
-documentation of the concrete `pydantic`_ model you can find in the
+An example for such a dictionary is provided in `rules_example.json`_ as JSON, the documentation of
+the concrete `pydantic`_ model you can find its
 `API reference <https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html>`_.
-
-More documentation can be found `here <https://anr-bmbf-pivot.github.io/pylibschc>`_.
 
 Compression/Decompression
 -------------------------
 
-Both compression and decompression can be achieved by using the `CompressorDecompressor` class from
-the submodule `pylibschc.compressor <./pylibschc/compressor.py>`_. We use `scapy`_ in our example
-to construct a valid CoAP over IPv6 packet for compression for which the ``output()`` method is
+Both compression and decompression can be achieved by using the
+|pylibschc.compressor.CompressorDecompressor|_ class. We use `scapy`_ in our example
+to construct a valid CoAP over IPv6 packet for compression for which the
+|pylibschc.compressor.CompressorDecompressor.output|_ method is
 called:
 
     >>> from scapy.all import IPv6, UDP, raw
@@ -92,25 +92,28 @@ called:
     >>> bit_array.buffer
     b'\x01\t3#\xaf:5\xb7\xb2&\x96B#\xa3\x12\xc2\x02&\xe6\x16\xd6R#\xa2$4\xa2\xe4\x82\xe4\xc2\xe2\x84\xa6\xf6R\x92\x04\xc6V6\xf6\xd7FR\x92\x04\x86V\xc6\x97\x06\xf7\'B"\xc2&6\xf6FR#\xa2%\x94\xf5\x92"\xc2&6\xf7V\xe7G\'\x92#\xa2$4\x12\'\xd5\xd0'
 
-For decompression, the `input()` method is called:
+For decompression, the |pylibschc.compressor.CompressorDecompressor.input|_ method is called:
 
     >>> comp_dec.input(bit_array)
     b'`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
     >>> pkt == comp_dec.input(bit_array)
     True
 
-Both ``input()`` and ``output()`` take either ``BitArray``- or ``bytes``-typed variables as input.
+Both |pylibschc.compressor.CompressorDecompressor.input|_ and
+|pylibschc.compressor.CompressorDecompressor.output|_ take either |pylibschc.libschc.BitArray|_- or
+|bytes|_-typed variables as input.
 
 Fragmentation/Reassembly
 ------------------------
 
-For fragmentation, call the ``output()`` method of a ``pylibschc.fragmenter.Fragmenter`` object.
-To actually send then from the, a send function needs to be registered for the device of the
-fragmenter.
-For reassembly, call the ``input()`` method of a ``pylibschc.fragmenter.Reassembler`` object.
-Acknowledgements can be handled by the ``input()`` method of the ``pylibschc.fragmenter.Fragmenter``
-object. Again, both ``input()`` and ``output()`` take either ``BitArray``- or ``bytes``-typed
-variables as input.
+For fragmentation, call the |pylibschc.fragmenter.Fragmenter.output|_ method of a
+|pylibschc.fragmenter.Fragmenter|_ object. To actually send then from the, a send function needs to
+be `registered for the device`_ of the fragmenter. For reassembly, call the
+|pylibschc.fragmenter.Reassembler.input|_ method of a |pylibschc.fragmenter.Reassembler|_ object.
+Acknowledgements can be handled by the |pylibschc.fragmenter.Fragmenter.output|_ method of the
+|pylibschc.fragmenter.Fragmenter|_ object. Again, either |pylibschc.fragmenter.Fragmenter.input|_ or
+|pylibschc.fragmenter.Reassembler.input|_, and |pylibschc.fragmenter.Fragmenter.output|_ take either
+|pylibschc.libschc.BitArray|_- or |bytes|_-typed variables as input.
 
     >>> import asyncio
     >>> import logging
@@ -186,11 +189,49 @@ variables as input.
     reassembler.input -> ReassemblyStatus.COMPLETED
     True
 
-While this example uses `asyncio` to parallelize timer calls, any method to establish concurrency
-can be used (see `./tests/test_fragmenter.py <./tests/test_fragmenter.py>`_ for an example using the
-`threading` module) as long as the access to libSCHC (including calls to timer tasks) is
+While this example uses `asyncio`_ to parallelize timer calls, any method to establish concurrency
+can be used (see `test for a threaded fragmenter/reassembler`_ for an example using the
+`threading`_ module) as long as the access to libSCHC (including calls to timer tasks) is
 synchronized.
+
+License
+=======
+
+This code is published under the GNU General Public License Version 3 (GPLv3). Please keep in mind,
+that libSCHC is dual licensed for non-open source use. For more, have a look at the
+`license information <https://github.com/imec-idlab/libschc/blob/master/README.md#license>`_ over at
+libSCHC.
 
 .. _`libSCHC`: https://github.com/imec-idlab/libschc
 .. _`pydantic`: https://pydantic.dev
 .. _`scapy`: https://scapy.net/
+.. |pylibschc.rules| replace:: ``pylibschc.rules``
+.. _`pylibschc.rules`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html#pylibschc.rules
+.. |pylibschc.rules.Config.deploy| replace:: ``deploy()``
+.. _`pylibschc.rules.Config.deploy`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/rules.html#pylibschc.rules.Config.deploy
+.. _`rules_example.json`: https://github.com/anr-bmbf-pivot/pylibschc/blob/main/tests/artifacts/rules_example.json
+.. |pylibschc.compressor.CompressorDecompressor| replace:: ``pylibschc.compressor.Decompressor``
+.. _`pylibschc.compressor.CompressorDecompressor`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor
+.. |pylibschc.compressor.CompressorDecompressor.output| replace:: ``output()``
+.. _`pylibschc.compressor.CompressorDecompressor.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.output
+.. |pylibschc.compressor.CompressorDecompressor.input| replace:: ``input()``
+.. _`pylibschc.compressor.CompressorDecompressor.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input
+.. |pylibschc.libschc.BitArray| replace:: ``BitArray``
+.. _`pylibschc.libschc.BitArray`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/libschc.html#pylibschc.libschc.BitArray
+.. |bytes| replace:: ``bytes``
+.. _`bytes`: https://docs.python.org/3/library/stdtypes.html#bytes
+.. |pylibschc.fragmenter.Fragmenter| replace:: ``pylibschc.fragmenter.Fragmenter``
+.. _`pylibschc.fragmenter.Fragmenter`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter
+.. |pylibschc.fragmenter.Fragmenter.output| replace:: ``output()``
+.. _`pylibschc.fragmenter.Fragmenter.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output
+.. _`registered for the device`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.register_send
+.. |pylibschc.fragmenter.Fragmenter.input| replace:: ``input()``
+.. _`pylibschc.fragmenter.Fragmenter.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.input
+.. |pylibschc.fragmenter.Reassembler| replace:: ``pylibschc.fragmenter.Reassembler``
+.. _`pylibschc.fragmenter.Reassembler`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler
+.. _`pylibschc.fragmenter.Reassembler.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.output
+.. |pylibschc.fragmenter.Reassembler.input| replace:: ``input()``
+.. _`pylibschc.fragmenter.Reassembler.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input
+.. _`asyncio`: https://docs.python.org/3/library/asyncio.html
+.. _`test for a threaded fragmenter/reassembler`: https://github.com/anr-bmbf-pivot/pylibschc/blob/main/tests/test_fragmenter.py
+.. _`threading`: https://docs.python.org/3/library/threading.html
