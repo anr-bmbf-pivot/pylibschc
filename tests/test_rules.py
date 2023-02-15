@@ -998,6 +998,16 @@ def test_device_rule_id_duplicates():
         )
 
 
+def test_device_uncompressed_rule_none():
+    device = pylibschc.rules.Device(
+        device_id=1,
+        mtu=500,
+        duty_cycle=5000,
+        uncompressed_rule=None,
+    )
+    assert device.uncompressed_rule is None
+
+
 def test_device_c_schc_declaration():
     device = pylibschc.rules.Device(
         device_id=1,

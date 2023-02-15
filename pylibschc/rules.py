@@ -485,7 +485,7 @@ class Device(BaseModel):
     duty_cycle: conint(ge=0x00000000, le=0xFFFFFFFF)
     """The duty cycle in milliseconds of the device. Must be 0
     < :attr:`Device.duty_cycle` ≤ :math:`(2^{32} - 1)`."""
-    uncompressed_rule: UncompressedRule
+    uncompressed_rule: UncompressedRule = None
     """The rule for an uncompressed packet on this device. Must not contain any
     duplicate rule IDs (i.e., same value of same bit width) with
     :attr:`Device.compression_rules` or :attr:`Device.fragmentation_rules`."""

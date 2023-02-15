@@ -30,6 +30,20 @@ def reset_compressor_reassembler():
     pylibschc.compressor.CompressorDecompressor._inner = None
 
 
+def test_compressor_reassembler_no_uncompressed_rule(test_rules):
+    test_rules.devices[0].uncompressed_rule = None
+    config = test_rules.deploy()
+    device = config.devices[0]
+    direction = pylibschc.compressor.Direction.UP
+    cr = pylibschc.compressor.CompressorDecompressor(  # pylint: disable=invalid-name
+        device=device, direction=direction
+    )
+    bit_array = pylibschc.compressor.BitArray(bytes(IPv6()))
+    res, not_compressed = cr.output(bit_array)
+    assert res == pylibschc.compressor.CompressionResult.UNCOMPRESSED
+    assert bytes(IPv6()) == not_compressed.buffer
+
+
 @pytest.fixture()
 def exp_rules(request, test_rules):
     config = test_rules.deploy()
