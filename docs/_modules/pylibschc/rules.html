@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pylibschc.rules &#8212; pylibschc 0.0.1b0 documentation</title>
+    <title>pylibschc.rules &#8212; pylibschc 0.0.1b1 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -571,7 +571,7 @@
     <span class="n">duty_cycle</span><span class="p">:</span> <span class="n">conint</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mh">0x00000000</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mh">0xFFFFFFFF</span><span class="p">)</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The duty cycle in milliseconds of the device. Must be 0</span>
 <span class="sd">    &lt; :attr:`Device.duty_cycle` ≤ :math:`(2^{32} - 1)`.&quot;&quot;&quot;</span>
-    <span class="n">uncompressed_rule</span><span class="p">:</span> <span class="n">UncompressedRule</span>
+    <span class="n">uncompressed_rule</span><span class="p">:</span> <span class="n">UncompressedRule</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;The rule for an uncompressed packet on this device. Must not contain any</span>
 <span class="sd">    duplicate rule IDs (i.e., same value of same bit width) with</span>
 <span class="sd">    :attr:`Device.compression_rules` or :attr:`Device.fragmentation_rules`.&quot;&quot;&quot;</span>
