@@ -98,8 +98,11 @@ class Fragmenter(BaseFragmenterReassembler):
         """Handle incoming an ACK.
 
         :param data: An ACK.
-        :raise RuntimeError: if ``data`` was not an ACK.
+        :raise RuntimeError: if ``data`` was not an ACK or if the fragmenter never sent
+            a fragment for which the ACK should be handled.
         :retval ACK_HANDLED: when the ACK was handled."""
+        if not self._tx_conn:
+            raise RuntimeError("Unexpected state, you did not send a fragment yet")
         if isinstance(data, BitArray):
             bit_array = data
         else:
@@ -115,7 +118,7 @@ class Fragmenter(BaseFragmenterReassembler):
                     self.end_rx(new_conn)
                 new_conn.reset()
             assert RuntimeError(
-                b"Unexpected state, input {data.hex()} should be an ACK"
+                f"Unexpected state, input {data.hex()} should be an ACK"
             )
         return ReassemblyStatus.ACK_HANDLED  # pragma: no cover
 

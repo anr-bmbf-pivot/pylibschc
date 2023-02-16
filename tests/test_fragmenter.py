@@ -298,6 +298,8 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
             end_tx=self.end_tx,
             remove_timer_entry=self.remove_timer_entry,
         )
+        with pytest.raises(RuntimeError):
+            self.fragmenter.input(b"\x03\x03")
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
             post_timer_task=self.post_timer_task,
@@ -426,6 +428,8 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             end_tx=self.end_tx,
             remove_timer_entry=self.remove_timer_entry,
         )
+        with pytest.raises(RuntimeError):
+            self.fragmenter.input(b"\x03\x03")
         self.reassembler = pylibschc.fragmenter.Reassembler(
             device=device,
             post_timer_task=self.post_timer_task,
