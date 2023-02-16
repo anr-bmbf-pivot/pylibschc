@@ -232,7 +232,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         self.reassembler_queue.put_nowait(conn.mbuf)
 
     def end_tx(self, conn: pylibschc.fragmenter.FragmentationConnection):
-        # pylint: disable=unused-argument
+        assert self.fragmenter.device.device_id == conn.device_id
         self.end_tx_called = True
 
     def remove_timer_entry(self, conn: pylibschc.fragmenter.FragmentationConnection):
@@ -356,7 +356,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         self.reassembly_buffer.set_result(conn.mbuf)
 
     def end_tx(self, conn: pylibschc.fragmenter.FragmentationConnection):
-        # pylint: disable=unused-argument
+        assert self.fragmenter.device.device_id == conn.device_id
         self.fragmenter_queue.put_nowait({"cmd": "end_rx"})
 
     def remove_timer_entry(self, conn: pylibschc.fragmenter.FragmentationConnection):

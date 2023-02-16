@@ -1033,6 +1033,16 @@ cdef class FragmentationConnection:
             self._bit_arr = None
             self._frag_conn.bit_arr = NULL
 
+    property device_id:
+        """
+        :type: int
+
+        The libSCHC-internal identifier for the device used with this fragmentation
+        connection.
+        """
+        def __get__(self) -> int:
+            return self._frag_conn.device_id
+
     property fragmented:
         """
         :type: bool
