@@ -171,7 +171,7 @@ Acknowledgements can be handled by the |pylibschc.fragmenter.Fragmenter.output|_
     ...         end_tx=end_tx,
     ...         remove_timer_entry=remove_timer_entry,
     ...     )
-    ...     fragmenter.register_send(config.devices[0], send)
+    ...     fragmenter.register_send(send)
     ...     reassembler = pylibschc.fragmenter.Reassembler(
     ...         device=config.devices[0],
     ...         post_timer_task=post_timer_task,
