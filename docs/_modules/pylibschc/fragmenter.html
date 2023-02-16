@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>pylibschc.fragmenter &#8212; pylibschc 0.0.1b2 documentation</title>
+    <title>pylibschc.fragmenter &#8212; pylibschc 0.0.1b3 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
@@ -184,8 +184,11 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Handle incoming an ACK.</span>
 
 <span class="sd">        :param data: An ACK.</span>
-<span class="sd">        :raise RuntimeError: if ``data`` was not an ACK.</span>
+<span class="sd">        :raise RuntimeError: if ``data`` was not an ACK or if the fragmenter never sent</span>
+<span class="sd">            a fragment for which the ACK should be handled.</span>
 <span class="sd">        :retval ACK_HANDLED: when the ACK was handled.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_tx_conn</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unexpected state, you did not send a fragment yet&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
@@ -201,7 +204,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">end_rx</span><span class="p">(</span><span class="n">new_conn</span><span class="p">)</span>
                 <span class="n">new_conn</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
             <span class="k">assert</span> <span class="ne">RuntimeError</span><span class="p">(</span>
-                <span class="sa">b</span><span class="s2">&quot;Unexpected state, input {data.hex()} should be an ACK&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Unexpected state, input </span><span class="si">{</span><span class="n">data</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2"> should be an ACK&quot;</span>
             <span class="p">)</span>
         <span class="k">return</span> <span class="n">ReassemblyStatus</span><span class="o">.</span><span class="n">ACK_HANDLED</span>  <span class="c1"># pragma: no cover</span></div>
 
