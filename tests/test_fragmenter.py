@@ -306,7 +306,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        self.fragmenter.register_send(device, self.send)
+        self.fragmenter.register_send(self.send)
         with self.timer_lock:
             if compress_data:
                 res, pkt = cr.output(self.input_type(data))
@@ -320,7 +320,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
             assert cr.input(pkt) == data
         else:
             assert pkt == data
-        self.fragmenter.unregister_send(device)
+        self.fragmenter.unregister_send()
 
 
 class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attributes
@@ -436,7 +436,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        self.fragmenter.register_send(device, self.send)
+        self.fragmenter.register_send(self.send)
         if compress_data:
             res, pkt = cr.output(self.input_type(data))
             assert res == pylibschc.compressor.CompressionResult.COMPRESSED
@@ -451,4 +451,4 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             assert cr.input(pkt) == data
         else:
             assert pkt == data
-        self.fragmenter.unregister_send(device)
+        self.fragmenter.unregister_send()

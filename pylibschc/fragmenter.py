@@ -152,24 +152,16 @@ class Fragmenter(BaseFragmenterReassembler):
             self._tx_conn_release()
             raise
 
-    @classmethod
-    def register_send(
-        cls, device: pylibschc.device.Device, send: typing.Callable[[bytes], int]
-    ):
-        """Register a send function for a device.
+    def register_send(self, send: typing.Callable[[bytes], int]):
+        """Register a send function for the device of this fragmenter.
 
-        :param device: A device,
         :param send: The send function for ``device``.
         """
-        return cls.conn_cls.register_send(device.device_id, send)
+        return self.conn_cls.register_send(self.device.device_id, send)
 
-    @classmethod
-    def unregister_send(cls, device: pylibschc.device.Device):
-        """Remove a send function for a device.
-
-        :param device: A device,
-        """
-        return cls.conn_cls.unregister_send(device.device_id)
+    def unregister_send(self):
+        """Remove a send function for the device of this fragmenter."""
+        return self.conn_cls.unregister_send(self.device.device_id)
 
 
 class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-methods
