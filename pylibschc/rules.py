@@ -504,11 +504,12 @@ class Device(BaseModel):
         # pylint: disable=missing-function-docstring
         uncompressed_rule = values.get("uncompressed_rule")
         compression_rules = values.get("compression_rules", [])
+        rule_ids = set()
 
-        if uncompressed_rule:  # pragma: no cover
-            rule_ids = {
+        if uncompressed_rule:
+            rule_ids.add(
                 (uncompressed_rule.rule_id, uncompressed_rule.rule_id_size_bits)
-            }
+            )
 
         for rule in compression_rules + fragmentation_rules:
             if (rule.rule_id, rule.rule_id_size_bits) in rule_ids:
@@ -540,12 +541,17 @@ class Device(BaseModel):
             if self.fragmentation_rules
             else "0U"
         )
+        if self.uncompressed_rule:
+            uncomp_rule_id = self.uncompressed_rule.rule_id
+            uncomp_rule_id_size_bits = self.uncompressed_rule.rule_id_size_bits
+        else:
+            uncomp_rule_id = 0
+            uncomp_rule_id_size_bits = 0
         return (
             "{\n"
             f"    .device_id = {self.device_id}U,\n"
-            f"    .uncomp_rule_id = {self.uncompressed_rule.rule_id}U,\n"
-            "    .uncomp_rule_id_size_bits = "
-            f"{self.uncompressed_rule.rule_id_size_bits}U,\n"
+            f"    .uncomp_rule_id = {uncomp_rule_id}U,\n"
+            f"    .uncomp_rule_id_size_bits = {uncomp_rule_id_size_bits}U,\n"
             f"    .compression_rule_count = {compression_rules_count},\n"
             f"    .compression_context = {compression_rules_ptr},\n"
             f"    .fragmentation_rule_count = {fragmentation_rules_count},\n"
@@ -575,6 +581,8 @@ class Config(BaseModel):
 
     @staticmethod
     def _layer_rule_to_c(visited_layer_rules, layer_name, rule, decl_func):
+        if not rule:
+            return None
         for rule_name, (visited_rule, _) in visited_layer_rules.items():
             if rule == visited_rule:
                 return rule_name
@@ -653,7 +661,7 @@ class Config(BaseModel):
                             array_decl += f"    &{rule_name},\n"
                             break
                     if rule_visited:
-                        break
+                        continue
                     ipv6_rule_name = self._layer_rule_to_c(
                         visited_compression_layer_rules["ipv6"],
                         "ipv6",
@@ -717,12 +725,16 @@ class Config(BaseModel):
                 )
                 for rule in device.fragmentation_rules:
                     rule_visited = False
-                    for visited_rule, _ in visited_fragmentation_rules.values():
+                    for rule_name, (
+                        visited_rule,
+                        _,
+                    ) in visited_fragmentation_rules.items():
                         if rule == visited_rule:
                             rule_visited = True
+                            array_decl += f"    &{rule_name},\n"
                             break
                     if rule_visited:
-                        break
+                        continue
                     rule_name = ""
                     for i in range(  # pragma: no cover
                         len(visited_fragmentation_rules) + 1

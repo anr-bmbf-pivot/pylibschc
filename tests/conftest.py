@@ -499,6 +499,13 @@ def test_rules():
             udp_rule=udp_rule3,
             coap_rule=coap_rule3,
         ),
+        pylibschc.rules.CompressionRule(
+            rule_id=4,
+            rule_id_size_bits=8,
+            ipv6_rule=ipv6_rule2,
+            udp_rule=None,
+            coap_rule=None,
+        ),
     ]
     fragmentation_rules = [
         pylibschc.rules.FragmentationRule(
@@ -561,13 +568,20 @@ def test_rules():
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
                     rule_id=20, rule_id_size_bits=6
                 ),
-                fragmentation_rule=pylibschc.rules.FragmentationRule(
-                    rule_id=22,
-                    rule_id_size_bits=8,
-                    mode="NO_ACK",
-                    dir="UP",
-                    FCN_SIZE=1,
-                ),
+                fragmentation_rules=[
+                    pylibschc.rules.FragmentationRule(
+                        rule_id=22,
+                        rule_id_size_bits=8,
+                        mode="NO_ACK",
+                        dir="UP",
+                        FCN_SIZE=1,
+                    )
+                ],
+            ),
+            pylibschc.rules.Device(
+                device_id=4,
+                mtu=500,
+                duty_cycle=5000,
             ),
         ],
     )

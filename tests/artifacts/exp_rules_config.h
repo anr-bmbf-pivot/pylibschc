@@ -214,6 +214,20 @@ static const struct schc_compression_rule_t comp_rule_003_08_00 = {
 #endif
 };
 
+static const struct schc_compression_rule_t comp_rule_004_08_00 = {
+    .rule_id = 4U,
+    .rule_id_size_bits = 8U,
+#if USE_IP6
+    .ipv6_rule = &ipv6_rule_01,
+#endif
+#if USE_UDP
+    .udp_rule = NULL,
+#endif
+#if USE_COAP
+    .coap_rule = NULL,
+#endif
+};
+
 static const struct schc_fragmentation_rule_t frag_rule_021_08_00 = {
     .rule_id = 21U,
     .rule_id_size_bits = 8U,
@@ -236,6 +250,17 @@ static const struct schc_fragmentation_rule_t frag_rule_022_08_00 = {
     .DTAG_SIZE =     0U     /* DTAG field size (T in RFC) */
 };
 
+static const struct schc_fragmentation_rule_t frag_rule_022_08_01 = {
+    .rule_id = 22U,
+    .rule_id_size_bits = 8U,
+    .mode = NO_ACK,
+    .dir = UP,
+    .FCN_SIZE =      1U,    /* FCN field size (N in RFC) */
+    .MAX_WND_FCN =   0U,    /* Maximum fragments per window (WINDOW_SIZE in RFC) */
+    .WINDOW_SIZE =   0U,    /* W field size (M in RFC) */
+    .DTAG_SIZE =     0U     /* DTAG field size (T in RFC) */
+};
+
 static const struct schc_fragmentation_rule_t frag_rule_023_08_00 = {
     .rule_id = 23U,
     .rule_id_size_bits = 8U,
@@ -251,10 +276,13 @@ static const struct schc_compression_rule_t *compression_rules_00[] = {
     &comp_rule_001_08_00,
     &comp_rule_002_08_00,
     &comp_rule_003_08_00,
+    &comp_rule_004_08_00,
 };
 
 static const struct schc_compression_rule_t *compression_rules_01[] = {
     &comp_rule_001_08_00,
+    &comp_rule_002_08_00,
+    &comp_rule_003_08_00,
 };
 
 static const struct schc_fragmentation_rule_t *fragmentation_rules_00[] = {
@@ -264,6 +292,12 @@ static const struct schc_fragmentation_rule_t *fragmentation_rules_00[] = {
 };
 
 static const struct schc_fragmentation_rule_t *fragmentation_rules_01[] = {
+    &frag_rule_021_08_00,
+    &frag_rule_022_08_00,
+};
+
+static const struct schc_fragmentation_rule_t *fragmentation_rules_02[] = {
+    &frag_rule_022_08_01,
 };
 
 static const struct schc_device device1 = {
@@ -292,6 +326,16 @@ static const struct schc_device device3 = {
     .uncomp_rule_id_size_bits = 6U,
     .compression_rule_count = 0U,
     .compression_context = NULL,
+    .fragmentation_rule_count = sizeof(fragmentation_rules_02) / sizeof(fragmentation_rules_02[0]),
+    .fragmentation_context = &fragmentation_rules_02,
+};
+
+static const struct schc_device device4 = {
+    .device_id = 4U,
+    .uncomp_rule_id = 0U,
+    .uncomp_rule_id_size_bits = 0U,
+    .compression_rule_count = 0U,
+    .compression_context = NULL,
     .fragmentation_rule_count = 0U,
     .fragmentation_context = NULL,
 };
@@ -299,7 +343,8 @@ static const struct schc_device device3 = {
 static const struct schc_device* devices[] = {
     &device1,
     &device2,
-    &device3
+    &device3,
+    &device4
 };
 
 #define DEVICE_COUNT    ((int)(sizeof(devices) / sizeof(devices[0])))
