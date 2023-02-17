@@ -31,6 +31,7 @@ __email__ = "m.lenders@fu-berlin.de"
 
 MTU = 60
 DUTY_CYCLE_MS = 100
+REPEATS = 2
 
 TEST_PARAMS = [
     (
@@ -189,7 +190,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
     # pylint: disable=attribute-defined-outside-init
     def setup_method(self, method):  # pylint: disable=unused-argument
         self.timers = {}
-        self.fragmenter_queue = queue.Queue()
+        self.send_queue = queue.Queue()
         self.end_tx_called = False
         self.reassembler_queue = queue.Queue()
         self.timer_lock = threading.Lock()
@@ -206,9 +207,14 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
                 timer.cancel()
                 timer.join()
 
-    def send(self, buffer: bytes) -> int:
+    def send_frag(self, buffer: bytes) -> int:
         assert len(buffer) <= MTU
-        self.fragmenter_queue.put_nowait(buffer)
+        self.send_queue.put_nowait({"cmd": "frag", "data": buffer})
+        return len(buffer)
+
+    def send_ack(self, buffer: bytes) -> int:
+        assert len(buffer) <= MTU
+        self.send_queue.put_nowait({"cmd": "ack", "data": buffer})
         return len(buffer)
 
     def post_timer_task(
@@ -243,14 +249,16 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
     def reassemble(self):
         try:
             while True:
-                buffer = self.fragmenter_queue.get(timeout=5 * (DUTY_CYCLE_MS / 1000))
+                cmd = self.send_queue.get(timeout=5 * (DUTY_CYCLE_MS / 1000))
+                buffer = cmd["data"]
+                assert cmd["cmd"] in ["frag", "ack"]
                 is_fragmented = False
                 for rule in self.fragmenter.device.fragmentation_rules:
                     assert rule.rule_id_size_bits == 8
                     if rule.rule_id == buffer[0]:
                         is_fragmented = True
                 if is_fragmented:
-                    if len(buffer) <= 2:
+                    if cmd["cmd"] == "ack":
                         with self.timer_lock:
                             # is an ACK, handle at fragmenter
                             assert self.fragmenter.input(self.input_type(buffer)) == (
@@ -266,6 +274,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
                             pylibschc.fragmenter.ReassemblyStatus.ONGOING,
                         )
                 else:
+                    assert cmd["cmd"] == "frag"
                     with self.timer_lock:
                         # otherwise handle at reassembler
                         assert (
@@ -279,47 +288,51 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         "mode, input_type, data, compress_data, exp_result", TEST_PARAMS
     )
     def test_fragmenter_reassembler_threaded(  # pylint: disable=too-many-arguments
-        self, test_rules, mode, input_type, data, compress_data, exp_result
+        self, test_rules, mode, input_type, data, compress_data, exp_result, subtests
     ):
         config = test_rules.deploy()
-        device = config.devices[0]
-        assert device.mtu == MTU
-        assert device.duty_cycle_ms == DUTY_CYCLE_MS
+        device_f = config.devices[0]
+        device_r = config.devices[1]
+        assert device_f.mtu == device_r.mtu == MTU
+        assert device_f.duty_cycle_ms == device_r.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
         cr = (  # pylint: disable=invalid-name
             pylibschc.compressor.CompressorDecompressor(
-                device, direction=pylibschc.rules.Direction.DOWN
+                device_f, direction=pylibschc.rules.Direction.DOWN
             )
         )
-        self.fragmenter = pylibschc.fragmenter.Fragmenter(
-            device=device,
+        self.fragmenter = pylibschc.fragmenter.FragmenterReassembler(
+            device=device_f,
             mode=mode,
             post_timer_task=self.post_timer_task,
             end_tx=self.end_tx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        with pytest.raises(RuntimeError):
-            self.fragmenter.input(b"\x03\x03")
-        self.reassembler = pylibschc.fragmenter.Reassembler(
-            device=device,
+        self.reassembler = pylibschc.fragmenter.FragmenterReassembler(
+            device=device_r,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        self.fragmenter.register_send(self.send)
-        with self.timer_lock:
-            if compress_data:
-                res, pkt = cr.output(self.input_type(data))
-                assert res == pylibschc.compressor.CompressionResult.COMPRESSED
-                assert self.fragmenter.output(pkt) == exp_result
-            else:
-                assert self.fragmenter.output(self.input_type(data)) == exp_result
-        self.reassemble()
-        pkt = self.reassembler_queue.get(timeout=(DUTY_CYCLE_MS / 1000) * 10)
-        if compress_data:
-            assert cr.input(pkt) == data
-        else:
-            assert pkt == data
+        self.fragmenter.register_send(self.send_frag)
+        self.reassembler.register_send(self.send_ack)
+        for i in range(REPEATS):  # check for idempotency
+            with subtests.test("loop", i=i):
+                with self.timer_lock:
+                    if compress_data:
+                        res, pkt = cr.output(self.input_type(data))
+                        assert res == pylibschc.compressor.CompressionResult.COMPRESSED
+                        assert self.fragmenter.output(pkt) == exp_result
+                    else:
+                        assert (
+                            self.fragmenter.output(self.input_type(data)) == exp_result
+                        )
+                self.reassemble()
+                pkt = self.reassembler_queue.get(timeout=(DUTY_CYCLE_MS / 1000) * 10)
+                if compress_data:
+                    assert cr.input(pkt) == data
+                else:
+                    assert pkt == data
         self.fragmenter.unregister_send()
 
 
@@ -327,15 +340,20 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
     # pylint: disable=attribute-defined-outside-init
     def setup_method(self, method):  # pylint: disable=unused-argument
         self.timer_tasks = {}
-        self.fragmenter_queue = asyncio.Queue()
+        self.send_queue = asyncio.Queue()
 
     def teardown_method(self, method):  # pylint: disable=unused-argument
         for timer_task in list(self.timer_tasks.values()):
             timer_task.cancel()  # pragma: no cover
 
-    def send(self, buffer: bytes) -> int:
+    def send_frag(self, buffer: bytes) -> int:
         assert len(buffer) <= MTU
-        self.fragmenter_queue.put_nowait({"cmd": "send", "data": buffer})
+        self.send_queue.put_nowait({"cmd": "frag", "data": buffer})
+        return len(buffer)
+
+    def send_ack(self, buffer: bytes) -> int:
+        assert len(buffer) <= MTU
+        self.send_queue.put_nowait({"cmd": "ack", "data": buffer})
         return len(buffer)
 
     def post_timer_task(
@@ -353,11 +371,12 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         self.timer_tasks[conn] = self.loop.call_later(delay_sec, _timer_task, arg)
 
     def end_rx(self, conn: pylibschc.fragmenter.FragmentationConnection):
+        assert self.reassembler.device.device_id == conn.device_id
         self.reassembly_buffer.set_result(conn.mbuf)
 
     def end_tx(self, conn: pylibschc.fragmenter.FragmentationConnection):
         assert self.fragmenter.device.device_id == conn.device_id
-        self.fragmenter_queue.put_nowait({"cmd": "end_rx"})
+        self.send_queue.put_nowait({"cmd": "end_tx"})
 
     def remove_timer_entry(self, conn: pylibschc.fragmenter.FragmentationConnection):
         if conn in self.timer_tasks:
@@ -370,11 +389,11 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
 
         while True:
             cmd = await asyncio.wait_for(
-                self.fragmenter_queue.get(), timeout=5 * (DUTY_CYCLE_MS / 1000)
+                self.send_queue.get(), timeout=5 * (DUTY_CYCLE_MS / 1000)
             )
-            if cmd["cmd"] == "end_rx":
+            if cmd["cmd"] == "end_tx":
                 break
-            assert cmd["cmd"] == "send"
+            assert cmd["cmd"] in ["frag", "ack"]
             buffer = cmd["data"]
             is_fragmented = False
             for rule in self.fragmenter.device.fragmentation_rules:
@@ -382,7 +401,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
                 if rule.rule_id == buffer[0]:
                     is_fragmented = True
             if is_fragmented:
-                if len(buffer) <= 2:
+                if cmd["cmd"] == "ack":
                     # is an ACK, handle at fragmenter
                     res = await inp(self.fragmenter, self.input_type(buffer))
                     assert res == pylibschc.fragmenter.ReassemblyStatus.ACK_HANDLED
@@ -404,51 +423,54 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         "mode, input_type, data, compress_data, exp_result", TEST_PARAMS
     )
     async def test_fragmenter_reassembler_async(  # pylint: disable=too-many-arguments
-        self, test_rules, mode, input_type, data, compress_data, exp_result
+        self, test_rules, mode, input_type, data, compress_data, exp_result, subtests
     ):
+        # pylint: disable=too-many-locals
         async def output(buffer):
             return self.fragmenter.output(buffer)
 
         self.loop = asyncio.get_running_loop()
-        self.reassembly_buffer = self.loop.create_future()
         config = test_rules.deploy()
-        device = config.devices[0]
-        assert device.mtu == MTU
-        assert device.duty_cycle_ms == DUTY_CYCLE_MS
+        device_f = config.devices[0]
+        device_r = config.devices[1]
+        assert device_f.mtu == device_r.mtu == MTU
+        assert device_f.duty_cycle_ms == device_r.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
         cr = (  # pylint: disable=invalid-name
             pylibschc.compressor.CompressorDecompressor(
-                device, direction=pylibschc.rules.Direction.DOWN
+                device_f, direction=pylibschc.rules.Direction.DOWN
             )
         )
-        self.fragmenter = pylibschc.fragmenter.Fragmenter(
-            device=device,
+        self.fragmenter = pylibschc.fragmenter.FragmenterReassembler(
+            device=device_f,
             mode=mode,
             post_timer_task=self.post_timer_task,
             end_tx=self.end_tx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        with pytest.raises(RuntimeError):
-            self.fragmenter.input(b"\x03\x03")
-        self.reassembler = pylibschc.fragmenter.Reassembler(
-            device=device,
+        self.reassembler = pylibschc.fragmenter.FragmenterReassembler(
+            device=device_r,
             post_timer_task=self.post_timer_task,
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
-        self.fragmenter.register_send(self.send)
-        if compress_data:
-            res, pkt = cr.output(self.input_type(data))
-            assert res == pylibschc.compressor.CompressionResult.COMPRESSED
-            assert await output(pkt) == exp_result
-        else:
-            assert await output(self.input_type(data)) == exp_result
-        await self.reassemble()
-        pkt = await asyncio.wait_for(
-            self.reassembly_buffer, timeout=(DUTY_CYCLE_MS / 1000) * 10
-        )
-        if compress_data:
-            assert cr.input(pkt) == data
-        else:
-            assert pkt == data
+        self.fragmenter.register_send(self.send_frag)
+        self.reassembler.register_send(self.send_ack)
+        for i in range(REPEATS):  # check for idempotency
+            with subtests.test("loop", i=i):
+                self.reassembly_buffer = self.loop.create_future()
+                if compress_data:
+                    res, pkt = cr.output(self.input_type(data))
+                    assert res == pylibschc.compressor.CompressionResult.COMPRESSED
+                    assert await output(pkt) == exp_result
+                else:
+                    assert await output(self.input_type(data)) == exp_result
+                await self.reassemble()
+                pkt = await asyncio.wait_for(
+                    self.reassembly_buffer, timeout=(DUTY_CYCLE_MS / 1000) * 10
+                )
+                if compress_data:
+                    assert cr.input(pkt) == data
+                else:
+                    assert pkt == data
         self.fragmenter.unregister_send()

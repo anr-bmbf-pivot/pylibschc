@@ -312,6 +312,16 @@ static const struct schc_device device1 = {
 
 static const struct schc_device device2 = {
     .device_id = 2U,
+    .uncomp_rule_id = 20U,
+    .uncomp_rule_id_size_bits = 8U,
+    .compression_rule_count = sizeof(compression_rules_00) / sizeof(compression_rules_00[0]),
+    .compression_context = &compression_rules_00,
+    .fragmentation_rule_count = sizeof(fragmentation_rules_00) / sizeof(fragmentation_rules_00[0]),
+    .fragmentation_context = &fragmentation_rules_00,
+};
+
+static const struct schc_device device3 = {
+    .device_id = 3U,
     .uncomp_rule_id = 0U,
     .uncomp_rule_id_size_bits = 8U,
     .compression_rule_count = sizeof(compression_rules_01) / sizeof(compression_rules_01[0]),
@@ -320,8 +330,8 @@ static const struct schc_device device2 = {
     .fragmentation_context = &fragmentation_rules_01,
 };
 
-static const struct schc_device device3 = {
-    .device_id = 3U,
+static const struct schc_device device4 = {
+    .device_id = 4U,
     .uncomp_rule_id = 20U,
     .uncomp_rule_id_size_bits = 6U,
     .compression_rule_count = 0U,
@@ -330,8 +340,8 @@ static const struct schc_device device3 = {
     .fragmentation_context = &fragmentation_rules_02,
 };
 
-static const struct schc_device device4 = {
-    .device_id = 4U,
+static const struct schc_device device5 = {
+    .device_id = 5U,
     .uncomp_rule_id = 0U,
     .uncomp_rule_id_size_bits = 0U,
     .compression_rule_count = 0U,
@@ -344,7 +354,8 @@ static const struct schc_device* devices[] = {
     &device1,
     &device2,
     &device3,
-    &device4
+    &device4,
+    &device5
 };
 
 #define DEVICE_COUNT    ((int)(sizeof(devices) / sizeof(devices[0])))

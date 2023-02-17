@@ -553,6 +553,16 @@ def test_rules():
             ),
             pylibschc.rules.Device(
                 device_id=2,
+                mtu=60,
+                duty_cycle=100,
+                uncompressed_rule=pylibschc.rules.UncompressedRule(
+                    rule_id=20, rule_id_size_bits=8
+                ),
+                compression_rules=compression_rules,
+                fragmentation_rules=fragmentation_rules,
+            ),
+            pylibschc.rules.Device(
+                device_id=3,
                 mtu=500,
                 duty_cycle=5000,
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
@@ -562,7 +572,7 @@ def test_rules():
                 fragmentation_rules=fragmentation_rules[:-1],
             ),
             pylibschc.rules.Device(
-                device_id=3,
+                device_id=4,
                 mtu=500,
                 duty_cycle=5000,
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
@@ -579,7 +589,7 @@ def test_rules():
                 ],
             ),
             pylibschc.rules.Device(
-                device_id=4,
+                device_id=5,
                 mtu=500,
                 duty_cycle=5000,
             ),
