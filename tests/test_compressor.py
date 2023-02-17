@@ -35,11 +35,9 @@ def test_compressor_reassembler_no_uncompressed_rule(test_rules):
     config = test_rules.deploy()
     device = config.devices[0]
     direction = pylibschc.compressor.Direction.UP
-    cr = pylibschc.compressor.CompressorDecompressor(  # pylint: disable=invalid-name
-        device=device, direction=direction
-    )
+    c_r = pylibschc.compressor.CompressorDecompressor(device=device)
     bit_array = pylibschc.compressor.BitArray(bytes(IPv6()))
-    res, not_compressed = cr.output(bit_array)
+    res, not_compressed = c_r.output(bit_array, direction)
     assert res == pylibschc.compressor.CompressionResult.UNCOMPRESSED
     assert bytes(IPv6()) == not_compressed.buffer
 
@@ -61,25 +59,30 @@ def exp_rules(request, test_rules):
     }
 
 
-def test_compressor_reassembler_init_error(test_rules):
+def test_compressor_reassembler_output_value_error(test_rules):
     config = test_rules.deploy()
     device = config.devices[0]
+    c_r = pylibschc.compressor.CompressorDecompressor(device)
     with pytest.raises(ValueError):
-        pylibschc.compressor.CompressorDecompressor(
-            device, pylibschc.compressor.Direction.BI
-        )
+        c_r.output(bytes(IPv6()), pylibschc.compressor.Direction.BI)
+
+
+def test_compressor_reassembler_input_value_error(test_rules):
+    config = test_rules.deploy()
+    device = config.devices[0]
+    c_r = pylibschc.compressor.CompressorDecompressor(device)
+    with pytest.raises(ValueError):
+        c_r.input(bytes(IPv6()), pylibschc.compressor.Direction.BI)
 
 
 def test_compressor_reassembler_io_type_error(test_rules):
     config = test_rules.deploy()
     device = config.devices[0]
-    cr = pylibschc.compressor.CompressorDecompressor(  # pylint: disable=invalid-name
-        device, pylibschc.compressor.Direction.UP
-    )
+    c_r = pylibschc.compressor.CompressorDecompressor(device)
     with pytest.raises(TypeError):
-        cr.output(12356)
+        c_r.output(12356, pylibschc.compressor.Direction.UP)
     with pytest.raises(TypeError):
-        cr.input(12356)
+        c_r.input(12356, pylibschc.compressor.Direction.UP)
 
 
 @pytest.mark.parametrize(
@@ -175,18 +178,17 @@ def test_compressor_reassembler(
     device = exp_rules["device"]
     rule_id = exp_rules["rule_id"]
     exp_result = exp_rules["result"]
-    pylibschc.compressor.CompressorDecompressor(device=device, direction=direction)
+    pylibschc.compressor.CompressorDecompressor(device=device)
     # check __new__ if
-    cr = pylibschc.compressor.CompressorDecompressor(  # pylint: disable=invalid-name
-        device=device, direction=direction
-    )
+    c_r = pylibschc.compressor.CompressorDecompressor(device=device)
     bit_array = pylibschc.compressor.BitArray(bytes(pkt))
-    comp_res = cr.output(bit_array)
-    assert comp_res == cr.output(bytes(pkt))  # bytes input has same effect as BitArray
+    comp_res = c_r.output(bit_array, direction)
+    # bytes input has same effect as BitArray
+    assert comp_res == c_r.output(bytes(pkt), direction)
     assert comp_res[0] == exp_result
     assert comp_res[1].buffer == bytes([rule_id]) + exp_payload
 
-    uncomp_res = cr.input(comp_res[1])
+    uncomp_res = c_r.input(comp_res[1], direction)
     # bytes input has same effect as BitArray
-    assert uncomp_res == cr.input(comp_res[1].buffer)
+    assert uncomp_res == c_r.input(comp_res[1].buffer, direction)
     assert uncomp_res == bytes(pkt)  # decompression results in packet again

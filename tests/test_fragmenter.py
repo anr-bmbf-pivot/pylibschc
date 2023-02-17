@@ -296,11 +296,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
         assert device_f.mtu == device_r.mtu == MTU
         assert device_f.duty_cycle_ms == device_r.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
-        cr = (  # pylint: disable=invalid-name
-            pylibschc.compressor.CompressorDecompressor(
-                device_f, direction=pylibschc.rules.Direction.DOWN
-            )
-        )
+        c_r = pylibschc.compressor.CompressorDecompressor(device_f)
         self.fragmenter = pylibschc.fragmenter.FragmenterReassembler(
             device=device_f,
             mode=mode,
@@ -320,7 +316,9 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
             with subtests.test("loop", i=i):
                 with self.timer_lock:
                     if compress_data:
-                        res, pkt = cr.output(self.input_type(data))
+                        res, pkt = c_r.output(
+                            self.input_type(data), pylibschc.rules.Direction.DOWN
+                        )
                         assert res == pylibschc.compressor.CompressionResult.COMPRESSED
                         assert self.fragmenter.output(pkt) == exp_result
                     else:
@@ -330,7 +328,7 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
                 self.reassemble()
                 pkt = self.reassembler_queue.get(timeout=(DUTY_CYCLE_MS / 1000) * 10)
                 if compress_data:
-                    assert cr.input(pkt) == data
+                    assert c_r.input(pkt, pylibschc.rules.Direction.DOWN) == data
                 else:
                     assert pkt == data
         self.fragmenter.unregister_send()
@@ -436,11 +434,7 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
         assert device_f.mtu == device_r.mtu == MTU
         assert device_f.duty_cycle_ms == device_r.duty_cycle_ms == DUTY_CYCLE_MS
         self.input_type = input_type
-        cr = (  # pylint: disable=invalid-name
-            pylibschc.compressor.CompressorDecompressor(
-                device_f, direction=pylibschc.rules.Direction.DOWN
-            )
-        )
+        c_r = pylibschc.compressor.CompressorDecompressor(device_f)
         self.fragmenter = pylibschc.fragmenter.FragmenterReassembler(
             device=device_f,
             mode=mode,
@@ -460,7 +454,9 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             with subtests.test("loop", i=i):
                 self.reassembly_buffer = self.loop.create_future()
                 if compress_data:
-                    res, pkt = cr.output(self.input_type(data))
+                    res, pkt = c_r.output(
+                        self.input_type(data), direction=pylibschc.rules.Direction.DOWN
+                    )
                     assert res == pylibschc.compressor.CompressionResult.COMPRESSED
                     assert await output(pkt) == exp_result
                 else:
@@ -470,7 +466,9 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
                     self.reassembly_buffer, timeout=(DUTY_CYCLE_MS / 1000) * 10
                 )
                 if compress_data:
-                    assert cr.input(pkt) == data
+                    assert (
+                        c_r.input(pkt, direction=pylibschc.rules.Direction.DOWN) == data
+                    )
                 else:
                     assert pkt == data
         self.fragmenter.unregister_send()
