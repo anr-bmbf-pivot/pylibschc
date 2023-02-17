@@ -38,37 +38,28 @@ class CompressorDecompressor:
             cls._inner.init()
         return super().__new__(cls)
 
-    def __init__(self, device: pylibschc.device.Device, direction: Direction):
+    def __init__(self, device: pylibschc.device.Device):
         """
         :param device: Device to be used for compression/decompression.
         :type device: :class:`pylibschc.device.Device`
-        :param direction: Direction to use for compression/decompression.
-        :type direction: :class:`pylibschc.libschc.Direction`
-        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
 
         .. py:attribute:: device
            :type: pylibschc.device.Device
 
            Device to be used for compression/decompression.
-
-        .. py:attribute:: direction
-           :type: pylibschc.libschc.Direction
-
-           Direction to use for compression/decompression.
         """
-        if direction == Direction.BI:
-            raise ValueError("direction must be either UP or DOWN, not BI")
         self.device = device
-        self.direction = direction
 
     def output(
-        self, data: typing.Union[bytes, BitArray]
+        self, data: typing.Union[bytes, BitArray], direction: Direction
     ) -> typing.Tuple[CompressionResult, BitArray]:
         """Compress according to the compression rules of
         :py:attr:`CompressorDecompressor.device`.
 
         :param data: The data to compress.
+        :param direction: Direction to use for compression.
         :raise TypeError: When ``data`` is not of the expected input type.
+        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
         :return: Whether the packet was compressed or the uncompressed rule was used
             and the compressed packet as a :class:`pylibschc.libschc.BitArray`.
         :rtype: :class:`typing.Tuple` [
@@ -76,27 +67,33 @@ class CompressorDecompressor:
             :class:`pylibschc.libschc.BitArray`
             ]
         """
+        if direction == Direction.BI:
+            raise ValueError("direction must be either UP or DOWN, not BI")
         if isinstance(data, BitArray):
             byts = data.buffer
         elif isinstance(data, bytes):
             byts = data
         else:
             raise TypeError(f"data ({data}) expected to be either bytes or BitArray")
-        return self._inner.compress(byts, self.device.__inner__, self.direction)
+        return self._inner.compress(byts, self.device.__inner__, direction)
 
-    def input(self, data: typing.Union[bytes, BitArray]) -> bytes:
+    def input(self, data: typing.Union[bytes, BitArray], direction: Direction) -> bytes:
         """Decompress according to the compression rules of
         :py:attr:`CompressorDecompressor.device`.
 
         :param data: The data to decompress.
+        :param direction: Direction to use for decompression.
         :raise TypeError: When ``data`` is not of the expected input type.
+        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.
         :return: The decompressed data.
         :rtype: :class:`bytes`
         """
+        if direction == Direction.BI:
+            raise ValueError("direction must be either UP or DOWN, not BI")
         if isinstance(data, BitArray):
             bit_array = data
         elif isinstance(data, bytes):
             bit_array = BitArray(data)
         else:
             raise TypeError(f"data ({data}) expected to be either bytes or BitArray")
-        return self._inner.decompress(bit_array, self.device.__inner__, self.direction)
+        return self._inner.decompress(bit_array, self.device.__inner__, direction)

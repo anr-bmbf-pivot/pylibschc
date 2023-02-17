@@ -70,10 +70,7 @@ called:
     >>> from scapy.contrib.coap import CoAP
     >>> import pylibschc.compressor
     >>>
-    >>> comp_dec = pylibschc.compressor.CompressorDecompressor(
-    ...     device=config.devices[0],
-    ...     direction=pylibschc.rules.Direction.UP
-    ... )
+    >>> comp_dec = pylibschc.compressor.CompressorDecompressor(device=config.devices[0])
     >>> pkt = raw(
     ...     IPv6(hlim=64, src="2001:db8::1", dst="2001:db8:1::2")
     ...     / UDP(
@@ -92,7 +89,7 @@ called:
     ...         b'[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
     ...     )
     ... )
-    >>> res, bit_array = comp_dec.output(pkt)
+    >>> res, bit_array = comp_dec.output(pkt, direction=pylibschc.rules.Direction.UP)
     >>> res
     <CompressionResult.COMPRESSED: 1>
     >>> bit_array.buffer
@@ -100,9 +97,9 @@ called:
 
 For decompression, the |pylibschc.compressor.CompressorDecompressor.input|_ method is called:
 
-    >>> comp_dec.input(bit_array)
+    >>> comp_dec.input(bit_array, direction=pylibschc.rules.Direction.UP)
     b'`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
-    >>> pkt == comp_dec.input(bit_array)
+    >>> pkt == comp_dec.input(bit_array, direction=pylibschc.rules.Direction.UP)
     True
 
 Both |pylibschc.compressor.CompressorDecompressor.input|_ and
