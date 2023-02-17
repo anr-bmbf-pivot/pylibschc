@@ -103,11 +103,6 @@ class Fragmenter(BaseFragmenterReassembler):
         :retval ACK_HANDLED: when the ACK was handled."""
         if not self._tx_conn:
             raise RuntimeError("Unexpected state, you did not send a fragment yet")
-        if isinstance(data, BitArray):
-            bit_array = data
-        else:
-            bit_array = BitArray(data)
-        self._tx_conn.bit_arr = bit_array
         new_conn = self._tx_conn.input(data)
         if new_conn is None:
             return ReassemblyStatus.ACK_HANDLED  # pragma: no cover
@@ -183,18 +178,12 @@ class Reassembler(BaseFragmenterReassembler):  # pylint: disable=too-few-public-
         :retval STAY_ALIVE: If reassembly was completed, but the connection still is
             kept open, e.g., in case another ACK needs to be sent.
         """
-        if isinstance(data, BitArray):
-            bit_array = data
-        else:
-            bit_array = BitArray(data)
         with self._rx_conn_lock:
             if self._rx_conn is None:
                 self._rx_conn = self.conn_cls(ops=self)
                 self._rx_conn.init_rx(
-                    self.device.device_id, bit_array, self.device.duty_cycle_ms
+                    self.device.device_id, self.device.duty_cycle_ms
                 )
-            else:
-                self._rx_conn.bit_arr = bit_array
             new_conn = self._rx_conn.input(data)
             if new_conn is None:
                 return ReassemblyStatus.COMPLETED  # pragma: no cover
