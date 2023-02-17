@@ -129,6 +129,7 @@ class FragmenterReassembler(FragmenterOps):
         :param data: Either an ACK, a fragment, or an unfragmented packet.
         :return: Status of reassembly or an ACK was handled.
         :raises MemoryError: If memory for fragment reception could not be allocated.
+        :retval MIC_INCORRECT: when MIC was incorrect in received fragment.
         :retval ACK_HANDLED: when the ACK was handled.
         :retval ONGOING: If reassembly is still missing fragments.
         :retval COMPLETED: If the fragment handled was the last missing fragment (or if
