@@ -1185,7 +1185,6 @@ cdef class FragmentationConnection:
     def init_rx(
         self,
         device_id: uint32_t,
-        bit_arr: BitArray,
         dc: uint32_t,
     ):
         """Initialize connection for reception.
@@ -1193,8 +1192,6 @@ cdef class FragmentationConnection:
         :param device_id: The identifier of the device this connection is to be used
             with.
         :type device_id: int
-        :param bit_arr: The :py:class:`BitArray` for the connection.
-        :type bit_arr: :py:class:`BitArray`
         :param dc: Duty cycle in milliseconds for the connection.
         :type ds: int
         """
@@ -1205,7 +1202,6 @@ cdef class FragmentationConnection:
         assert self.ops.end_rx is not None
         assert self.ops.remove_timer_entry is not None
         self._frag_conn.device_id = device_id
-        self.bit_arr = bit_arr
         self._frag_conn.dc = dc
 
     def init_tx(
