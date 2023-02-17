@@ -869,6 +869,7 @@ class FragmentationResult(enum.Enum):
 class ReassemblyStatus(enum.Enum):
     """The state of reassembly after calling
     :py:meth:`FragmentationConnection.reassemble()`."""
+    MIC_INCORRECT = -1
     ONGOING = 0
     COMPLETED = 1
     STAY_ALIVE = 2
@@ -1355,6 +1356,8 @@ cdef class FragmentationConnection:
                 f"No fragmentation rule found for {self}"
             )
             res = clibschc.schc_reassemble(self._frag_conn)
+            if not self._frag_conn:
+                return -1
             if (  # last fragment received with NO_ACK
                 res
                 and self._frag_conn.fragmentation_rule != NULL
