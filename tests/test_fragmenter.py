@@ -259,9 +259,12 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
                         is_fragmented = True
                 if is_fragmented:
                     if cmd["cmd"] == "ack":
+                        was_awaiting_ack = self.fragmenter.is_awaiting_ack()
                         with self.timer_lock:
                             # is an ACK, handle at fragmenter
-                            assert self.fragmenter.input(self.input_type(buffer)) == (
+                            res = self.fragmenter.input(self.input_type(buffer))
+                        if was_awaiting_ack:  # pragma: no cover
+                            assert res == (
                                 pylibschc.fragmenter.ReassemblyStatus.ACK_HANDLED
                             )
                     else:
@@ -310,6 +313,10 @@ class TestFragmenterReassemblerThreaded:  # pylint: disable=too-many-instance-at
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
+        assert self.fragmenter.tx_state == pylibschc.fragmenter.TXState.INIT_TX
+        assert self.fragmenter.rx_state == pylibschc.fragmenter.RXState.RECV_WINDOW
+        assert self.reassembler.tx_state == pylibschc.fragmenter.TXState.INIT_TX
+        assert self.reassembler.rx_state == pylibschc.fragmenter.RXState.RECV_WINDOW
         self.fragmenter.register_send(self.send_frag)
         self.reassembler.register_send(self.send_ack)
         for i in range(REPEATS):  # check for idempotency
@@ -400,9 +407,11 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
                     is_fragmented = True
             if is_fragmented:
                 if cmd["cmd"] == "ack":
+                    was_awaiting_ack = self.fragmenter.is_awaiting_ack()
                     # is an ACK, handle at fragmenter
                     res = await inp(self.fragmenter, self.input_type(buffer))
-                    assert res == pylibschc.fragmenter.ReassemblyStatus.ACK_HANDLED
+                    if was_awaiting_ack:  # pragma: no cover
+                        assert res == pylibschc.fragmenter.ReassemblyStatus.ACK_HANDLED
                 else:
                     # otherwise handle at reassembler
                     res = await inp(self.reassembler, self.input_type(buffer))
@@ -448,6 +457,10 @@ class TestFragmenterReassemblerAsync:  # pylint: disable=too-many-instance-attri
             end_rx=self.end_rx,
             remove_timer_entry=self.remove_timer_entry,
         )
+        assert self.fragmenter.tx_state == pylibschc.fragmenter.TXState.INIT_TX
+        assert self.fragmenter.rx_state == pylibschc.fragmenter.RXState.RECV_WINDOW
+        assert self.reassembler.tx_state == pylibschc.fragmenter.TXState.INIT_TX
+        assert self.reassembler.rx_state == pylibschc.fragmenter.RXState.RECV_WINDOW
         self.fragmenter.register_send(self.send_frag)
         self.reassembler.register_send(self.send_ack)
         for i in range(REPEATS):  # check for idempotency
