@@ -544,7 +544,7 @@ def test_rules():
             pylibschc.rules.Device(
                 device_id=1,
                 mtu=60,
-                duty_cycle=100,
+                duty_cycle=150,
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
                     rule_id=20, rule_id_size_bits=8
                 ),
@@ -554,7 +554,7 @@ def test_rules():
             pylibschc.rules.Device(
                 device_id=2,
                 mtu=60,
-                duty_cycle=100,
+                duty_cycle=150,
                 uncompressed_rule=pylibschc.rules.UncompressedRule(
                     rule_id=20, rule_id_size_bits=8
                 ),
