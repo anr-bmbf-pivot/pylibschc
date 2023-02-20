@@ -23,6 +23,8 @@ from .libschc import (
     FragmentationMode,
     FragmentationResult,
     ReassemblyStatus,
+    RXState,
+    TXState,
 )
 
 
@@ -33,6 +35,7 @@ class FragmenterReassembler(FragmenterOps):
        If you fragment and reassemble a packet on the same device, you need two objects
        of this type."""
 
+    _AWAITING_ACK_TXSTATES = {TXState.WAIT_BITMAP, TXState.RESEND}
     conn_cls = FragmentationConnection
 
     def __init__(  # pylint: disable=too-many-arguments
@@ -122,6 +125,24 @@ class FragmenterReassembler(FragmenterOps):
         if self._real_end_tx:  # pragma: no cover
             self._real_end_tx(conn)
         self._tx_conn_release()
+
+    @property
+    def rx_state(self) -> RXState:
+        """The transmission state of the FragmenterReassembler."""
+        return self._conn.rx_state
+
+    @property
+    def tx_state(self) -> TXState:
+        """The transmission state of the FragmenterReassembler."""
+        return self._conn.tx_state
+
+    def is_awaiting_ack(self) -> bool:
+        """Check if we are currently waiting for ACKs.
+
+        :retval True: when the :py:class:FragmenterReassembler is waiting for an ACK.
+        :retval False: when the :py:class:FragmentationResult is not waiting for an ACK.
+        """
+        return self._conn.tx_state in self._AWAITING_ACK_TXSTATES
 
     def input(self, data: typing.Union[bytes, BitArray]) -> ReassemblyStatus:
         """Handle incoming data.

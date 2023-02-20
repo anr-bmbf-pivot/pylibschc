@@ -855,6 +855,32 @@ cdef class CompressorDecompressor:
         return buf[:length]
 
 
+class TXState(enum.Enum):
+    """The transmission state of a fragmentation connection.
+
+    Wraps the ``tx_state`` type.
+    """
+    INIT_TX = clibschc.INIT_TX
+    SEND = clibschc.SEND
+    RESEND = clibschc.RESEND
+    WAIT_BITMAP = clibschc.WAIT_BITMAP
+    END_TX = clibschc.END_TX
+    ERR = clibschc.ERR
+
+
+class RXState(enum.Enum):
+    """The reception state of a fragmentation connection.
+
+    Wraps the ``rx_state`` type.
+    """
+    RECV_WINDOW = clibschc.RECV_WINDOW
+    WAIT_NEXT_WINDOW = clibschc.WAIT_NEXT_WINDOW
+    WAIT_MISSING_FRAG = clibschc.WAIT_MISSING_FRAG
+    WAIT_END = clibschc.WAIT_END
+    END_RX = clibschc.END_RX
+    ABORT = clibschc.ABORT
+
+
 class FragmentationResult(enum.Enum):
     """The result of calling :py:meth:`FragmentationConnection.fragment()`.
     Wraps ``SCHC_FRAG_INPUT``, ``SCHC_ACK_INPUT``, ``SCHC_SUCCESS``, ``SCHC_END``,
@@ -1043,6 +1069,24 @@ cdef class FragmentationConnection:
         """
         def __get__(self) -> int:
             return self._frag_conn.device_id
+
+    property rx_state:
+        """
+        :type: pylibschc.libschc.RXState
+
+        The reception state of this fragmentation connection.
+        """
+        def __get__(self) -> RXState:
+            return RXState(self._frag_conn.RX_STATE)
+
+    property tx_state:
+        """
+        :type: pylibschc.libschc.TXState
+
+        The reception state of this fragmentation connection.
+        """
+        def __get__(self) -> TXState:
+            return TXState(self._frag_conn.TX_STATE)
 
     property fragmented:
         """
