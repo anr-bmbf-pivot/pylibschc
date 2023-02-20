@@ -124,28 +124,37 @@
             <span class="bp">cls</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">Device</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="n">pylibschc</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">Device</span><span class="p">,</span> <span class="n">direction</span><span class="p">:</span> <span class="n">Direction</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        :param device: Device to be used for compression/decompression.</span>
 <span class="sd">        :type device: :class:`pylibschc.device.Device`</span>
+<span class="sd">        :param direction: Direction to use for compression/decompression.</span>
+<span class="sd">        :type direction: :class:`pylibschc.libschc.Direction`</span>
+<span class="sd">        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.</span>
 
 <span class="sd">        .. py:attribute:: device</span>
 <span class="sd">           :type: pylibschc.device.Device</span>
 
 <span class="sd">           Device to be used for compression/decompression.</span>
+
+<span class="sd">        .. py:attribute:: direction</span>
+<span class="sd">           :type: pylibschc.libschc.Direction</span>
+
+<span class="sd">           Direction to use for compression/decompression.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">BI</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;direction must be either UP or DOWN, not BI&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">direction</span>
 
 <div class="viewcode-block" id="CompressorDecompressor.output"><a class="viewcode-back" href="../../pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">],</span> <span class="n">direction</span><span class="p">:</span> <span class="n">Direction</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">]</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Tuple</span><span class="p">[</span><span class="n">CompressionResult</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Compress according to the compression rules of</span>
 <span class="sd">        :py:attr:`CompressorDecompressor.device`.</span>
 
 <span class="sd">        :param data: The data to compress.</span>
-<span class="sd">        :param direction: Direction to use for compression.</span>
 <span class="sd">        :raise TypeError: When ``data`` is not of the expected input type.</span>
-<span class="sd">        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.</span>
 <span class="sd">        :return: Whether the packet was compressed or the uncompressed rule was used</span>
 <span class="sd">            and the compressed packet as a :class:`pylibschc.libschc.BitArray`.</span>
 <span class="sd">        :rtype: :class:`typing.Tuple` [</span>
@@ -153,36 +162,30 @@
 <span class="sd">            :class:`pylibschc.libschc.BitArray`</span>
 <span class="sd">            ]</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">BI</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;direction must be either UP or DOWN, not BI&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">byts</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">buffer</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
             <span class="n">byts</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data (</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">) expected to be either bytes or BitArray&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">byts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">__inner__</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">compress</span><span class="p">(</span><span class="n">byts</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">__inner__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="CompressorDecompressor.input"><a class="viewcode-back" href="../../pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">],</span> <span class="n">direction</span><span class="p">:</span> <span class="n">Direction</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<div class="viewcode-block" id="CompressorDecompressor.input"><a class="viewcode-back" href="../../pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Decompress according to the compression rules of</span>
 <span class="sd">        :py:attr:`CompressorDecompressor.device`.</span>
 
 <span class="sd">        :param data: The data to decompress.</span>
-<span class="sd">        :param direction: Direction to use for decompression.</span>
 <span class="sd">        :raise TypeError: When ``data`` is not of the expected input type.</span>
-<span class="sd">        :raise ValueError: When direction is :attr:`pylibschc.libschc.Direction.BI`.</span>
 <span class="sd">        :return: The decompressed data.</span>
 <span class="sd">        :rtype: :class:`bytes`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">direction</span> <span class="o">==</span> <span class="n">Direction</span><span class="o">.</span><span class="n">BI</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;direction must be either UP or DOWN, not BI&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">BitArray</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">data</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">):</span>
             <span class="n">bit_array</span> <span class="o">=</span> <span class="n">BitArray</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data (</span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s2">) expected to be either bytes or BitArray&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">bit_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">__inner__</span><span class="p">,</span> <span class="n">direction</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_inner</span><span class="o">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">bit_array</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="o">.</span><span class="n">__inner__</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="p">)</span></div></div>
 </pre></div>
 
           </div>

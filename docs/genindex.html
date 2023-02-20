@@ -131,6 +131,8 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.BaseFragmenterReassembler">BaseFragmenterReassembler (class in pylibschc.fragmenter)</a>
+</li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.BaseModel">BaseModel (class in pylibschc.rules)</a>
 </li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.BaseModel.Config">BaseModel.Config (class in pylibschc.rules)</a>
@@ -139,10 +141,10 @@
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.Direction.BI">BI (pylibschc.libschc.Direction attribute)</a>
 </li>
-      <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.bit_arr">bit_arr (pylibschc.libschc.FragmentationConnection attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.bit_arr">bit_arr (pylibschc.libschc.FragmentationConnection attribute)</a>
+</li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.BitArray.bit_length">bit_length (pylibschc.libschc.BitArray attribute)</a>
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.BitArray">BitArray (class in pylibschc.libschc)</a>
@@ -251,7 +253,7 @@
       </ul></li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.Config">Config (class in pylibschc.rules)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.conn_cls">conn_cls (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.BaseFragmenterReassembler.conn_cls">conn_cls (pylibschc.fragmenter.BaseFragmenterReassembler attribute)</a>
 
       <ul>
         <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmenterOps.conn_cls">(pylibschc.libschc.FragmenterOps attribute)</a>
@@ -282,11 +284,7 @@
 </li>
       </ul></li>
       <li><a href="pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.device">device (pylibschc.compressor.CompressorDecompressor attribute)</a>
-
-      <ul>
-        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.device">(pylibschc.fragmenter.FragmenterReassembler attribute)</a>
 </li>
-      </ul></li>
       <li><a href="cfiles/rules.html#c.DEVICE_COUNT">DEVICE_COUNT (C var)</a>
 </li>
       <li><a href="pylibschc/device.html#pylibschc.device.Device.device_id">device_id (pylibschc.device.Device property)</a>
@@ -317,6 +315,8 @@
       </ul></li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.Direction">Direction (class in pylibschc.libschc)</a>
 </li>
+      <li><a href="pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.direction">direction (pylibschc.compressor.CompressorDecompressor attribute)</a>
+</li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.Direction.DOWN">DOWN (pylibschc.libschc.Direction attribute)</a>
 </li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.FragmentationRule.DTAG_SIZE">DTAG_SIZE (pylibschc.rules.FragmentationRule attribute)</a>
@@ -341,12 +341,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationResult.END">END (pylibschc.libschc.FragmentationResult attribute)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.end_rx">end_rx (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.end_tx">end_tx (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
-</li>
       <li><a href="pylibschc/rules.html#pylibschc._pydantic.EnumByName">EnumByName (class in pylibschc._pydantic)</a>
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.MO.EQUAL">EQUAL (pylibschc.libschc.MO attribute)</a>
@@ -395,9 +391,9 @@
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.fragmented">fragmented (pylibschc.libschc.FragmentationConnection attribute)</a>
 </li>
-      <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmenterOps">FragmenterOps (class in pylibschc.libschc)</a>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter">Fragmenter (class in pylibschc.fragmenter)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler">FragmenterReassembler (class in pylibschc.fragmenter)</a>
+      <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmenterOps">FragmenterOps (class in pylibschc.libschc)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -440,7 +436,11 @@
       <li><a href="pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.input">input() (pylibschc.compressor.CompressorDecompressor method)</a>
 
       <ul>
-        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.input">(pylibschc.fragmenter.FragmenterReassembler method)</a>
+        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.BaseFragmenterReassembler.input">(pylibschc.fragmenter.BaseFragmenterReassembler method)</a>
+</li>
+        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.input">(pylibschc.fragmenter.Fragmenter method)</a>
+</li>
+        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input">(pylibschc.fragmenter.Reassembler method)</a>
 </li>
         <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.input">(pylibschc.libschc.FragmentationConnection method)</a>
 </li>
@@ -451,10 +451,10 @@
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.HeaderFieldID.IP6_DEVIID">IP6_DEVIID (pylibschc.libschc.HeaderFieldID attribute)</a>
 </li>
-      <li><a href="pylibschc/libschc.html#pylibschc.libschc.HeaderFieldID.IP6_DEVPRE">IP6_DEVPRE (pylibschc.libschc.HeaderFieldID attribute)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pylibschc/libschc.html#pylibschc.libschc.HeaderFieldID.IP6_DEVPRE">IP6_DEVPRE (pylibschc.libschc.HeaderFieldID attribute)</a>
+</li>
       <li><a href="cfiles/schc_config.html#c.IP6_FIELDS">IP6_FIELDS (C macro)</a>
 
       <ul>
@@ -535,8 +535,6 @@
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.mbuf">mbuf (pylibschc.libschc.FragmentationConnection attribute)</a>
 </li>
-      <li><a href="pylibschc/libschc.html#pylibschc.libschc.ReassemblyStatus.MIC_INCORRECT">MIC_INCORRECT (pylibschc.libschc.ReassemblyStatus attribute)</a>
-</li>
       <li><a href="cfiles/schc_config.html#c.MIC_SIZE_BYTES">MIC_SIZE_BYTES (C macro)</a>
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.MO">MO (class in pylibschc.libschc)</a>
@@ -557,12 +555,8 @@
 </li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.CompressionRuleField.MO_param_length">MO_param_length (pylibschc.rules.CompressionRuleField attribute)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.mode">mode (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
-
-      <ul>
-        <li><a href="pylibschc/rules.html#pylibschc.rules.FragmentationRule.mode">(pylibschc.rules.FragmentationRule attribute)</a>
+      <li><a href="pylibschc/rules.html#pylibschc.rules.FragmentationRule.mode">mode (pylibschc.rules.FragmentationRule attribute)</a>
 </li>
-      </ul></li>
       <li>
     module
 
@@ -623,7 +617,7 @@
       <li><a href="pylibschc/compressor.html#pylibschc.compressor.CompressorDecompressor.output">output() (pylibschc.compressor.CompressorDecompressor method)</a>
 
       <ul>
-        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.output">(pylibschc.fragmenter.FragmenterReassembler method)</a>
+        <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output">(pylibschc.fragmenter.Fragmenter method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -633,8 +627,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.BitArray.padding">padding (pylibschc.libschc.BitArray attribute)</a>
-</li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.post_timer_task">post_timer_task (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
 </li>
       <li>
     pylibschc
@@ -699,9 +691,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.reassemble">reassemble() (pylibschc.libschc.FragmentationConnection method)</a>
 </li>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler">Reassembler (class in pylibschc.fragmenter)</a>
+</li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.ReassemblyStatus">ReassemblyStatus (class in pylibschc.libschc)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.register_send">register_send() (pylibschc.fragmenter.FragmenterReassembler method)</a>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.register_send">register_send() (pylibschc.fragmenter.Fragmenter method)</a>
 
       <ul>
         <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.register_send">(pylibschc.libschc.FragmentationConnection static method)</a>
@@ -709,8 +703,6 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.remove_timer_entry">remove_timer_entry (pylibschc.fragmenter.FragmenterReassembler attribute)</a>
-</li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.reset">reset() (pylibschc.libschc.FragmentationConnection method)</a>
 </li>
       <li><a href="pylibschc/rules.html#pylibschc.rules.BaseRule.rule_id">rule_id (pylibschc.rules.BaseRule attribute)</a>
@@ -797,7 +789,7 @@
 </li>
       <li><a href="pylibschc/libschc.html#pylibschc.libschc.Device.unregister">unregister() (pylibschc.libschc.Device method)</a>
 </li>
-      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.unregister_send">unregister_send() (pylibschc.fragmenter.FragmenterReassembler method)</a>
+      <li><a href="pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.unregister_send">unregister_send() (pylibschc.fragmenter.Fragmenter method)</a>
 
       <ul>
         <li><a href="pylibschc/libschc.html#pylibschc.libschc.FragmentationConnection.unregister_send">(pylibschc.libschc.FragmentationConnection static method)</a>

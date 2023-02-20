@@ -70,7 +70,10 @@ called:
     >>> from scapy.contrib.coap import CoAP
     >>> import pylibschc.compressor
     >>>
-    >>> comp_dec = pylibschc.compressor.CompressorDecompressor(device=config.devices[0])
+    >>> comp_dec = pylibschc.compressor.CompressorDecompressor(
+    ...     device=config.devices[0],
+    ...     direction=pylibschc.rules.Direction.UP
+    ... )
     >>> pkt = raw(
     ...     IPv6(hlim=64, src="2001:db8::1", dst="2001:db8:1::2")
     ...     / UDP(
@@ -89,7 +92,7 @@ called:
     ...         b'[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
     ...     )
     ... )
-    >>> res, bit_array = comp_dec.output(pkt, direction=pylibschc.rules.Direction.UP)
+    >>> res, bit_array = comp_dec.output(pkt)
     >>> res
     <CompressionResult.COMPRESSED: 1>
     >>> bit_array.buffer
@@ -97,9 +100,9 @@ called:
 
 For decompression, the |pylibschc.compressor.CompressorDecompressor.input|_ method is called:
 
-    >>> comp_dec.input(bit_array, direction=pylibschc.rules.Direction.UP)
+    >>> comp_dec.input(bit_array)
     b'`\x00\x00\x00\x00`\x11@ \x01\r\xb8\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01 \x01\r\xb8\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x163\xf0\xb2\x00`r\xf2TE#\xb32:\xf3\xa3\xff[{"id":1, "name":"CJ.H.L.(Joe) Lecomte) Heliport","code":"YOY","country":"CA"}]'
-    >>> pkt == comp_dec.input(bit_array, direction=pylibschc.rules.Direction.UP)
+    >>> pkt == comp_dec.input(bit_array)
     True
 
 Both |pylibschc.compressor.CompressorDecompressor.input|_ and
@@ -109,14 +112,14 @@ Both |pylibschc.compressor.CompressorDecompressor.input|_ and
 Fragmentation/Reassembly
 ------------------------
 
-For fragmentation, call the |pylibschc.fragmenter.FragmenterReassembler.output|_ method of a
-|pylibschc.fragmenter.FragmenterReassembler|_ object. To actually send then from the, a send
-function needs to be `registered for the device`_ of the fragmenter. For reassembly or to handle
-acknowledgments, call the |pylibschc.fragmenter.FragmenterReassembler.input|_ method of a
-|pylibschc.fragmenter.FragmenterReassembler|_ object. Both
-|pylibschc.fragmenter.FragmenterReassembler.input|_ and
-|pylibschc.fragmenter.FragmenterReassembler.output|_, take either |pylibschc.libschc.BitArray|_- or
-|bytes|_-typed variables as input.
+For fragmentation, call the |pylibschc.fragmenter.Fragmenter.output|_ method of a
+|pylibschc.fragmenter.Fragmenter|_ object. To actually send then from the, a send function needs to
+be `registered for the device`_ of the fragmenter. For reassembly, call the
+|pylibschc.fragmenter.Reassembler.input|_ method of a |pylibschc.fragmenter.Reassembler|_ object.
+Acknowledgements can be handled by the |pylibschc.fragmenter.Fragmenter.output|_ method of the
+|pylibschc.fragmenter.Fragmenter|_ object. Again, either |pylibschc.fragmenter.Fragmenter.input|_ or
+|pylibschc.fragmenter.Reassembler.input|_, and |pylibschc.fragmenter.Fragmenter.output|_ take either
+|pylibschc.libschc.BitArray|_- or |bytes|_-typed variables as input.
 
     >>> import asyncio
     >>> import logging
@@ -161,7 +164,7 @@ acknowledgments, call the |pylibschc.fragmenter.FragmenterReassembler.input|_ me
     ...     fragmenter_queue = asyncio.Queue()
     ...     loop = asyncio.get_running_loop()
     ...     reassembly_buffer = loop.create_future()
-    ...     fragmenter = pylibschc.fragmenter.FragmenterReassembler(
+    ...     fragmenter = pylibschc.fragmenter.Fragmenter(
     ...         device=config.devices[0],
     ...         mode=pylibschc.fragmenter.FragmentationMode.NO_ACK,
     ...         post_timer_task=post_timer_task,
@@ -169,7 +172,7 @@ acknowledgments, call the |pylibschc.fragmenter.FragmenterReassembler.input|_ me
     ...         remove_timer_entry=remove_timer_entry,
     ...     )
     ...     fragmenter.register_send(send)
-    ...     reassembler = pylibschc.fragmenter.FragmenterReassembler(
+    ...     reassembler = pylibschc.fragmenter.Reassembler(
     ...         device=config.devices[0],
     ...         post_timer_task=post_timer_task,
     ...         end_rx=end_rx,
@@ -224,13 +227,18 @@ libSCHC.
 .. _`pylibschc.libschc.BitArray`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/libschc.html#pylibschc.libschc.BitArray
 .. |bytes| replace:: ``bytes``
 .. _`bytes`: https://docs.python.org/3/library/stdtypes.html#bytes
-.. |pylibschc.fragmenter.FragmenterReassembler| replace:: ``pylibschc.fragmenter.FragmenterReassembler``
-.. _`pylibschc.fragmenter.FragmenterReassembler`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler
-.. |pylibschc.fragmenter.FragmenterReassembler.output| replace:: ``output()``
-.. _`pylibschc.fragmenter.FragmenterReassembler.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.output
-.. _`registered for the device`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.register_send
-.. |pylibschc.fragmenter.FragmenterReassembler.input| replace:: ``input()``
-.. _`pylibschc.fragmenter.FragmenterReassembler.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.FragmenterReassembler.input
+.. |pylibschc.fragmenter.Fragmenter| replace:: ``pylibschc.fragmenter.Fragmenter``
+.. _`pylibschc.fragmenter.Fragmenter`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter
+.. |pylibschc.fragmenter.Fragmenter.output| replace:: ``output()``
+.. _`pylibschc.fragmenter.Fragmenter.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.output
+.. _`registered for the device`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.register_send
+.. |pylibschc.fragmenter.Fragmenter.input| replace:: ``input()``
+.. _`pylibschc.fragmenter.Fragmenter.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Fragmenter.input
+.. |pylibschc.fragmenter.Reassembler| replace:: ``pylibschc.fragmenter.Reassembler``
+.. _`pylibschc.fragmenter.Reassembler`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler
+.. _`pylibschc.fragmenter.Reassembler.output`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.output
+.. |pylibschc.fragmenter.Reassembler.input| replace:: ``input()``
+.. _`pylibschc.fragmenter.Reassembler.input`: https://anr-bmbf-pivot.github.io/pylibschc/pylibschc/fragmenter.html#pylibschc.fragmenter.Reassembler.input
 .. _`asyncio`: https://docs.python.org/3/library/asyncio.html
 .. _`test for a threaded fragmenter/reassembler`: https://github.com/anr-bmbf-pivot/pylibschc/blob/main/tests/test_fragmenter.py
 .. _`threading`: https://docs.python.org/3/library/threading.html
