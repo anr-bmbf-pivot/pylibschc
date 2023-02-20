@@ -618,7 +618,6 @@ received packet is a fragment, <code class="docutils literal notranslate"><span 
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>device_id</strong> (<em>int</em>) – The identifier of the device this connection is to be used
 with.</p></li>
-<li><p><strong>bit_arr</strong> (<a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a>) – The <a class="reference internal" href="#pylibschc.libschc.BitArray" title="pylibschc.libschc.BitArray"><code class="xref py py-class docutils literal notranslate"><span class="pre">BitArray</span></code></a> for the connection.</p></li>
 <li><p><strong>dc</strong> – Duty cycle in milliseconds for the connection.</p></li>
 </ul>
 </dd>
@@ -730,6 +729,28 @@ an integer.) – The send function for the device identified by <code class="doc
 <a class="reference internal" href="#pylibschc.libschc.FragmentationConnection.input" title="pylibschc.libschc.FragmentationConnection.input"><code class="xref py py-meth docutils literal notranslate"><span class="pre">FragmentationConnection.input()</span></code></a> should not be used and is
 recommended to be deleted after.</p>
 </div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.rx_state">
+<span class="sig-name descname"><span class="pre">rx_state</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.rx_state" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pylibschc.libschc.RXState" title="pylibschc.libschc.RXState">pylibschc.libschc.RXState</a></p>
+</dd>
+</dl>
+<p>The reception state of this fragmentation connection.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.FragmentationConnection.tx_state">
+<span class="sig-name descname"><span class="pre">tx_state</span></span><a class="headerlink" href="#pylibschc.libschc.FragmentationConnection.tx_state" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pylibschc.libschc.TXState" title="pylibschc.libschc.TXState">pylibschc.libschc.TXState</a></p>
+</dd>
+</dl>
+<p>The reception state of this fragmentation connection.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1077,6 +1098,44 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">COAPO_fie
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">RXState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.RXState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>The reception state of a fragmentation connection.</p>
+<p>Wraps the <code class="docutils literal notranslate"><span class="pre">rx_state</span></code> type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.ABORT">
+<span class="sig-name descname"><span class="pre">ABORT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.ABORT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.END_RX">
+<span class="sig-name descname"><span class="pre">END_RX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.END_RX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.RECV_WINDOW">
+<span class="sig-name descname"><span class="pre">RECV_WINDOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.RECV_WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.WAIT_END">
+<span class="sig-name descname"><span class="pre">WAIT_END</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.WAIT_END" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.WAIT_MISSING_FRAG">
+<span class="sig-name descname"><span class="pre">WAIT_MISSING_FRAG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.WAIT_MISSING_FRAG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.RXState.WAIT_NEXT_WINDOW">
+<span class="sig-name descname"><span class="pre">WAIT_NEXT_WINDOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.RXState.WAIT_NEXT_WINDOW" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">ReassemblyStatus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
@@ -1093,6 +1152,11 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">COAPO_fie
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.MIC_INCORRECT">
+<span class="sig-name descname"><span class="pre">MIC_INCORRECT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">-1</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.MIC_INCORRECT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.ONGOING">
 <span class="sig-name descname"><span class="pre">ONGOING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.ONGOING" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -1100,6 +1164,44 @@ Wraps the <code class="docutils literal notranslate"><span class="pre">COAPO_fie
 <dl class="py attribute">
 <dt class="sig sig-object py" id="pylibschc.libschc.ReassemblyStatus.STAY_ALIVE">
 <span class="sig-name descname"><span class="pre">STAY_ALIVE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.ReassemblyStatus.STAY_ALIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">pylibschc.libschc.</span></span><span class="sig-name descname"><span class="pre">TXState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pylibschc.libschc.TXState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></p>
+<p>The transmission state of a fragmentation connection.</p>
+<p>Wraps the <code class="docutils literal notranslate"><span class="pre">tx_state</span></code> type.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.END_TX">
+<span class="sig-name descname"><span class="pre">END_TX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.END_TX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.ERR">
+<span class="sig-name descname"><span class="pre">ERR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.ERR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.INIT_TX">
+<span class="sig-name descname"><span class="pre">INIT_TX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.INIT_TX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.RESEND">
+<span class="sig-name descname"><span class="pre">RESEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.RESEND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.SEND">
+<span class="sig-name descname"><span class="pre">SEND</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.SEND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pylibschc.libschc.TXState.WAIT_BITMAP">
+<span class="sig-name descname"><span class="pre">WAIT_BITMAP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#pylibschc.libschc.TXState.WAIT_BITMAP" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
