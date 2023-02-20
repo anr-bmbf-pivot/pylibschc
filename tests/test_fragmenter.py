@@ -30,7 +30,7 @@ __email__ = "m.lenders@fu-berlin.de"
 
 
 MTU = 60
-DUTY_CYCLE_MS = 100
+DUTY_CYCLE_MS = 150
 REPEATS = 2
 
 TEST_PARAMS = [
