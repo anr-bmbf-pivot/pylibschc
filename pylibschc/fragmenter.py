@@ -112,14 +112,16 @@ class FragmenterReassembler(FragmenterOps):
         self.mode = mode
         self._conn = self.conn_cls(ops=self)
         self._init_tx = False
-        self._tx_conn_lock = threading.Lock()
+        self._tx_conn_lock = threading.RLock()
         self._rx_conn_lock = threading.Lock()
 
     def _tx_conn_release(self):
         self._init_tx = False
         self._conn.reset()
-        if self._tx_conn_lock.locked():  # pragma: no cover
+        try:
             self._tx_conn_lock.release()
+        except RuntimeError:
+            pass
 
     def _end_fragmentation_tx(self, conn: FragmentationConnection):
         if self._real_end_tx:  # pragma: no cover
