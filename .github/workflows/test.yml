@@ -51,9 +51,9 @@ jobs:
       if: matrix.testenv == 'build-doc'
       run: |
         sudo apt-get update
-        sudo apt-get install libclang1-14
+        sudo apt-get install libclang1-15
         # hack to get sphinx-c-autodoc to build C API documentation
-        sudo ln -s /usr/lib/llvm-14/lib/libclang-14.so.1 /usr/lib/libclang-14.so
+        sudo ln -s /usr/lib/llvm-15/lib/libclang-15.so.1 /usr/lib/libclang-15.so
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
