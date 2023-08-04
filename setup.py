@@ -77,7 +77,7 @@ setup(
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
     ],
-    setup_requires=["setuptools>=42", "Cython", "wheel"],
+    setup_requires=["setuptools>=42", "Cython<3", "wheel"],
     install_requires=list(get_requirements()),
     cmdclass={"build": Build},
     ext_modules=[
